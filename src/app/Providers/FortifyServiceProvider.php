@@ -28,19 +28,32 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // 新規ユーザーの登録処理
         Fortify::createUsersUsing(CreateNewUser::class);
-        Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-        Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-        Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+        // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
+        // Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
+        // Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        // ユーザー登録画面を表示するためのビュー。
+        Fortify::registerView(function () {
+            return view('auth.register');
+        });
+
+        // ユーザーログイン画面を表示するためのビューを指定します。
+        // 'auth.login'は、resources/views/auth/login.blade.phpに対応します。
+        Fortify::loginView(function () {
+            return view('auth.login');
+        });
+
 
         RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
 
-            return Limit::perMinute(5)->by($throttleKey);
+            return Limit::perMinute(1000)->by($throttleKey);
         });
 
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        });
+        // RateLimiter::for('two-factor', function (Request $request) {
+        //     return Limit::perMinute(5)->by($request->session()->get('login.id'));
+        // });
     }
 }
