@@ -30,8 +30,11 @@
       @endif
       </ul>
     </div>
+    <div class="header__logo">Rese</div>
+    @yield('header')
   </header>
-
-
+  <main>
+      @yield('content')
+  </main>
 </body>
 </html>

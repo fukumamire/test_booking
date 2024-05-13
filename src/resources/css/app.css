@@ -9,6 +9,13 @@ body {
     -webkit-animation: bugfix infinite 1s;
 }
 
+.header {
+  display: flex;
+  align-items: center; /* アイテムを垂直方向に中央揃え */
+  justify-content: space-between; /* アイテム間のスペースを均等に分配 */
+  height: 60px; 
+}
+
 @keyframes bugfix {
   from {
     padding: 0;
@@ -29,12 +36,15 @@ body {
 .overlay-toggle {
   display: none; 
 }
-
+/* ハンバーガーアイコン */
 .overlay-button {
-  position: absolute; 
-  left: 2em; /* ハンバーガーアイコンを左に配置　アイコンの左端から画面の左端までの距離が2em*/
-  top: 3em;/* アイコンの上端から画面の上端までの距離が3em */
-  padding: 26px 11px;
+  /* position: absolute;  */
+  /* left: 2em; */
+  /* ハンバーガーアイコンを左に配置　アイコンの左端から画面の左端までの距離が2em*/
+  /* top: 3em; */
+  /* アイコンの上端から画面の上端までの距離が3em */
+  margin-right: auto; 
+  padding: 10px 50px;
   z-index: 5;
   cursor: pointer;
   user-select: none;
@@ -43,7 +53,7 @@ body {
 .overlay-button span {
   display: inline-block; 
   height: 4px;
-  width: 45px;/* 中央の線の長さ */
+  width: 45px;/* 中央の線の長さ一番長く */
   border-radius: 2px;
   background-color: white;
   position: relative;
@@ -54,12 +64,12 @@ body {
 .overlay-button span:before,.overlay-button span:after {
   content: ""; 
   height: 4px;
-  width: 35px;/* 初期設定 */
   border-radius: 2px;
   background-color: white;
   position: absolute;
   content: "";
   transition: all.2s ease-in-out;
+  visibility: visible; 
 }
 
 .overlay-button span:before {
@@ -68,7 +78,12 @@ body {
 }
 .overlay-button span:after {
   top: 10px;
-  width: 23px; /* 下の線を一番短く設定 */
+  width: 15px; /* 下の線を一番短く設定 */
+}
+
+.overlay-toggle:checked ~.overlay-button span:before,
+.overlay-toggle:checked ~.overlay-button span:after {
+  width: 35px; /* ハンバーガーアイコンの三本線から✖を作成する際の長さ */
 }
 
 .overlay-button:hover span, .overlay-button:hover span:before, .overlay-button:hover span:after {
@@ -124,4 +139,12 @@ body {
 }
 .overlay-menu ul li a:hover {
   color: #000!important;
+}
+
+.header__logo {
+    font-size: 2.8rem;
+    color: blue;
+    padding-left: 16px;
+    font-weight: bold;
+    margin-left: 20px; /* ハンバーガーアイコンからロゴまでのスペースを設定 */
 }
