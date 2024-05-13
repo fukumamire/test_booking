@@ -12,21 +12,21 @@
 </head>
 
 <body>
-  <header>
-    <input type="checkbox" id="overlay-input" />
-    <label for="overlay-input" id="overlay-button"><span></span></label>
-    <div id="overlay">
-    <ul>
+  <header class="header-left">
+    <input type="checkbox" id="overlay-input" class="overlay-toggle" />
+    <label for="overlay-input" id="overlay-button" class="overlay-button"><span></span></label>
+    <div id="overlay" class="overlay-menu">
+    <ul class="nav__list">
       @if(Auth::check())
         <!-- ログインしている場合のメニュー -->
-        <li><a href="{{ route('home') }}">Home</a></li>
-        <li><a href="{{ route('logout') }}">Logout</a></li>
-        <li><a href="{{ route('mypage') }}">Mypage</a></li>
+        <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ route('logout') }}" class="nav-link">Logout</a></li>
+        <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li>
       @else
         <!-- ログインしていない場合のメニュー -->
-        <li><a href="{{ route('home') }}">Home</a></li>
-        <li><a href="{{ route('register') }}">Registration</a></li>
-        <li><a href="{{ route('login') }}">Login</a></li>
+        <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ route('register') }}" class="nav-link">Registration</a></li>
+        <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
       @endif
       </ul>
     </div>
