@@ -9,10 +9,10 @@ body {
     -webkit-animation: bugfix infinite 1s;
 }
 
-.header {
+.header-left {
   display: flex;
   align-items: center; /* アイテムを垂直方向に中央揃え */
-  justify-content: space-between; /* アイテム間のスペースを均等に分配 */
+ justify-content: flex-start; /* アイテムを左端に配置 */
   height: 60px; 
 }
 
@@ -43,13 +43,15 @@ body {
   /* ハンバーガーアイコンを左に配置　アイコンの左端から画面の左端までの距離が2em*/
   /* top: 3em; */
   /* アイコンの上端から画面の上端までの距離が3em */
-  margin-right: auto; 
-  padding: 10px 50px;
+  margin-right: 20px; 
+  padding: 30px 10px;
   z-index: 5;
   cursor: pointer;
   user-select: none;
   background-color: blue;
+  border-radius: 5px;
 }
+
 .overlay-button span {
   display: inline-block; 
   height: 4px;
@@ -144,7 +146,6 @@ body {
 .header__logo {
     font-size: 2.8rem;
     color: blue;
-    padding-left: 16px;
+    padding-left: 0;
     font-weight: bold;
-    margin-left: 20px; /* ハンバーガーアイコンからロゴまでのスペースを設定 */
 }
