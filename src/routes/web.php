@@ -22,3 +22,15 @@ Route::get('/register', function () {
 Route::get('/login', function () {
     return view('auth.login');
 })->middleware('guest')->name('login');
+
+//会員登録後　コントローラーやアクションを経由せずに、すぐにビューを表示
+Route::view('/thanks', 'auth.thanks');
+
+// 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
+Route::view('/done', 'done');
+
+
+//会員登録画面を作成するために便宜　店舗一覧
+Route::get('/', function () {
+    return view('index');
+})->name('home');

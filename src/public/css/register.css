@@ -1,0 +1,67 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin-top: 100px;
+    background-color: #eee;
+}
+
+
+.registration-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 100px auto;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
+
+
+.registration-header {
+    margin-bottom: 20px;
+}
+
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.form-submit {
+    display: flex;
+    justify-content: flex-end; /* ボタンを右寄せにする */
+}
+
+.submit-button {
+    display: inline-block;
+    background-color: rgb(63, 90, 242);
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+}
+
+.submit-button:hover {
+    background-color: darkblue;
+}

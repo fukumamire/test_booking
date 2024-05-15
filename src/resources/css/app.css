@@ -38,11 +38,6 @@ body {
 }
 /* ハンバーガーアイコン */
 .overlay-button {
-  /* position: absolute;  */
-  /* left: 2em; */
-  /* ハンバーガーアイコンを左に配置　アイコンの左端から画面の左端までの距離が2em*/
-  /* top: 3em; */
-  /* アイコンの上端から画面の上端までの距離が3em */
   margin-right: 20px; 
   padding: 30px 10px;
   z-index: 5;
