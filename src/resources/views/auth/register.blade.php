@@ -13,21 +13,19 @@
     <form action="/register" method="post" class="registration-form">
       @csrf
       <div class="form-group">
-        <label for="username">Username</label>
+        
         <input type="text" id="username" name="name" placeholder="username" value="{{ old('name') }}">
         @error('name')
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
       <div class="form-group">
-        <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="email" value="{{ old('email') }}">
         @error('email')
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="password">
         @error('password')
           <div class="error-message">{{ $message }}</div>
