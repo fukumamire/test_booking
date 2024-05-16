@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
   <title>Rese</title>
 @yield('css')
+
 </head>
 
 <body>
