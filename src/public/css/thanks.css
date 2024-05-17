@@ -1,0 +1,36 @@
+main {
+    margin-top: 100px;
+}
+.thanks-page {
+    background-color: #eee;
+}
+.content__wrap {
+    width: 90%;
+    max-width: 400px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    margin: auto;
+    background-color: #fff;
+    height: 250px;
+    box-shadow: 2px 2px 5px gray;
+}
+
+.content__text{
+    margin: 0;
+    padding-top: 80px;
+    padding-bottom: 40px;
+    font-size: clamp(1.4rem,0.9712rem + 1.34vw,2rem);
+}
+
+.content__button{
+    display: inline-block;
+    background-color:blue;
+    border: 2px solid blue;
+    border-radius: 10px;
+    font-size: clamp(1rem,0.8576rem + 0.45vw,1,2rem);
+    padding: 3px 10px;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+}
