@@ -1,0 +1,155 @@
+body {
+    max-width: 1280px;
+    margin: 0 auto;
+    background-color: #eee;
+    font-family: arial;
+    width: 100vw;
+    height: 100vh;
+    animation: bugfix infinite 1s;
+    -webkit-animation: bugfix infinite 1s;
+}
+
+header.header-left {
+    display: flex;
+    align-items: center; /* アイテムを垂直方向に中央揃え */
+    justify-content: flex-start; /* アイテムを左端に配置 */
+    height: 60px; 
+}
+
+@keyframes bugfix {
+    from {
+        padding: 0;
+    }
+    to {
+        padding: 0;
+    }
+}
+@-webkit-keyframes bugfix {
+    from {
+        padding: 0;
+    }
+    to {
+        padding: 0;
+    }
+}
+
+header .overlay-toggle {
+    display: none; 
+}
+/* ハンバーガーアイコン */
+header #overlay-button.overlay-button {
+    display: block; /* ブロック要素にすることでハンバーガーアイコンが正しく表示 */
+    margin: 20px; 
+    padding: 30px 10px;
+    z-index: 5;
+    cursor: pointer;
+    user-select: none;
+    background-color: blue;
+    border-radius: 5px;
+}
+
+header #overlay-button.overlay-button span {
+    display: block; 
+    height: 4px;
+    width: 45px; /* 中央の線の長さ一番長く */
+    border-radius: 2px;
+    background-color: white;
+    position: relative;
+    display: block;
+    transition: all 0.2s ease-in-out;
+}
+
+header #overlay-button.overlay-button span:before, 
+header #overlay-button.overlay-button span:after {
+    content: ""; 
+    height: 4px;
+    border-radius: 2px;
+    background-color: white;
+    position: absolute;
+    content: "";
+    transition: all 0.2s ease-in-out;
+    visibility: visible; 
+}
+
+header #overlay-button.overlay-button span:before {
+    top: -10px;
+    width: 25px; /* 一番上の線を２番めに長く設定 */
+}
+header #overlay-button.overlay-button span:after {
+    top: 10px;
+    width: 15px; /* 下の線を一番短く設定 */
+}
+
+header .overlay-toggle:checked ~ #overlay-button.overlay-button span:before,
+header .overlay-toggle:checked ~ #overlay-button.overlay-button span:after {
+    width: 40px; /* ハンバーガーアイコンの三本線から✖を作成する際の長さ */
+}
+
+header #overlay-button.overlay-button:hover span, 
+header #overlay-button.overlay-button:hover span:before, 
+header #overlay-button.overlay-button:hover span:after {
+    background: #fff;
+}
+
+header .overlay-toggle:checked ~ #overlay-button.overlay-button:hover span,
+header .overlay-toggle:checked ~ #overlay-button.overlay-button span {
+    background: transparent;
+}
+
+header .overlay-toggle:checked ~ #overlay-button.overlay-button span:before {
+    transform: rotate(45deg) translate(7px, 7px);
+}
+
+header .overlay-toggle:checked ~ #overlay-button.overlay-button span:after {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+header .overlay-menu {
+    height: 100vh;
+    width: 100vw;
+    background: #fff;
+    z-index: 2;
+    visibility: hidden;
+    position: fixed;
+}
+
+.overlay-toggle:checked + #overlay-button.overlay-button span,
+.overlay-toggle:checked ~ .overlay-menu {
+    visibility: visible; 
+}
+
+header .overlay-menu.active {
+    /* JavaScript使用時に記載 */
+}
+
+header .overlay-menu ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    height: 100vh;
+    padding-left: 0;
+    list-style-type: none;
+}
+
+header .overlay-menu ul li {
+    padding: 1em;
+}
+
+header .overlay-menu ul li a {
+    color: blue;
+    text-decoration: none;
+    font-size: 1.5em;
+}
+
+header .overlay-menu ul li a:hover {
+    color: #000!important;;
+}
+
+header .header__logo {
+    font-size: 2.8rem;
+    color: blue;
+    padding-left: 0;
+    font-weight: bold;
+}
