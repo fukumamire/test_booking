@@ -39,7 +39,7 @@ header .overlay-toggle {
 /* ハンバーガーアイコン */
 header #overlay-button.overlay-button {
     display: block; /* ブロック要素にすることでハンバーガーアイコンが正しく表示 */
-    margin: 20px; 
+    margin: 80px 20px 0 80px;  
     padding: 30px 10px;
     z-index: 5;
     cursor: pointer;
@@ -111,6 +111,8 @@ header .overlay-menu {
     z-index: 2;
     visibility: hidden;
     position: fixed;
+    top: 0;
+    bottom: 0;
 }
 
 .overlay-toggle:checked + #overlay-button.overlay-button span,
@@ -151,5 +153,7 @@ header .header__logo {
     font-size: 2.8rem;
     color: blue;
     padding-left: 0;
+    margin-top: 80px;
+    /* margin: 20px 20px 0 20px;  */
     font-weight: bold;
 }
