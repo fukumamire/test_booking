@@ -39,7 +39,8 @@ main {
     width: 80%;
     padding: 10px;
     margin-bottom: 20px;
-    border: 1px solid #ccc;
+    border: none; /*テキストの他の側面の枠線を非表示 */
+    border-bottom: 1px solid #ccc; /* 下線*/
     border-radius: 5px;
 }
 
