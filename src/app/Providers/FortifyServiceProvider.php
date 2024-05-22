@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -13,7 +14,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; 
+use Laravel\Fortify\Contracts\RegisterResponse;
+use App\Http\Responses\CustomRegisterResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -30,7 +32,7 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-    // 新規ユーザーの登録処理
+        // 新規ユーザーの登録処理
         Fortify::createUsersUsing(CreateNewUser::class);
 
         // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
@@ -42,12 +44,14 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.register');
         });
 
+        
         // ユーザーログイン画面を表示するためのビューを指定します。
         // 'auth.login'は、resources/views/auth/login.blade.phpに対応します。
         Fortify::loginView(function () {
             return view('auth.login');
         });
 
+        $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
 
         RateLimiter::for('login', function (Request $request) {
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());

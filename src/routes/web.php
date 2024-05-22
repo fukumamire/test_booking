@@ -23,8 +23,11 @@ Route::get('/login', function () {
     return view('auth.login');
 })->middleware('guest')->name('login');
 
-//会員登録後　コントローラーやアクションを経由せずに、すぐにビューを表示
-Route::view('/thanks', 'auth.thanks');
+
+// 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
+Route::get('/thanks', function () {
+    return view('auth.thanks');
+});
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
 Route::view('/done', 'done');
@@ -34,3 +37,7 @@ Route::view('/done', 'done');
 Route::get('/', function () {
     return view('index');
 })->name('home');
+
+// Route::get('/mypage', function () {
+//     return view('mypage.mypage');
+// })->name('mypage');
