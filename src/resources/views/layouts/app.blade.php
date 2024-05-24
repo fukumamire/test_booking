@@ -22,7 +22,7 @@
         <!-- ログインしている場合のメニュー -->
         <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
         <li><a href="{{ route('logout') }}" class="nav-link">Logout</a></li>
-        <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li>
+        {{-- <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li> --}}
       @else
         <!-- ログインしていない場合のメニュー -->
         <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>

@@ -24,6 +24,12 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 
+//ログアウト後ログイン画面へ便宜
+Route::get('/logout', function () {
+    return view('auth.login');
+})->name('logout');
+
+
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
 Route::get('/thanks', function () {
     return view('auth.thanks');
