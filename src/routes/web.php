@@ -24,7 +24,7 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 
-//ログアウト後ログイン画面へ便宜
+//ログアウト後ログイン画面へ
 Route::get('/logout', function () {
     return view('auth.login');
 })->name('logout');
@@ -44,6 +44,13 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
+
+
+Route::get('/mypage', function () {
+    return view('mypage.mypage');
+})->name('mypage');
+
+
 // Route::get('/mypage', function () {
 //     return view('mypage.mypage');
-// })->name('mypage');
+// })->middleware('auth')->name('mypage');
