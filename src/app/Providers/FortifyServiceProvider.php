@@ -16,6 +16,7 @@ use Laravel\Fortify\Fortify;
 use App\Models\User;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Http\Responses\CustomRegisterResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,13 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
+        {
+            public function toResponse($request)
+            {
+                return redirect('/login');
+            }
+        });
     }
 
     /**
@@ -44,7 +51,7 @@ class FortifyServiceProvider extends ServiceProvider
             return view('auth.register');
         });
 
-        
+
         // ユーザーログイン画面を表示するためのビューを指定します。
         // 'auth.login'は、resources/views/auth/login.blade.phpに対応します。
         Fortify::loginView(function () {

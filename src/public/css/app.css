@@ -147,18 +147,18 @@ header .overlay-menu ul li a:hover {
     color: #000!important;;
 }
 
-/* フォームのスタイル */
+
 header .overlay-menu ul li button.logout-link {
-    background: none!important; /* フォームの背景を非表示 */
-    border: none!important; /* フォームの境界線を非表示 */
+    background: none!important; 
+    border: none!important; /* 境界線を非表示 */
     padding: 0!important; /* フォームの周囲の余白を除去 */
-    color: blue!important;; /* フォームのテキストカラーを青に設定 */
+    color: blue!important;; 
     text-decoration: none!important;; 
     cursor: pointer!important;; /* マウスカーソルをポインター（手の形）に変化 */
     font-size: 1.5em!important;; 
 }
 
-/* フォームのホバー時のスタイル */
+/* ホバー時のスタイル */
 header .overlay-menu ul li button.logout-link:hover {
     color: #000!important; /* マウスオーバー時にテキストカラーを黒に変更 */
 }

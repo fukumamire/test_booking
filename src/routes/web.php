@@ -24,10 +24,10 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 
-//ログアウト後ログイン画面へ
-Route::get('/logout', function () {
-    return view('auth.login');
-})->name('logout');
+// //ログアウト後ログイン画面へ
+// Route::get('/logout', function () {
+//     return view('auth.login');
+// })->name('logout');
 
 
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
