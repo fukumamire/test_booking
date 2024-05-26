@@ -21,7 +21,12 @@
       @if(Auth::check())
         <!-- ログインしている場合のメニュー -->
         <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-        <li><a href="{{ route('logout') }}" class="nav-link">Logout</a></li>
+        <li>
+          <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="logout-link">Logout</button>
+          </form>
+        </li>
         <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li>
       @else
         <!-- ログインしていない場合のメニュー -->
