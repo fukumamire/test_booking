@@ -1,0 +1,360 @@
+.header__right {
+    display: flex;
+    width: 60%; 
+    justify-content: flex-end; 
+    margin-top: 40px;
+    margin-left: 40px;
+}
+
+.header__search{
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px gray;
+    background-color: #fff;
+    font-size: 1.2rem;
+    width: 65%;
+}
+
+
+
+.select-box__label {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    width: 25%;
+}
+
+
+.select-box__label::after {
+    position: absolute;
+    right: 5px;
+    width: 10px;
+    height: 7px;
+    background-color: lightgray;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: "";
+    pointer-events: none;
+}
+
+.select-box__item {
+    appearance: none;
+    width: 100%;
+    height: 20px;
+    padding-left: 8px;
+    border: none;
+    border-right: 1px solid #cccccc;
+    background-color: #fff;
+    color: black;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+
+.select-box__item:focus {
+    outline: none;
+}
+
+.select-box__option {
+    height: 39px;
+}
+
+.search__item {
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    width: 40%;
+}
+
+.search__item-label {
+    width: 100%;
+}
+
+.search__item-input {
+    width: 100%;
+    height: 45px;
+    padding: 0 5px;
+    border: none;
+    outline: none;
+}
+
+.search__item-input::placeholder {
+    color: black;
+    font-weight: bold;
+}
+
+.search__item-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.search__item-button::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    vertical-align: center;
+    background: url(../images/search.svg);
+    color: lightgray;
+    background-repeat: no-repeat;
+    content: "";
+}
+
+.header__right--hidden {
+    display: none;
+}
+
+.shop__wrap {
+    display: flex;
+    gap: 15px 1%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 0 10px;
+    margin: auto;
+}
+
+.shop__content {
+    width: 260px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px gray;
+    background-color: #fff;
+}
+
+.shop__image {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.shop__item {
+    margin: 20px;
+}
+
+.shop__title {
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.shop__tag {
+    display: flex;
+    font-size: 1.2rem;
+    margin-top: 5px;
+}
+
+.shop__tag-info {
+    margin: 0;
+    padding-right: 5px;
+}
+
+.shop__button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.shop__button-detail {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    background-color: rgb(63, 90, 242);
+    border: 1px solid rgb(63, 90, 242);
+    border-radius: 5px;
+    color: #fff;
+    padding: 0 16px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+.shop__button-detail:hover {
+    opacity: 0.8;
+}
+
+.shop__button-favorite-btn {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border: none;
+    background-color: #fff;
+}
+
+.shop__button-favorite-btn:hover {
+    opacity: 0.6;
+}
+
+.dummy {
+    visibility: hidden;
+}
+
+@media screen and (max-width: 768px) {
+    .header__right {
+        display: none;
+    }
+
+    .drawer__hidden-search {
+        display: none;
+    }
+
+    .header__right--hidden {
+        display: inline-block;
+    }
+
+    .drawer__open-search {
+        display: flex;
+        height: 32px;
+        width: 32px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 101;
+        cursor: pointer;
+        background-color: rgb(63, 90, 242);
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px gray;
+    }
+
+    .drawer__open:hover {
+        opacity: 0.8;
+    }
+
+    .drawer__open-search span {
+        content: url("../images/search.svg");
+        height: 20px;
+        width: 20px;
+        display: block;
+        transition: 0.2s;
+        position: absolute;
+    }
+
+    .search__content {
+        width: 100%;
+        height: 45%;
+        min-height: 250px;
+        position: fixed;
+        top: -100%;
+        left: 0;
+        z-index: 100;
+        background: #eee;
+        transition: 0.5s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .search__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search__select {
+        display: flex;
+        justify-content: center;
+        padding-top: 50px;
+    }
+
+    .select-box__label {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px gray;
+        margin: 0 10px;
+        height: 35px;
+        width: 110px;
+    }
+
+    .select-box__item {
+        border: none;
+        margin: 0 10px;
+        height: 35px;
+    }
+
+    .search__text {
+        display: block;
+        margin-top: 5px;
+        margin: 20px 0;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 2px 2px 5px gray;
+        height: 35px;
+        width: 240px;
+    }
+
+    .search__item {
+        height: 35px;
+        width: 100%;
+    }
+
+    .sort__select {
+        display: block;
+        width: 240px;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+
+    .sort__label {
+        width: 100%;
+        margin: 0;
+    }
+
+    .sort__item {
+        margin: 0;
+    }
+
+    #drawer__input-search:checked ~ .drawer__open-search span {
+        content: url("../images/batsu.svg");
+    }
+
+    /* アイコンがクリックされたらメニューを表示 */
+    #drawer__input-search:checked ~ .search__content {
+        top: 0; /* メニューを画面に入れる */
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 98;
+    }
+
+    #drawer__input-search:checked ~ .overlay {
+        display: block;
+    }
+
+    .form__button {
+        margin: auto;
+        display: block;
+        background-color: rgb(63, 90, 242);
+        border: 1px solid rgb(63, 90, 242);
+        border-radius: 5px;
+        color: #fff;
+        padding: 3px 0;
+        width: 60px;
+        cursor: pointer;
+    }
+
+    .form__button:hover {
+        opacity: 0.8;
+    }
+
+    .shop__wrap {
+        justify-content: center;
+        gap: 15px 30px;
+    }
+}
