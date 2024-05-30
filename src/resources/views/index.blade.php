@@ -22,9 +22,8 @@
         <div class="search__item">
             <div class="search__item-button"></div>
             <label class="search__item-label">
-              <button class="search__item-button" >
               <img src="search.png" alt="searchアイコン"/> 
-              </button>
+              
               <input type="text" name="word" class="search__item-input" placeholder="Search...">
             </label>
         </div>
