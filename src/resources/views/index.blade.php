@@ -23,12 +23,14 @@
             <div class="search__item-button"></div>
             <label class="search__item-label">
               <img src="search.png" alt="searchアイコン"/> 
-              
               <input type="text" name="word" class="search__item-input" placeholder="Search...">
             </label>
         </div>
     </div>
 </form>
+<button class="heart"></button>
 @endsection
+
+
 
 

@@ -23,6 +23,8 @@ Route::get('/login', function () {
     return view('auth.login');
 })->middleware('guest')->name('login');
 
+//　コントローラ等使用せず　会員登録、ログインを促すページ
+Route::view('/request_login', 'auth.request_login');
 
 
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
