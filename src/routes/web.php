@@ -24,7 +24,7 @@ Route::get('/login', function () {
 })->middleware('guest')->name('login');
 
 //　コントローラ等使用せず　会員登録、ログインを促すページ
-Route::view('/request_login', 'auth.request_login');
+Route::view('/request_login', 'auth.request_login')->name('request_login');
 
 
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
