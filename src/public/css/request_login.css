@@ -1,27 +1,44 @@
+.box h2 {
+  text-align:center;
+  position:relative;
+  top:60px;
+}
 
 .box h3 {
-  text-align:center;
+    text-align:center;
     position:relative;
-    top:80px;
+    top:70px;
 }
 .box {
-    width:70%;
-    height:200px;
+    width: 50%;
+    height:250px;
     background:#FFF;
     margin:40px auto;
 }
 
-/*
-box-shadow: [horizontal offset] [vertical offset] [blur radius] [optional spread radius] [color];
-aka
-box-shadow: 1px 3px 5px #ccc;
-*/
-
-/*=========================================
- * Effect 1
-=========================================*/
-.effect1 {
+.effect {
     -webkit-box-shadow: 0 10px 6px -6px #777;
-       -moz-box-shadow: 0 10px 6px -6px #777;
+      -moz-box-shadow: 0 10px 6px -6px #777;
             box-shadow: 0 10px 6px -6px #777;
+}
+
+a.btn-solid {
+  color: #fff;
+  font-size: 36px;
+  line-height: 40px;
+  padding: 15px;
+  border-top: 4px solid #48ecc4;
+  border-right: 4px solid #0a5f4a;
+  border-bottom: 4px solid #0f745b;
+  border-left: 4px solid #8cf9de;
+  border-radius: 5px;
+  background: #1669c7f9;
+}
+
+a.btn-solid:hover {
+  color: #fff;
+  border-top: 4px solid #0f745b;
+  border-right: 4px solid #8cf9de;
+  border-bottom: 4px solid #48ecc4;
+  border-left: 4px solid #0a5f4a;
 }

@@ -6,15 +6,15 @@
 
 
 @section('content')
-  <div class="box effect1">
-    アカウントをお持ちでない方
-    <h3>Registration</h3>
+  <div class="box effect">
+    <h2>アカウントをお持ちでない方</h2>
+    <h3><a href="{{ route('register') }}" class="btn btn-solid" ><span>Registration</span></a></h3>
   </div>
 
 
-<div class="box effect1">
-    アカウントをお持ちの方
-    <h3>Login</h3>
+  <div class="box effect">
+    <h2>アカウントをお持ちの方</h2>
+    <h3><a href="{{ route('login') }}" class="btn btn-solid" ><span>Login</span></a></h3>
   </div>
 
 
