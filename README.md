@@ -2,7 +2,7 @@
 <img width="1437" alt="shop_all" src="https://github.com/fukumamire/todo/assets/136237535/54a24a32-84a0-4c31-a2f0-69c4943134ae">
 
 ## 作成した目的
-
+自社で予約サービスを持ちたい。
 
 ## アプリケーションURL
 
@@ -15,7 +15,11 @@ phpMyAdmin:：http://localhost:8080/
 
 ログイン機能、お気に入り追加/削除、検索
 
-## 使用技術（実行環境
+###　店舗一覧について
+・店舗画像URLを複数DBに保存できるようになっています。
+
+
+## 使用技術（実行環境）
 Laravel 8.x、PHP 7.4.9、docker、laravel-fortify
 
 ## テーブル設計とER図
