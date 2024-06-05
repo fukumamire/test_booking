@@ -15,6 +15,8 @@ class CreateShopsTable extends Migration
     {
         Schema::create('shops', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->comment('店舗名')->nullable(false);
+            $table->text('outline')->comment('概要')->nullable(true);
             $table->timestamps();
         });
     }
