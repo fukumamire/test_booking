@@ -1,17 +1,21 @@
 @extends('layouts.app')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 @endsection
 
 @section('header')
-    <form class="header__right" action="/" method="get">
+  <form class="header__right" action="/" method="get">
     <div class="header__search">
-        <label class="select-box__label">
-            <select name="area" class="select-box__item">
-                <option value="">All area</option>
-            </select>
-        </label>
+      <label class="select-box__label">
+        <select name="area" class="select-box__item">
+          <option value="">All area</option>
+					@foreach ($areas ?? '' as $area)
+						<option class="select-box__option" value="{{ $area->id }}" {{ request('area') == $area->id ? 'selected' : '' }}>{{ $area->name }}
+						</option>
+					@endforeach
+        </select>
+      </label>
 
         <label class="select-box__label">
             <select name="genre" class="select-box__item">
@@ -27,7 +31,7 @@
             </label>
         </div>
     </div>
-</form>
+	</form>
 <button class="heart"></button>
 @endsection
 
