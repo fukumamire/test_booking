@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,9 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
+Route::get('/', [ShopController::class, 'index'])->name('shops.index');
+Route::post('/favorite/{shop}', [ShopController::class, 'favorite'])->name('favorite');
+Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
 
 Route::get('/mypage', function () {

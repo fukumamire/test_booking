@@ -25,4 +25,9 @@ class Shop extends Model
   {
     return $this->hasMany(ShopImage::class);
   }
+
+  public function favorites()
+  {
+    return $this->belongsToMany(User::class, 'favorites');
+  }
 }
