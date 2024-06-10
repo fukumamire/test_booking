@@ -17,8 +17,8 @@ class DatabaseSeeder extends Seeder
 		$this->call(ShopsTableSeeder::class);
 		$this->call(ShopImageSeeder::class);
 		$this->call(AreasTableSeeder::class);
-		$this->call(ShopAreasSeeder::class,);
-
+		$this->call(ShopAreasSeeder::class);
+		$this->call(GenreSeeder::class);
 		// \App\Models\User::factory(10)->create();
 	}
 }
