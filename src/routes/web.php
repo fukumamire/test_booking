@@ -42,7 +42,11 @@ Route::get('/', function () {
     return view('index');
 })->name('home');
 
-Route::get('/', [ShopController::class, 'index'])->name('shops.index');
+
+//6月１１日　まだindex設定していないため便宜コメントアウト
+// Route::get('/', [ShopController::class, 'index'])->name('shops.index');
+// 検索機能
+Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 Route::post('/favorite/{shop}', [ShopController::class, 'favorite'])->name('favorite');
 Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
