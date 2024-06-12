@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shop;
 use App\Models\Area;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -35,7 +36,7 @@ class ShopController extends Controller
 
     // エリアとジャンルのリストを取得
     $areas = Area::all();
-    $genres = Shop::select('genres.name')->distinct()->get();
+    $genres = Genre::select('name')->distinct()->get();
 
     return view('index', compact('shops', 'areas', 'genres'));
   }

@@ -16,6 +16,7 @@
             </select>
         </label>
 
+
         <label class="select-box__label">
             <select name="genre" class="select-box__item">
                 <option value="">All genre</option>
@@ -24,6 +25,7 @@
                 @endforeach
             </select>
         </label>
+
 
         <div class="search__item">
             <div class="search__item-button"></div>
