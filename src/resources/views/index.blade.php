@@ -34,7 +34,6 @@
                 <input type="text" name="word" class="search__item-input" placeholder="Search..." value="{{ request('word') }}">
             </label>
         </div>
-        <button type="submit">Search</button>
     </div>
 </form>
 <button class="heart"></button>
@@ -53,4 +52,8 @@
         {{ $shops->links() }} <!-- ページネーションリンク -->
     @endif
 </div>
+@endsection
+
+@section('script')
+  <script src="{{ asset('js/search.js') }}"></script>
 @endsection
