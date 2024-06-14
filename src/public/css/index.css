@@ -69,10 +69,6 @@
     width: 70%; 
 }
 
-/* .search__item-label {
-    width: 100%;
-} */
-
 .search__item-label {
     display: flex;
     align-items: center; /* アイコンとテキストを垂直方向に中央揃え */
@@ -110,48 +106,47 @@
   transition: background 1s steps(28);
 }
 
-
-/* .shop__wrap {
+.shop__wrap {
     display: flex;
     gap: 15px 1%;
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 0 10px;
     margin: auto;
-} */
+}
 
-/* .shop__content {
+.shop__content {
     width: 260px;
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2px 5px gray;
     background-color: #fff;
-} */
+}
 
-/* .shop__image {
+.shop__image {
     width: 100%;
     height: 130px;
     object-fit: cover;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-} */
+}
 
-/* .shop__item {
+.shop__item {
     margin: 20px;
-} */
+}
 
-/* .shop__title {
+.shop__title {
     font-weight: bold;
     font-size: 1.6rem;
-} */
+}
 
-/* .shop__tag {
+.shop__tag {
     display: flex;
     font-size: 1.2rem;
     margin-top: 5px;
-} */
+}
 
-/* .shop__tag-info {
+.shop__tag-info {
     margin: 0;
     padding-right: 5px;
 }
@@ -161,9 +156,9 @@
     justify-content: space-between;
     align-items: center;
     margin: 10px 0;
-} */
+}
 
-/* .shop__button-detail {
+.shop__button-detail {
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -179,24 +174,28 @@
 
 .shop__button-detail:hover {
     opacity: 0.8;
-} */
+}
 
-/* .shop__button-favorite-btn {
+.shop__button-favorite-btn {
     display: inline-block;
     width: 40px;
     height: 40px;
     cursor: pointer;
     border: none;
     background-color: #fff;
+    background: url('path_to_favorite_icon') no-repeat center center;
+    background-size: contain;
 }
 
-.shop__button-favorite-btn:hover {
+.shop__button-favorite-btn.favorite {
+    background: url('path_to_favorite_active_icon') no-repeat center center;
+    background-size: contain;
+}
+
+.shop__button-favorite-btn.not-favorite:hover {
     opacity: 0.6;
 }
 
-.dummy {
-    visibility: hidden;
-} */
 
 @media screen and (max-width: 768px) {
     .header__right {
@@ -356,4 +355,6 @@
         justify-content: center;
         gap: 15px 30px;
     }
+
+
 }

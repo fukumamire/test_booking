@@ -20,7 +20,7 @@
     <ul class="nav__list">
       @if(Auth::check())
         <!-- ログインしている場合のメニュー -->
-        <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
         <li>
           <form method="POST" action="{{ route('logout') }}">
             @csrf
@@ -30,7 +30,7 @@
         <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li>
       @else
         <!-- ログインしていない場合のメニュー -->
-        <li><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+        <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
         <li><a href="{{ route('register') }}" class="nav-link">Registration</a></li>
         <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
       @endif

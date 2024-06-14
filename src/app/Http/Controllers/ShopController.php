@@ -40,4 +40,12 @@ class ShopController extends Controller
 
     return view('index', compact('shops', 'areas', 'genres'));
   }
+
+  public function index()
+  {
+    $shops = Shop::paginate(20); // ページネーションを使用してデータを取得
+    $areas = Area::all();
+    $genres = Genre::select('name')->distinct()->get(); // ジャンルの名前を選択し、重複を除去して取得
+    return view('index', compact('shops', 'areas', 'genres')); // 'index'ビューに渡すデータを準備
+  }
 }

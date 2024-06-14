@@ -5,7 +5,7 @@
 @endsection
 
 @section('header')
-<form class="header__right" action="{{ route('shops.search') }}" method="get">
+<form id="search__form" class="header__right" action="{{ route('shops.search') }}" method="get">
     <div class="header__search">
         <label class="select-box__label">
             <select name="area" class="select-box__item">
@@ -36,24 +36,38 @@
         </div>
     </div>
 </form>
-<button class="heart"></button>
+
 @endsection
 
 @section('content')
-<div>
-    @foreach (($shops?? []) as $shop)
-        <div>
-            <h2>{{ $shop->name }}</h2>
-            <p>{{ $shop->outline }}</p>
-            <!-- ショップの詳細を表示 -->
+<div class="shop__wrap">
+    @foreach ($shops?? [] as $shop)
+        <div class="shop__content">
+            <img src="{{ $shop->image_url }}" alt="{{ $shop->name }}" class="shop__image">
+            <div class="shop__item">
+                <h2 class="shop__title">{{ $shop->name }}</h2>
+                <div class="shop__tag">
+                    <p class="shop__tag-info">#{{ $shop->area }}</p>
+                    <p class="shop__tag-info">#{{ $shop->genre }}</p>
+                </div>
+                <div class="shop__button">
+                    <a href="#" class="shop__button-detail">詳しくみる</a>
+                    <button class="shop__button-favorite-btn {{ $shop->is_favorite ? 'favorite' : 'not-favorite' }}"></button>
+										<button class="heart"></button>
+                </div>
+            </div>
         </div>
     @endforeach
-    @if(isset($shops))
+</div>
+
+
+    @if($shops->count())
         {{ $shops->links() }} <!-- ページネーションリンク -->
     @endif
 </div>
 @endsection
 
+
 @section('script')
-  <script src="{{ asset('js/search.js') }}"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
 @endsection
