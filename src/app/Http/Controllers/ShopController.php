@@ -14,7 +14,7 @@ class ShopController extends Controller
     $query = Shop::query();
 
     // キーワードによるフィルタリング
-    if ($request->has('keyword')) {
+    if ($request->filled('keyword')) {
       $query->where(function ($query) use ($request) {
         $query->where('name', 'like', '%' . $request->keyword . '%')
           ->orWhere('outline', 'like', '%' . $request->keyword . '%');
@@ -22,16 +22,16 @@ class ShopController extends Controller
     }
 
     // エリアでのフィルタリング
-    if ($request->has('area')) {
+    if ($request->filled('area')) {
       $query->whereHas('areas', function ($q) use ($request) {
-        $q->where('id', $request->area);
+        $q->where('areas.id', $request->area);
       });
     }
 
     // ジャンルでのフィルタリング
-    if ($request->has('genre')) {
+    if ($request->filled('genre')) {
       $query->whereHas('genres', function ($q) use ($request) {
-        $q->where('name', $request->genre);
+        $q->where('genres.name', $request->genre);
       });
     }
 
@@ -48,11 +48,9 @@ class ShopController extends Controller
     return view('index', compact('shops', 'areas', 'genres', 'message'));
   }
 
-
-
   public function index()
   {
-    $shops = Shop::paginate(20); // ページネーションを使用してデータを取得
+    $shops = Shop::with(['areas', 'genres'])->paginate(20); // ページネーションを使用してデータを取得
     $areas = Area::all();
     $genres = Genre::select('name')->distinct()->get(); // ジャンルの名前を選択し、重複を除去して取得
     return view('index', compact('shops', 'areas', 'genres')); // 'index'ビューに渡すデータを準備
