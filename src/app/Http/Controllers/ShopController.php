@@ -13,6 +13,14 @@ class ShopController extends Controller
   {
     $query = Shop::query();
 
+    // キーワードによるフィルタリング
+    if ($request->has('keyword')) {
+      $query->where(function ($query) use ($request) {
+        $query->where('name', 'like', '%' . $request->keyword . '%')
+          ->orWhere('outline', 'like', '%' . $request->keyword . '%');
+      });
+    }
+
     // エリアでのフィルタリング
     if ($request->has('area')) {
       $query->whereHas('areas', function ($q) use ($request) {
@@ -27,11 +35,6 @@ class ShopController extends Controller
       });
     }
 
-    // 検索ワードでのフィルタリング
-    if ($request->has('word')) {
-      $query->where('name', 'like', '%' . $request->word . '%');
-    }
-
     // areas と genres のリレーションをロードして shops を取得
     $shops = $query->with(['areas', 'genres'])->paginate(10);
 
@@ -39,7 +42,10 @@ class ShopController extends Controller
     $areas = Area::all();
     $genres = Genre::select('name')->distinct()->get();
 
-    return view('index', compact('shops', 'areas', 'genres'));
+    // 検索結果が空の場合はエラーメッセージを設定
+    $message = $shops->isEmpty() ? 'お探しの飲食店はございません。再度検索してください' : '';
+
+    return view('index', compact('shops', 'areas', 'genres', 'message'));
   }
 
 

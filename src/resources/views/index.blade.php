@@ -41,6 +41,12 @@
 
 @section('content')
 <div class="shop__wrap">
+		@if(session('message'))
+        <div class="alert alert-warning">
+            {{ session('message') }}
+        </div>
+    @endif
+		
     @foreach ($shops as $shop)
         <div class="shop__content">
 					@foreach($shop->images as $image)
