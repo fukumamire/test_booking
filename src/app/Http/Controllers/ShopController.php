@@ -14,14 +14,14 @@ class ShopController extends Controller
     $query = Shop::query();
 
     // エリアでのフィルタリング
-    if ($request->has('area') && $request->area != '') {
+    if ($request->has('area')) {
       $query->whereHas('areas', function ($q) use ($request) {
         $q->where('id', $request->area);
       });
     }
 
     // ジャンルでのフィルタリング
-    if ($request->has('genre') && $request->genre != '') {
+    if ($request->has('genre')) {
       $query->whereHas('genres', function ($q) use ($request) {
         $q->where('name', $request->genre);
       });
@@ -32,7 +32,8 @@ class ShopController extends Controller
       $query->where('name', 'like', '%' . $request->word . '%');
     }
 
-    $shops = $query->paginate(10); // ページネーションを適用
+    // areas と genres のリレーションをロードして shops を取得
+    $shops = $query->with(['areas', 'genres'])->paginate(10);
 
     // エリアとジャンルのリストを取得
     $areas = Area::all();
@@ -40,6 +41,8 @@ class ShopController extends Controller
 
     return view('index', compact('shops', 'areas', 'genres'));
   }
+
+
 
   public function index()
   {

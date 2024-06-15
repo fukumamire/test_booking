@@ -36,8 +36,6 @@
     pointer-events: none;
 }
 
-
-
 .select-box__item {
     appearance: none;
     width: 100%;
@@ -90,60 +88,61 @@
 }
 
 .search__item-button {
-    margin-right: 10px; /* アイコンと入力フィールドの間にスペースを設ける */
+    margin-right: 5px; /* アイコンと入力フィールドの間にスペースを設ける */
 }
 
-.heart {
-  width: 100px;
-  height: 100px;
-  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png) no-repeat;
-  background-position: 0 0;
-  cursor: pointer;
-}
-.heart:hover {
-  background-position: -2800px 0;
-  -webkit-transition: background 1s steps(28);
-  transition: background 1s steps(28);
-}
+
 
 .shop__wrap {
     display: flex;
-    gap: 15px 1%;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: wrap;/* 子要素が1行に収まらない場合、新たな行に折り返して配置 */
     padding: 0 10px;
     margin: auto;
+    margin-top: 100px; 
 }
+
 
 .shop__content {
     width: 260px;
+    height: 80%;
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2px 5px gray;
     background-color: #fff;
+    margin: 15px 0.5%;  /* 上下に15px、左右に0.5%のマージン */
+    /* 最初と最後の要素のマージンを0に */
+    &:first-child,
+    &:last-child {
+       margin: 15px 0.5%; /* 最初と最後の要素にも標準のマージンを適用 */
+    }
 }
 
 .shop__image {
     width: 100%;
-    height: 130px;
+    height: 50%;
     object-fit: cover;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
 
 .shop__item {
-    margin: 20px;
+  width: 100%;
+  height: 40%;
+  margin: 10px;
 }
 
 .shop__title {
     font-weight: bold;
     font-size: 1.6rem;
+    margin: 5pt 0; /* 上下に5pxのマージンを追加 */
 }
 
 .shop__tag {
     display: flex;
     font-size: 1.2rem;
     margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .shop__tag-info {
@@ -155,21 +154,21 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 .shop__button-detail {
     text-decoration: none;
     display: flex;
     align-items: center;
-    background-color: rgb(63, 90, 242);
+    background-color: rgb(33, 44, 103);
     border: 1px solid rgb(63, 90, 242);
     border-radius: 5px;
     color: #fff;
     padding: 0 16px;
-    height: 30px;
+    height: 40px;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
 }
 
 .shop__button-detail:hover {
@@ -196,6 +195,22 @@
     opacity: 0.6;
 }
 
+
+/* お気に入り */
+.heart {
+  width: 100px;
+  height: 100px;
+  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png) no-repeat;
+  background-position: -10px  0;
+  cursor: pointer;
+  border: none; 
+}
+
+.heart:hover {
+  background-position: -2810px 0;
+  -webkit-transition: background 1s steps(28);
+  transition: background 1s steps(28);
+}
 
 @media screen and (max-width: 768px) {
     .header__right {

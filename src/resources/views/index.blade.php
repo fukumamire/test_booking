@@ -41,14 +41,20 @@
 
 @section('content')
 <div class="shop__wrap">
-    @foreach ($shops?? [] as $shop)
+    @foreach ($shops as $shop)
         <div class="shop__content">
-            <img src="{{ $shop->image_url }}" alt="{{ $shop->name }}" class="shop__image">
+					@foreach($shop->images as $image)
+            <img src="{{ $image->shop_image_url }}" alt="{{ $shop->name }}" class="shop__image">
+					@endforeach
             <div class="shop__item">
                 <h2 class="shop__title">{{ $shop->name }}</h2>
                 <div class="shop__tag">
-                    <p class="shop__tag-info">#{{ $shop->area }}</p>
-                    <p class="shop__tag-info">#{{ $shop->genre }}</p>
+									@foreach($shop->areas as $area)
+                    <p class="shop__tag-info">#{{ $area->name }}</p>
+									@endforeach
+									@foreach($shop->genres as $genre)
+                    <p class="shop__tag-info">#{{ $genre->name }}</p>
+									@endforeach
                 </div>
                 <div class="shop__button">
                     <a href="#" class="shop__button-detail">詳しくみる</a>
