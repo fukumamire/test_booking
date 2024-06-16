@@ -212,6 +212,25 @@
   transition: background 1s steps(28);
 }
 
+/* ページネーションのcustom　横並び */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination li {
+  font-size: 1.2em; /* サイズを大きくします */
+  padding: 0.5rem 1rem; /* 内側のパディングを増やす */
+  border-radius: 5px; /* 角を丸くします */
+  background-color: #f8f9fa; /* 基本的な背景色 */
+}
+
+.pagination li.active {
+  background-color: #007bff; /* 現在のページ番号に対して背景色を変更 */
+  color: white; /* テキスト色を白にします */
+}
+
+
 @media screen and (max-width: 768px) {
     .header__right {
         display: none;

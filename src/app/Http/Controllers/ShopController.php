@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use App\Models\Shop;
 use App\Models\Area;
 use App\Models\Genre;
