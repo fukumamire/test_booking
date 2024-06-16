@@ -1,3 +1,5 @@
 {
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "editor.experimentalInlineEdit.backgroundColoring": true,
+  "editor.foldingHighlight": false
 }

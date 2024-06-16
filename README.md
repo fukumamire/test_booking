@@ -23,6 +23,7 @@ phpMyAdmin:：http://localhost:8080/
 Laravel 8.x、PHP 7.4.9、docker、laravel-fortify
 
 ## テーブル設計とER図
+![booking](https://github.com/fukumamire/Booking-restaurant/assets/136237535/b162ad42-3fe2-41ce-bf0f-1a0f2bf23b9a)
 
 # 環境構築
 ## Dockerビルド
