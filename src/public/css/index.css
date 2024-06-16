@@ -1,6 +1,6 @@
 .header__right {
     display: flex;
-    width: 60%; 
+    width: 70%; 
     justify-content: flex-end; 
     margin-top: 40px;
     margin-left: 40px;
@@ -64,7 +64,7 @@
     align-items: center; /* アイテムを垂直方向に中央揃え */
     justify-content: flex-start; /* アイテムを左寄せ */
     border-radius: 3px;
-    width: 70%; 
+    width: 80%; 
 }
 
 .search__item-label {
@@ -95,7 +95,7 @@
 
 .shop__wrap {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start; /* アイテムを左揃えで配置 */
     flex-wrap: wrap;/* 子要素が1行に収まらない場合、新たな行に折り返して配置 */
     padding: 0 10px;
     margin: auto;
@@ -104,18 +104,13 @@
 
 
 .shop__content {
-    width: 260px;
-    height: 80%;
+    width: calc(100% / 4 - 20px); /* 4アイテムが並ぶように幅を調整 */
+    margin: 10px;  /* 均等なマージンを設定 */
     border: none;
     border-radius: 5px;
     box-shadow: 2px 2px 5px gray;
     background-color: #fff;
-    margin: 15px 0.5%;  /* 上下に15px、左右に0.5%のマージン */
-    /* 最初と最後の要素のマージンを0に */
-    &:first-child,
-    &:last-child {
-       margin: 15px 0.5%; /* 最初と最後の要素にも標準のマージンを適用 */
-    }
+    
 }
 
 .shop__image {
@@ -231,164 +226,3 @@
 }
 
 
-@media screen and (max-width: 768px) {
-    .header__right {
-        display: none;
-    }
-
-    .drawer__hidden-search {
-        display: none;
-    }
-
-    .header__right--hidden {
-        display: inline-block;
-    }
-
-    .drawer__open-search {
-        display: flex;
-        height: 32px;
-        width: 32px;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        z-index: 101;
-        cursor: pointer;
-        background-color: rgb(63, 90, 242);
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-    }
-
-    .drawer__open:hover {
-        opacity: 0.8;
-    }
-
-    .drawer__open-search span {
-        content: url("../images/search.svg");
-        height: 20px;
-        width: 20px;
-        display: block;
-        transition: 0.2s;
-        position: absolute;
-    }
-
-    .search__content {
-        width: 100%;
-        height: 45%;
-        min-height: 250px;
-        position: fixed;
-        top: -100%;
-        left: 0;
-        z-index: 100;
-        background: #eee;
-        transition: 0.5s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .search__form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .search__select {
-        display: flex;
-        justify-content: center;
-        padding-top: 50px;
-    }
-
-    .select-box__label {
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-        margin: 0 10px;
-        height: 35px;
-        width: 110px;
-    }
-
-    .select-box__item {
-        border: none;
-        margin: 0 10px;
-        height: 35px;
-    }
-
-    .search__text {
-        display: block;
-        margin-top: 5px;
-        margin: 20px 0;
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-        height: 35px;
-        width: 240px;
-    }
-
-    .search__item {
-        height: 35px;
-        width: 100%;
-    }
-
-    .sort__select {
-        display: block;
-        width: 240px;
-        margin-top: 5px;
-        margin-bottom: 20px;
-    }
-
-    .sort__label {
-        width: 100%;
-        margin: 0;
-    }
-
-    .sort__item {
-        margin: 0;
-    }
-
-    #drawer__input-search:checked ~ .drawer__open-search span {
-        content: url("../images/batsu.svg");
-    }
-
-    /* アイコンがクリックされたらメニューを表示 */
-    #drawer__input-search:checked ~ .search__content {
-        top: 0; /* メニューを画面に入れる */
-    }
-
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 98;
-    }
-
-    #drawer__input-search:checked ~ .overlay {
-        display: block;
-    }
-
-    .form__button {
-        margin: auto;
-        display: block;
-        background-color: rgb(63, 90, 242);
-        border: 1px solid rgb(63, 90, 242);
-        border-radius: 5px;
-        color: #fff;
-        padding: 3px 0;
-        width: 60px;
-        cursor: pointer;
-    }
-
-    .form__button:hover {
-        opacity: 0.8;
-    }
-
-    .shop__wrap {
-        justify-content: center;
-        gap: 15px 30px;
-    }
-
-
-}
