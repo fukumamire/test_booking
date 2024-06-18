@@ -49,6 +49,13 @@ Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.sear
 Route::post('/favorite/{shop}', [ShopController::class, 'favorite'])->name('favorite');
 Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
+//2024/6/17　便宜　詳細画面
+Route::view('/detail', 'detail')->name('shop.detail');
+// 最終版？？予定
+// Route::get('/detail/{shop_id}', [ShopController::class, 'detail'])->name('shop.detail');
+
+
+
 
 Route::get('/mypage', function () {
     return view('mypage.mypage');
