@@ -56,4 +56,21 @@ class ShopController extends Controller
     $genres = Genre::select('name')->distinct()->get(); // ジャンルの名前を選択し、重複を除去して取得
     return view('index', compact('shops', 'areas', 'genres')); // 'index'ビューに渡すデータを準備
   }
+
+  // 飲食店詳細ページ
+  // public function detail(Request $request)
+  // {
+  //   $user = Auth::user();
+  //   $userId = Auth::id();
+  //   $shop = Shop::find($request->shop_id);
+  //   $review = Review::where('user_id', $userId)->where('shop_id', $shop->id)->first();
+  //   $from = $request->input('from');
+  //   // 戻りルートを設定
+  //   $backRoute = match ($from) {
+  //     'mypage' => '/mypage',
+  //     default => '/'
+  //   };
+
+  //   return view('detail', compact('user', 'shop', 'review', 'avgRating', 'countFavorites', 'backRoute'));
+  // }
 }

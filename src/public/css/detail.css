@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.shop-detail,
+.reservation-form {
+  width: 48%;
+}
+
+.shop-name {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.shop-image {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.shop-tags {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.shop-description {
+  font-size: 1.4rem;
+  margin-bottom: 20px;
+}
+
+.reservation-form {
+  background-color: rgb(63, 90, 242);
+  padding: 20px;
+  border-radius: 5px;
+  color: white;
+}
+
+.reservation-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.form-input {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+.reservation-summary {
+  background-color: rgb(84, 124, 243);
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.reservation-summary p {
+  margin: 0 0 10px;
+}
+
+.reservation-button {
+  width: 100%;
+  padding: 15px;
+  background-color: rgb(28, 65, 251);
+  border: none;
+  border-radius: 5px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .shop-detail,
+  .reservation-form {
+    width: 100%;
+  }
+}
