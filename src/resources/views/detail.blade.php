@@ -21,7 +21,7 @@
       @csrf
       <h2 class="reservation-title">予約</h2>
 
-      <input type="date" name="date" class="form-input" value="{{ request()->is('*edit*')? $reservation->date : '' }}" id="datePicker">
+      <input type="date" name="date" class="form-input-date" value="{{ request()->is('*edit*')? $reservation->date : '' }}" id="datePicker">
       <select name="time" class="form-input">
         <option value="" disabled selected>-- 時間を選択してください --</option>
         @foreach (['18:30','19:00','19:30','20:00', '20:30', '21:00', '21:30', '22:00'] as $time)
