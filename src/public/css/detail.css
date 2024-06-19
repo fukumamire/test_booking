@@ -9,6 +9,29 @@
   width: 48%;
 }
 
+/* header__back(<)とshop-name(店名）が横並びに */
+.header-container {
+  display: flex;
+  align-items: center; /* 垂直方向に中央揃え */
+  padding-top: 50px;  
+}
+
+/* 店名　戻るボタン＜ */
+.header__back {
+  display: inline-block;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px gray;
+  text-decoration: none;
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-weight: bold;
+  color: black;
+  margin-right: 10px; /* shop-nameとの間隔を調整 */
+}
+
 .shop-name {
   font-size: 2.4rem;
   font-weight: bold;
