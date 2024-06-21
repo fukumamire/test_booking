@@ -65,7 +65,12 @@
   padding: 20px;
   border-radius: 5px;
   color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* 高さを100%に設定 */
 }
+
 
 .reservation-title {
   font-size: 2rem;
@@ -79,6 +84,8 @@
   border-radius: 5px;
   border: none;
 }
+
+
 .form-input {
   display: block;
   width: 100%;
@@ -93,6 +100,7 @@
   padding: 20px;
   border-radius: 5px;
   margin-bottom: 20px;
+  flex-grow: 1; /* スペースを埋めるために追加 */
 }
 
 .reservation-summary p {
@@ -102,16 +110,17 @@
 
 /* 「予約する」ボタンが青色の枠の端から端まで広がるようにするために、ボタンのCSSを調整 */
 .reservation-button {
-  width: calc(100% + 40px); /* コンテナのパディング分を含める */
+ width: calc(100% + 40px); /* コンテナのパディング分を含める */
   margin: -20px; /* パディングを補正するために負のマージンを設定 */
   padding: 15px 20px; /* 見た目を良くするためにパディングを追加 */
   background-color: rgb(28, 65, 251);
   border: none;
-  border-radius: 0 0 5px 5px; /* 下の角だけ丸める */
+  border-radius: 0 0 5px 5px; /* 下の角を丸める */
   font-size: 1.6rem;
   cursor: pointer;
   color: white;
-}
+  margin-top: 50%; 
+  }
 
 
 @media screen and (max-width: 768px) {

@@ -55,7 +55,7 @@
       </select>
 
       <div class="reservation-summary">
-        <p>Shop: </p>
+        <p>Shop:{{ $shop->name }} </p>
         <p>Date: <span id="dateSummary"></span></p>
         <p>Time: <span id="timeSummary"></span></p>
         <p>Number: <span id="numberSummary"></span></p>
