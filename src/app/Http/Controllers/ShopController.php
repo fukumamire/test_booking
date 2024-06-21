@@ -59,10 +59,12 @@ class ShopController extends Controller
 
   // 飲食店詳細ページ
 
-  public function detail($shop)
+  public function detail($shopId)
   {
-    $shop = Shop::find($shop); // 例えば、Eloquentを使用して店舗情報を取得
-    return view('detail', compact('shop')); // 'detail'ビューに店舗情報を渡して表示
+    $backRoute = url()->previous(); // 直前のURLを取得
+
+    $shop = Shop::find($shopId); // Eloquentを使用して店舗情報を取得
+    return view('detail', compact('shop', 'backRoute'));
   }
   // public function detail(Request $request)
   // {

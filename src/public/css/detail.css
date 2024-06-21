@@ -16,8 +16,8 @@
   padding-top: 50px;  
 }
 
-/* 店名　戻るボタン＜ 包むボタン */
-.header__back, .header__next  {
+/* 店名　戻るボタン＜  */
+.header__back {
   display: inline-block;
   border-radius: 5px;
   box-shadow: 2px 2px 5px gray;

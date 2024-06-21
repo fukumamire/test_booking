@@ -52,12 +52,14 @@ Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name
 //2024/6/17　便宜　詳細画面
 Route::view('/detail', 'detail')->name('shop.detail');
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
+
+
 // 最終版？？予定
 // Route::get('/detail/{shop_id}', [ShopController::class, 'detail'])->name('shop.detail');
 
 
 
-
+// routes/web.php
 Route::get('/mypage', function () {
     return view('mypage.mypage');
 })->name('mypage');
