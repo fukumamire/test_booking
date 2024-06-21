@@ -38,9 +38,16 @@
   margin-bottom: 10px;
 }
 
+.shop-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .shop-image {
-  width: 100%;
-  margin-bottom: 10px;
+  width: 100%; /* 画像の幅を調整 */
+  height: auto; /* 高さを自動的に調整 */
+  object-fit: cover; /* 画像のアスペクト比を保持 */
 }
 
 .shop-tags {
