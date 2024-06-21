@@ -63,9 +63,9 @@
 									@endforeach
                 </div>
                 <div class="shop__button">
-                    <a href="#" class="shop__button-detail">詳しくみる</a>
-                    <button class="shop__button-favorite-btn {{ $shop->is_favorite ? 'favorite' : 'not-favorite' }}"></button>
-										<button class="heart"></button>
+                    <a href="{{ route('shop.detail', ['shop' => $shop->id]) }}" class="shop__button-detail">詳しくみる</a>
+                    <button class="shop__button-favorite-btn {{ $shop->is_favorite ? 'favorite' : 'not-favorite' }}" aria-label="お気に入り"></button>
+										<button class="heart"  aria-label="ハート"></button>
                 </div>
             </div>
         </div>
