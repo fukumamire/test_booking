@@ -17,7 +17,16 @@
       <img src="{{ asset($image->shop_image_url)}}" alt="イメージ画像" class="shop-image">
       @endforeach
     </div>
-    <p class="shop-tags">#地域#ジャンル</p>
+    
+    <p class="shop-tags">
+      @foreach($shop->areas as $index => $area)
+        #{{ $area->name }}
+        @if($index < $shop->areas->count() - 1)
+          ,
+        @endif
+    @endforeach
+        #ジャンル
+    </p>
     <p class="shop-description">飲食店の概要</p>
   </div>
 
