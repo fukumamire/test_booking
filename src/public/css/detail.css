@@ -16,8 +16,8 @@
   padding-top: 50px;  
 }
 
-/* 店名　戻るボタン＜ */
-.header__back {
+/* 店名　戻るボタン＜ 包むボタン */
+.header__back, .header__next  {
   display: inline-block;
   border-radius: 5px;
   box-shadow: 2px 2px 5px gray;
@@ -29,13 +29,13 @@
   line-height: 40px;
   font-weight: bold;
   color: black;
-  margin-right: 10px; /* shop-nameとの間隔を調整 */
+  margin:0 5px; /* shop-nameとの間隔を調整　左右 */
 }
 
 .shop-name {
   font-size: 2.4rem;
   font-weight: bold;
-  margin-bottom: 10px;
+  padding: 0 10px;
 }
 
 .shop-images {
