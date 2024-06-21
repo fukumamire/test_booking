@@ -10,6 +10,7 @@
     <div class="header-container">
       <a href="#" class="header__back"><</a>
       <h1 class="shop-name">{{ $shop->name }}</h1>
+      <a href="#" class="header__next">></a>
     </div>
     
     <div class="shop-images">
@@ -24,8 +25,13 @@
         @if($index < $shop->areas->count() - 1)
           ,
         @endif
-    @endforeach
-        #ジャンル
+      @endforeach
+      @foreach($shop->genres as $index => $genre)
+        #{{ $genre->name }}
+        @if($index < $shop->genres->count() - 1)
+          ,
+        @endif
+      @endforeach
     </p>
     <p class="shop-description">飲食店の概要</p>
   </div>
