@@ -7,8 +7,7 @@
 @section('content')
 <div class="container">
   <div class="shop-detail">
-    <a href="{{ $backRoute }}" class="header__back">
-      << /a>
+    <a href="{{ $backRoute }}" class="header__back"><</a>
         <h1 class="shop-name">{{ $shop->name }}</h1>
         <img src="{{ $shop->image_url }}" alt="イメージ画像" class="shop-image">
         <p class="shop-tags">#{{ $shop->area->name }} #{{ $shop->genre->name }}</p>

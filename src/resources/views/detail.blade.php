@@ -8,9 +8,8 @@
 <div class="container">
   <div class="shop-detail">
     <div class="header-container">
-      <a href="#" class="header__back"><</a>
+      <a href="{{ $backRoute }}" class="header__back"><</a>
       <h1 class="shop-name">{{ $shop->name }}</h1>
-      <a href="#" class="header__next">></a>
     </div>
     
     <div class="shop-images">
@@ -33,7 +32,7 @@
         @endif
       @endforeach
     </p>
-    <p class="shop-description">飲食店の概要</p>
+    <p class="shop-description">{{ $shop->outline }}</p>
   </div>
 
   <div class="reservation-form">
