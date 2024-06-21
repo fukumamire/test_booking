@@ -9,9 +9,14 @@
   <div class="shop-detail">
     <div class="header-container">
       <a href="#" class="header__back"><</a>
-      <h1 class="shop-name">選択された飲食店名</h1>
+      <h1 class="shop-name">{{ $shop->name }}</h1>
     </div>
-    <img src="#" alt="イメージ画像" class="shop-image">
+    
+    <div class="shop-images">
+      @foreach($shop->images as $image)
+      <img src="{{ asset($image->shop_image_url)}}" alt="イメージ画像" class="shop-image">
+      @endforeach
+    </div>
     <p class="shop-tags">#地域#ジャンル</p>
     <p class="shop-description">飲食店の概要</p>
   </div>
