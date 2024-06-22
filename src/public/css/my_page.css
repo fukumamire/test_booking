@@ -1,0 +1,208 @@
+.user__name {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.mypage__wrap {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+}
+
+.reservation__wrap {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+}
+
+.reservation__tab {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.reservation__title,
+.favorite__title {
+  font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
+  font-weight: bold;
+  padding-bottom: 20px;
+  position: sticky;
+  top: 100px;
+  background-color: #eee;
+}
+
+.reservation__title {
+  flex: 1 1;
+  order: -1;
+  color: lightgrey;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.hover__color--blue:hover,
+.hover__color--steelblue:hover,
+.hover__color--orange:hover {
+  color: var(--hover-color, rgba(84, 124, 243, 0.8));
+}
+
+.reservation__title-input {
+  display: none;
+}
+
+.reservation__content-wrap {
+  display: none;
+  width: 100%;
+}
+
+.reservation__title:has(:checked) {
+  color: black;
+  border: 1px solid #eee;
+}
+
+.reservation__title:has(:checked) + .reservation__content-wrap {
+  display: block;
+}
+
+.reservation__content {
+  margin-bottom: 20px;
+  padding: 10px 10% 30px 10%;
+  background-color: rgb(84, 124, 243);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1.6rem;
+}
+
+.reservation__content--steelblue {
+  background-color: steelblue;
+}
+
+.reservation__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__title {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.reservation__header__title {
+  text-decoration: none;
+  color: inherit;
+}
+
+.reservation__header__title::before,
+.reservation-history__header__title::before {
+  content: "";
+  background: url(../../images/clock.svg) no-repeat;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  padding-left: 50px;
+}
+
+.reservation-history__header__title::before {
+  background: url(../../images/clock_steelblue.svg) no-repeat;
+}
+
+.reservation__header-button {
+  display: flex;
+  align-items: center;
+}
+
+.header__form:not(:nth-child(1)) {
+  margin-left: 15px;
+}
+
+.form__button--edit,
+.form__button--cancel,
+.form__button--review {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.form__button-img {
+  width: 25px;
+  height: 25px;
+}
+
+.form__button-img:hover {
+  opacity: 0.6;
+}
+
+.favorite__title {
+  padding-left: 5px;
+  margin: 0;
+}
+
+.favorite__wrap {
+  width: 58%;
+}
+
+.shop__wrap {
+  padding: 5px 10px 0 5px;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.table__header {
+  width: 95px;
+  text-align: left;
+  font-weight: normal;
+  padding: 5px 0;
+}
+
+.mobile-favorite__title,
+.mobile-favorite__wrap {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .user__name {
+    margin: 0 auto;
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .reservation__wrap {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .reservation__content {
+    max-width: 400px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+
+  .reservation__title {
+    text-align: center;
+  }
+
+  .mobile-favorite__title {
+    display: block;
+  }
+
+  .favorite__wrap {
+    display: none;
+  }
+
+  .reservation__title:has(:checked) + .mobile-favorite__wrap {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px 0;
+  }
+
+  .table__header {
+    width: 70px;
+  }
+}
