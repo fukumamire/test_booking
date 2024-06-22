@@ -42,9 +42,27 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
-
-  public function favorites()
+  public function favorite(Shop $shop)
   {
-    return $this->belongsToMany(Shop::class, 'favorites');
+    $this->favorites()->attach($shop->id);
+  }
+
+  public function unfavorite(Shop $shop)
+  {
+    $this->favorites()->detach($shop->id);
+  }
+
+  public function toggleFavorite(Shop $shop)
+  {
+    if ($this->hasFavorited($shop)) {
+      $this->unfavorite($shop);
+    } else {
+      $this->favorite($shop);
+    }
+  }
+
+  public function hasFavorited(Shop $shop)
+  {
+    return $this->favorites->contains($shop->id);
   }
 }
