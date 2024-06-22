@@ -46,11 +46,17 @@ Route::get('/', function () {
 Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 // 検索機能
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
-Route::post('/favorite/{shop}', [ShopController::class, 'favorite'])->name('favorite');
-Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
-//2024/6/17　便宜　詳細画面
-Route::view('/detail', 'detail')->name('shop.detail');
+
+Route::post(
+    '/favorite/{shop_id}',
+    [ShopController::class, 'favorite']
+)->name('favorite');
+Route::delete('/unfavorite/{shop_id}', [ShopController::class, 'unfavorite'])->name('unfavorite');
+
+
+
+//2024/6/17店舗詳細＆予約画面
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
 
 
@@ -61,10 +67,10 @@ Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.deta
 
 // routes/web.php
 Route::get('/mypage', function () {
-    return view('mypage.mypage');
+    return view('mypage.my_page');
 })->name('mypage');
 
 
 // Route::get('/mypage', function () {
-//     return view('mypage.mypage');
+//     return view('mypage.my_page');
 // })->middleware('auth')->name('mypage');
