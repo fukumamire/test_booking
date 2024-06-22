@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +49,16 @@ Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 
 
-Route::post(
-    '/favorite/{shop_id}',
-    [ShopController::class, 'favorite']
-)->name('favorite');
-Route::delete('/unfavorite/{shop_id}', [ShopController::class, 'unfavorite'])->name('unfavorite');
+Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
+Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
+Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
+
+
+// Route::post(
+//     '/favorite/{shop_id}',
+//     [ShopController::class, 'favorite']
+// )->name('favorite');
+// Route::delete('/unfavorite/{shop_id}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
 
 
@@ -65,7 +71,7 @@ Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.deta
 
 
 
-// routes/web.php
+// マイページ
 Route::get('/mypage', function () {
     return view('mypage.my_page');
 })->name('mypage');
