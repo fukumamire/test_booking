@@ -42,20 +42,19 @@ class BookingController extends Controller
   }
 
   /**
-   * 予約を更新する.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  \App\Models\Booking  $booking
-   * @return \Illuminate\Http\RedirectResponse
+   * 予約を更新する
    */
   public function update(Request $request, Booking $booking)
   {
     $validatedData = $request->validate([
       // ここでバリデーションルールを定義
       'date' => 'required|date',
-      'time' => 'required',
+      'time' => 'required|date_format:H:i',
       'number_of_people' => 'required|integer',
-      // 他のフィールドに応じてバリデーションルールを追加
+    ], [
+      'date.required' => '予約日は必須です',
+      'time.required' => '予約時間は必須です',
+      'number_of_people.required' => '人数は必須です',
     ]);
 
     $booking->update($validatedData);
@@ -64,31 +63,31 @@ class BookingController extends Controller
   }
 
   /**
-   * 予約をキャンセルする.
-   *
-   * @param  \App\Models\Booking  $booking
-   * @return \Illuminate\Http\RedirectResponse
+   * 予約をキャンセルする
    */
   public function destroy(Booking $booking)
   {
-    $booking->delete();
-
-    return redirect()->route('mypage')->with('success', '予約をキャンセルしました');
+    try {
+      $booking->delete();
+      return redirect()->route('mypage')->with('success', '予約をキャンセルしました');
+    } catch (\Exception $e) {
+      return redirect()->route('mypage')->with('error', '予約のキャンセルに失敗しました。もう一度試してください。');
+    }
   }
 
-  /public function favorite(Shop $shop)
-{
+  public function favorite(Shop $shop)
+  {
     $user = Auth::user();
     $user->favorite($shop);
 
     return redirect()->route('mypage')->with('success', 'お気に入りを追加しました');
-}
+  }
 
-public function unfavorite(Shop $shop)
-{
+  public function unfavorite(Shop $shop)
+  {
     $user = Auth::user();
     $user->unfavorite($shop);
 
     return redirect()->route('mypage')->with('success', 'お気に入りを削除しました');
-}
+  }
 }

@@ -26,8 +26,14 @@ class Shop extends Model
     return $this->hasMany(ShopImage::class);
   }
 
-  public function favorites()
+  public function favoritedBy()
   {
-    return $this->belongsToMany(User::class, 'favorites');
+    return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+  }
+
+  // ユーザーがその店舗をお気に入り登録しているか
+  public function isFavoriteBy(User $user)
+  {
+    return $this->favoritedBy->contains($user->id);
   }
 }

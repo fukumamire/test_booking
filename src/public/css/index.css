@@ -161,26 +161,6 @@
   opacity: 0.8;
 }
 
-.shop__button-favorite-btn {
-  display: inline-block;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  border: none;
-  background-color: #fff;
-  background: url("path_to_favorite_icon") no-repeat center center;
-  background-size: contain;
-}
-
-.shop__button-favorite-btn.favorite {
-  background: url("path_to_favorite_active_icon") no-repeat center center;
-  background-size: contain;
-}
-
-.shop__button-favorite-btn.not-favorite:hover {
-  opacity: 0.6;
-}
-
 /* お気に入り */
 .heart {
   width: 100px;
