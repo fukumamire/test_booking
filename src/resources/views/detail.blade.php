@@ -36,8 +36,19 @@
   </div>
 
   <div class="reservation-form">
-    <form id="reservationForm" action="" method="post" class="@guest not-authenticated @endguest">
+    @if ($errors->any())
+      <div class="alert alert-danger">
+          <ul>
+              @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+      </div>
+    @endif
+    
+    <form id="reservationForm" data-login-url="{{ route('request_login') }}" action="{{ route('bookings.store') }}" method="post" class="@guest not-authenticated @endguest">
       @csrf
+      <input type="hidden" name="shop_id" value="{{ $shop->id }}">
       <h2 class="reservation-title">予約</h2>
 
       <input type="date" name="date" class="form-input-date" value="{{ request()->is('*edit*')? $reservation->date : '' }}" id="datePicker">
@@ -55,10 +66,10 @@
       </select>
 
       <div class="reservation-summary">
-        <p>Shop:{{ $shop->name }} </p>
-        <p>Date: <span id="dateSummary"></span></p>
-        <p>Time: <span id="timeSummary"></span></p>
-        <p>Number: <span id="numberSummary"></span></p>
+        <p>Shop{{ $shop->name }} </p>
+        <p>Date <span id="dateSummary"></span></p>
+        <p>Time <span id="timeSummary"></span></p>
+        <p>Number<span id="numberSummary"></span></p>
       </div>
 
       <button type="submit" class="reservation-button">予約する</button>

@@ -23,23 +23,60 @@ class BookingController extends Controller
       ->get();
     $histories = Booking::where('user_id', $user->id)
       ->where('status', 'completed')
-      ->get();
+      ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
     $shops = Shop::all(); // お気に入り店舗用のデータ
     $favorites = $user->favorites->pluck('shop_id')->toArray(); // お気に入り店舗のIDを取得
 
-    return view('my_page', compact('bookings', 'histories', 'shops', 'favorites'));
+    return view('mypage.my_page', compact('bookings', 'histories', 'shops', 'favorites'));
   }
 
-  /**
-   * 予約を編集するためのページを表示する.
-   *
-   * @param  \App\Models\Booking  $booking
-   * @return \Illuminate\View\View
-   */
-  public function edit(Booking $booking)
+
+  public function store(Request $request)
   {
-    return view('bookings.edit', compact('booking'));
+    // ログインチェック
+    if (!Auth::check()) {
+      return redirect()->route('request_login');
+    }
+
+    $validatedData = $request->validate([
+      'date' => 'required|date',
+      'time' => 'required|date_format:H:i',
+      'number_of_people' => 'required|integer',
+      'shop_id' => 'required|exists:shops,id', // shop_id が shops テーブルに存在するかを確認
+    ], [
+      'date.required' => '予約日は必須です。',
+      'time.required' => '予約時間は必須です。',
+      'time.date_format' => '予約時間の形式が正しくありません。',
+      'number_of_people.required' => '人数は必須です。',
+      'number_of_people.integer' => '人数は整数で入力してください。',
+      'shop_id.required' => '店舗を選択してください。',
+      'shop_id.exists' => '選択された店舗は存在しません。',
+    ]);
+
+    // 予約の作成
+    $booking = new Booking;
+    $booking->user_id = Auth::id(); // ログインユーザーのIDを設定
+    $booking->shop_id = $request->shop_id; // リクエストから shop_id を設定
+    $booking->date = $request->date;
+    $booking->time = $request->time;
+    $booking->number_of_people = $request->number_of_people;
+    $booking->status = Booking::STATUS_ACTIVE; // 予約状態を 'active' に設定
+    $booking->save();
+
+    // 予約成功後のリダイレクト
+    return redirect()->route('mypage')->with('success', '予約が完了しました');
   }
+
+  // /**編集ページ今はなし
+  //  * 予約を編集するためのページを表示する.
+  //  *
+  //  * @param  \App\Models\Booking  $booking
+  //  * @return \Illuminate\View\View
+  //  */
+  // public function edit(Booking $booking)
+  // {
+  //   return view('mypage.my_page', compact('booking'));
+  // }
 
   /**
    * 予約を更新する

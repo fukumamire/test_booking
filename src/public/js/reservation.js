@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (form.classList.contains("not-authenticated")) {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
-      window.location.href = "{{ route('request_login') }}";
+      window.location.href = form.dataset.loginUrl;
     });
   }
 
