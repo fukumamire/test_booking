@@ -35,7 +35,7 @@ Route::get('/thanks', function () {
 });
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
-Route::view('/done', 'done');
+Route::view('/done', 'done')->name('done');
 
 
 //会員登録画面を作成するために便宜　店舗一覧

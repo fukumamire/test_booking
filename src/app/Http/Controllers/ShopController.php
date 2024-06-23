@@ -62,7 +62,6 @@ class ShopController extends Controller
   public function detail($shopId)
   {
     $backRoute = url('/');
-
     $shop = Shop::find($shopId); // Eloquentを使用して店舗情報を取得
     return view('detail', compact('shop', 'backRoute'));
   }
