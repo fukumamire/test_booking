@@ -24,6 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .querySelector('select[name="number"]')
     .addEventListener("change", function () {
-      document.getElementById("numberSummary").textContent = this.value;
+      document.getElementById("numberSummary").textContent = this.value + "人";;
     });
 });
