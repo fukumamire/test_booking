@@ -35,40 +35,49 @@
     <p class="shop-description">{{ $shop->outline }}</p>
   </div>
 
-  <form id="bookingForm" data-login-url="{{ route('request_login') }}" action="{{ route('bookings.store') }}" method="post" class="@guest not-authenticated @endguest">
-    @csrf
-    <input type="hidden" name="shop_id" value="{{ $shop->id }}">
-    <h2 class="booking-title">予約</h2>
+  <div class="reservation-form">
+    @if ($errors->any())
+      <div class="alert alert-danger">
+          <ul>
+              @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+      </div>
+    @endif
+    
+  <form id="reservationForm" data-login-url="{{ route('request_login') }}" action="{{ route('bookings.store') }}" method="post" class="@guest not-authenticated @endguest">
+      @csrf
+      <input type="hidden" name="shop_id" value="{{ $shop->id }}">
+      <h2 class="reservation-title">予約</h2>
 
-    <label for="datePicker">日付</label>
-    <input type="date" name="date" class="form-input-date" value="{{ request()->is('*edit*')? $booking->date : '' }}" id="datePicker">
-
-    <label for="timeSelect">時間</label>
-    <select name="time" id="timeSelect" class="form-input">
+      <input type="date" name="date" class="form-input-date" value="{{ request()->is('*edit*')? $reservation->date : '' }}" id="datePicker">
+      <select name="time" class="form-input">
         <option value="" disabled selected>-- 時間を選択してください --</option>
-        @foreach (['18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'] as $time)
-            <option value="{{ $time }}" {{ request()->is('*edit*') && $time == date('H:i', strtotime($booking->time)) ? 'selected' : '' }}>{{ $time }}</option>
+        @foreach (['18:30','19:00','19:30','20:00', '20:30', '21:00', '21:30', '22:00'] as $time)
+        <option value="{{ $time }}" {{ request()->is('*edit*') && $time == date('H:i', strtotime($reservation->time)) ? 'selected' : '' }}>{{ $time }}</option>
         @endforeach
-    </select>
-
-    <label for="numberSelect">人数</label>
-    <select name="number" id="numberSelect" class="form-input">
-        <option value="" disabled selected>-- 人数を選択してください --</option>
+      </select>
+      <select name="number" class="form-input">
+        <option value="" disabled selected>--人数を選択してください --</option>
         @foreach (range(1, 10) as $number)
-            <option value="{{ $number }}" {{ request()->is('*edit*') && $number == $booking->number ? 'selected' : '' }}>{{ $number }}人</option>
+        <option value="{{ $number }}" {{ request()->is('*edit*') && $number == $reservation->number ? 'selected' : '' }}>{{ $number }}人</option>
         @endforeach
-    </select>
+      </select>
 
-    <div class="booking-summary">
-        <p>ショップ: {{ $shop->name }}</p>
-        <p>日付: <span id="dateSummary"></span></p>
-        <p>時間: <span id="timeSummary"></span></p>
-        <p>人数: <span id="numberSummary"></span></p>
-    </div>
+      <div class="reservation-summary">
+        <p>Shop{{ $shop->name }} </p>
+        <p>Date <span id="dateSummary"></span></p>
+        <p>Time <span id="timeSummary"></span></p>
+        <p>Number<span id="numberSummary"></span></p>
+      </div>
 
-    <button type="submit" class="booking-button">予約する</button>
-</form>
+      <button type="submit" class="reservation-button">予約する</button>
+    </form>
+  </div>
+</div>
+@endsection
 
 @section('script')
-<script src="{{ asset('js/booking.js') }}"></script>
+<script src="{{ asset('js/reservation.js') }}"></script>
 @endsection
