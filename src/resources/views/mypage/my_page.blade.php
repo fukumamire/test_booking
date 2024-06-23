@@ -20,7 +20,7 @@
   </div>
   @endif
 
-  <p class="user__name">{{ Auth::user()->name }}さん</p>
+  {{-- <p class="user__name">{{ Auth::user()->name }}さん</p> --}}
   <div class="mypage__wrap">
     <div class="booking__wrap">
       <div class="booking__tab">
@@ -29,7 +29,7 @@
           予約状況
         </label>
         <div class="booking__content-wrap">
-          @foreach ($bookings as $booking)
+          @foreach ($bookings ?? '' as $booking)
           @include('partials.booking', ['booking' => $booking, 'loopIteration' => $loop->iteration])
           @endforeach
         </div>
