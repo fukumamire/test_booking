@@ -65,11 +65,13 @@
   margin-bottom: 20px;
   border: 1px solid transparent;
   border-radius: 4px;
+  background: white;
 }
 
 .alert-danger {
   border-color: #ebccd1;
   color: #a94442;
+  font-weight: bold;
 }
 
 .reservation-form {
@@ -94,6 +96,7 @@
   padding: 10px;
   border-radius: 5px;
   border: none;
+  font-size: 20px;
 }
 
 .form-input {
@@ -103,6 +106,7 @@
   padding: 10px;
   border-radius: 5px;
   border: none;
+  font-size: 20px;
 }
 
 .reservation-summary {
@@ -115,6 +119,11 @@
 
 .reservation-summary p {
   margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.shopSummary,.date-summary,.timeSummary,.numberSummary{
+  padding-left: 3em;/* フォントサイズに基づくスペースを提供 */
 }
 
 /* 「予約する」ボタンが青色の枠の端から端まで広がるようにするために、ボタンのCSSを調整 */
