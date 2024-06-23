@@ -35,7 +35,7 @@ Route::get('/thanks', function () {
 });
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
-Route::view('/done', 'done')->name('done');
+Route::view('/done', 'done');
 
 
 //会員登録画面を作成するために便宜　店舗一覧
@@ -47,6 +47,10 @@ Route::get('/', function () {
 Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 // 検索機能
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
+
+
+
+
 
 
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
@@ -67,9 +71,6 @@ Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.deta
 
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
 
-// 最終版？？予定
-// Route::get('/detail/{shop_id}', [ShopController::class, 'detail'])->name('shop.detail');
-
 
 
 // マイページ
@@ -79,6 +80,7 @@ Route::get('/mypage', function () {
 })->name('mypage');
 
 Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage');
+// ->middleware('auth');
 
 // Route::get('/mypage', function () {
 //     return view('mypage.my_page');
