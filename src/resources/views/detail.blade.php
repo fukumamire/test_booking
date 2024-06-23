@@ -66,10 +66,10 @@
       </select>
 
       <div class="reservation-summary">
-        <p>Shop{{ $shop->name }} </p>
-        <p>Date <span id="dateSummary"></span></p>
-        <p>Time <span id="timeSummary"></span></p>
-        <p>Number<span id="numberSummary"></span></p>
+        <p>Shop&emsp;<span id="shopSummary">{{ $shop->name }}</span></p>
+        <p>Date&emsp;<span id="dateSummary"></span></p>
+        <p>Time&emsp;<span id="timeSummary"></span></p>
+        <p>Number&emsp;<span id="numberSummary"></span></p>
       </div>
 
       <button type="submit" class="reservation-button">予約する</button>
