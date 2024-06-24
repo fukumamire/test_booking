@@ -49,12 +49,13 @@ Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 
 
-
-
-
+// マイページ関係
+Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
+
 Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
+
 Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
 
 
