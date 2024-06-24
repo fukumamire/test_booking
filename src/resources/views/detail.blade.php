@@ -58,7 +58,7 @@
     <option value="{{ $time }}">{{ $time }}</option>
     @endforeach
   </select>
-  <select name="number" class="form-input">
+  <select name="number_of_people" class="form-input">
     <option value="" disabled selected>--人数を選択してください --</option>
     @foreach (range(1, 10) as $number)
     <option value="{{ $number }}">{{ $number }}人</option>

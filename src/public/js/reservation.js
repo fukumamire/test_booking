@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   document
-    .querySelector('select[name="number"]')
+    .querySelector('select[name="number_of_people"]')
     .addEventListener("change", function () {
-      document.getElementById("numberSummary").textContent = this.value + "人";;
+      document.getElementById("numberSummary").textContent = this.value + "人";
     });
 });
