@@ -30,11 +30,11 @@
         </label>
         <div class="booking__content-wrap">
           @foreach ($bookings ?? '' as $booking)
-          @include('partials.booking', ['booking' => $booking, 'loopIteration' => $loop->iteration])
+          @include('partials.bookings', ['booking' => $booking, 'loopIteration' => $loop->iteration])
           @endforeach
         </div>
 
-        <label class="booking__title hover__color--steelblue">
+        {{-- <label class="booking__title hover__color--steelblue">
           <input type="radio" name="tab" class="booking__title-input">
           予約履歴
         </label>
@@ -42,7 +42,7 @@
           @foreach ($histories as $booking)
           @include('partials.booking_history', ['booking' => $booking, 'loopIteration' => $loop->iteration])
           @endforeach
-        </div>
+        </div> --}}
 
         <label class="booking__title hover__color--orange mobile-favorite__title">
           <input type="radio" name="tab" class="booking__title-input">お気に入り店舗

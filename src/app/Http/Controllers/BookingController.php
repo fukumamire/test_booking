@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class BookingController extends Controller
 {
   /**
-   * マイページを表示する.
+   * マイページ全体を表示する.
    *
    * @return \Illuminate\View\View
    */
@@ -126,5 +126,11 @@ class BookingController extends Controller
     $user->unfavorite($shop);
 
     return redirect()->route('mypage')->with('success', 'お気に入りを削除しました');
+  }
+
+  // 指定して予約した詳細　マイページ
+  public function show(Booking $booking)
+  {
+    return view('mypape.my_page', compact('booking'));
   }
 }

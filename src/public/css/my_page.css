@@ -43,7 +43,6 @@
 }
 
 .hover__color--blue:hover,
-.hover__color--steelblue:hover,
 .hover__color--orange:hover {
   color: var(--hover-color, rgba(84, 124, 243, 0.8));
 }
