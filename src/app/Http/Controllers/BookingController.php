@@ -64,7 +64,7 @@ class BookingController extends Controller
     $booking->save();
 
     // 予約成功後のリダイレクト
-    return redirect()->route('mypage')->with('success', '予約が完了しました');
+    return redirect()->route('done');
   }
 
   // /**編集ページ今はなし
