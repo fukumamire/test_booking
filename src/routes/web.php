@@ -50,13 +50,32 @@ Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.sear
 
 
 // マイページ関係
+
+Route::get('/mypage', function () {
+    return view('mypage.my_page');
+})->name('mypage');
+
+// ログインしているユーザーのみがマイページにアクセスできるようにする
+Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')->middleware('auth');
+
+
+
 Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
 
+// 予約編集
+Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+
+// 予約をキャンセルするルートの定義
+Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'])->name('bookings.cancel');
+
+
 Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
 
 Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
+
+
 
 
 // Route::post(
@@ -71,18 +90,3 @@ Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->n
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
 
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
-
-
-
-// マイページ
-
-Route::get('/mypage', function () {
-    return view('mypage.my_page');
-})->name('mypage');
-
-Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage');
-// ->middleware('auth');
-
-// Route::get('/mypage', function () {
-//     return view('mypage.my_page');
-// })->middleware('auth')->name('mypage');

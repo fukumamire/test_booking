@@ -21,6 +21,6 @@
   <div class="booking__details">
     <p>予約日時: {{ $booking->date }} {{ $booking->time }}</p>
     <p>人数: {{ $booking->number_of_people }}人</p>
-    <p>ステータス: {{ $booking->status }}</p>
+    <p>ステータス: {{ $booking->status}}</p>
   </div>
 </div>

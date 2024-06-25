@@ -20,7 +20,7 @@
   </div>
   @endif
 
-  {{-- <p class="user__name">{{ Auth::user()->name }}さん</p> --}}
+  <p class="user__name">{{ Auth::user()->name }}さん</p>
   <div class="mypage__wrap">
     <div class="booking__wrap">
       <div class="booking__tab">
