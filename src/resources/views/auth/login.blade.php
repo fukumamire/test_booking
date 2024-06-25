@@ -10,7 +10,7 @@
     <div class="login-header">
       <h2>Login</h2>
     </div>
-    <form action="/login" method="post" class="login-form">
+    <form action="{{ route('login') }}" method="post" class="login-form">
       @csrf
       <div class="form-group">
         <img src="auth-img/mail.png" alt="mailアイコン"  width="30">
