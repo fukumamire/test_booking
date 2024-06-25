@@ -36,6 +36,6 @@ class Booking extends Model
       self::STATUS_ACTIVE => '予約中',
       self::STATUS_CANCELLED => 'キャンセル済み',
       self::STATUS_COMPLETED => '完了',
-    ][$this->status] ?? '不明';
+    ][$this->attributes['status']] ?? '不明';
   }
 }
