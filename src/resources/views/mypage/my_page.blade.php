@@ -53,8 +53,8 @@
       <p class="user__name">{{ Auth::user()->name }}さん</p>
       <p class="favorite__title">お気に入り店舗</p>
       <div class="shop__wrap">
-        @foreach ($shops as $shop)
-          @include('partials.shop', ['shop' => $shop])
+        @foreach ($favoriteShops as $favoriteShop)
+          @include('partials.shop', ['shop' => $favoriteShop])
         @endforeach
       </div>
     </div>
