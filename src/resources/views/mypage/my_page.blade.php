@@ -53,13 +53,8 @@
       <p class="user__name">{{ Auth::user()->name }}さん</p>
       <p class="favorite__title">お気に入り店舗</p>
       <div class="shop__wrap">
-        @foreach ($favorites as $favorite)
-          @php
-            $shop = $shops->firstWhere('id', $favorite->shop_id);
-          @endphp
-          @if ($shop)
-            @include('partials.shop', ['shop' => $shop, 'favorites' => $favorites])
-          @endif
+        @foreach ($shops as $shop)
+          @include('partials.shop', ['shop' => $shop])
         @endforeach
       </div>
     </div>

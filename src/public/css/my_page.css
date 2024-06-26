@@ -6,6 +6,7 @@
 
 .mypage__wrap {
   display: flex;
+  margin-top: 70px;
   justify-content: space-between;
   width: 100%;
 }

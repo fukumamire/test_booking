@@ -24,12 +24,12 @@ class BookingController extends Controller
     $histories = Booking::where('user_id', $user->id)
       ->where('status', 'completed')
       ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
-    $shops = Shop::all(); // お気に入り店舗用のデータ
-    $favorites = $user->favorites->pluck('shop_id')->toArray(); // お気に入り店舗のIDを取得
 
-    return view('mypage.my_page', compact('bookings', 'histories', 'shops', 'favorites'));
+    // ユーザーのお気に入りの店舗を直接取得
+    $favoriteShops = $user->favorites()->with('shops')->get()->pluck('shops');
+
+    return view('mypage.my_page', compact('bookings', 'histories', 'favoriteShops'));
   }
-
 
   public function store(Request $request)
   {
