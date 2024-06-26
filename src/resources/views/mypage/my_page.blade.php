@@ -34,22 +34,13 @@
           @endforeach
         </div>
 
-        {{-- <label class="booking__title hover__color--steelblue">
+        <label class="booking__title hover__color--steelblue">
           <input type="radio" name="tab" class="booking__title-input">
           予約履歴
         </label>
         <div class="booking__content-wrap">
           @foreach ($histories as $booking)
           @include('partials.booking_history', ['booking' => $booking, 'loopIteration' => $loop->iteration])
-          @endforeach
-        </div> --}}
-
-        <label class="booking__title hover__color--orange mobile-favorite__title">
-          <input type="radio" name="tab" class="booking__title-input">お気に入り店舗
-        </label>
-        <div class="booking__content-wrap mobile-favorite__wrap">
-          @foreach ($shops as $shop)
-          @include('partials.shop', ['shop' => $shop, 'favorites' => $favorites])
           @endforeach
         </div>
       </div>
@@ -58,10 +49,16 @@
     <div class="favorite__wrap">
       <p class="favorite__title">お気に入り店舗</p>
       <div class="shop__wrap">
-        @foreach ($shops as $shop)
-        @include('partials.shop', ['shop' => $shop, 'favorites' => $favorites])
+        @foreach ($favorites as $favorite)
+          @php
+            $shop = $shops->firstWhere('id', $favorite->shop_id);
+          @endphp
+          @if ($shop)
+            @include('partials.shop', ['shop' => $shop, 'favorites' => $favorites])
+          @endif
         @endforeach
       </div>
     </div>
   </div>
-  @endsection
+</div>
+@endsection
