@@ -1,4 +1,3 @@
-{{-- resources/views/partials/shop.blade.php --}}
 <div class="shop-item">
     <h3>{{ $shop->name }}</h3>
     <p>{{ $shop->outline }}</p>
