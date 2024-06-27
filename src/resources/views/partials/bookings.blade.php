@@ -7,13 +7,13 @@
       <form method="POST" action="{{ route('bookings.edit', ['booking' => $booking->id]) }}" class="header__form">
         @csrf
         <button type="submit" class="form__button form__button--edit">
-          <img src="{{ asset('images/edit.svg') }}" alt="編集" class="form__button-img">
+          <img src="{{ asset('images/pencil.png') }}" alt="編集" class="form__button-img white-image">
         </button>
       </form>
       <form method="POST" action="{{ route('bookings.cancel', ['booking' => $booking->id]) }}" class="header__form">
         @csrf
         <button type="submit" class="form__button form__button--cancel">
-          <img src="{{ asset('images/cancel.svg') }}" alt="キャンセル" class="form__button-img">
+          <img src="{{ asset('images/cancel.png') }}" alt="キャンセル" class="form__button-img white-image">
         </button>
       </form>
     </div>
