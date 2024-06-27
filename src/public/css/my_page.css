@@ -1,3 +1,5 @@
+/*bookings.blade.php  shop.blade.phpも含む*/
+
 .container {
   display: flex;
   flex-direction: column;
@@ -109,9 +111,9 @@
   padding-left: 50px;
 }
 
-.booking-history__header__title::before {
+/* .booking-history__header__title::before {
   background: url(../../images/clock_steelblue.svg) no-repeat;
-}
+} */
 
 .booking__header-button {
   display: flex;
@@ -140,9 +142,17 @@
 }
 
 .white-image {
-  /* アイコンの色を設定 */
+  /* アイコン（時計　キャンセル）反転させて白くを設定 */
   filter: brightness(0) invert(1);
 }
+
+.shop-label,.date-label,.time-label {
+  margin-right: 3.3em; /* 「Shop」項目と店名等との間にスペース*/
+}
+.number-label{
+  margin-right: 2.0em;
+}
+
 
 .favorite__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);

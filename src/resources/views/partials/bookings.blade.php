@@ -15,15 +15,15 @@
     </div>
   </div>
   <div class="booking__details">
-    <p>Shop {{ $booking->shop->name }}</p>
-    <p>Date {{ $booking->date }} </p>
-    <p>Time
+    <p><span class="shop-label">Shop </span>{{ $booking->shop->name }}</p>
+    <p><span class="date-label">Date</span> {{ $booking->date }} </p>
+    <p><span class="time-label">Time</span>
       @if($booking->time instanceof \DateTime)
         {{ $booking->time->format('H:i') }}
       @else
         {{ date('H:i', strtotime($booking->time)) }}
       @endif
     </p>
-    <p>Number {{ $booking->number_of_people }}人</p>
+    <p><span class="number-label">Number</span> {{ $booking->number_of_people }}人</p>
   </div>
 </div>
