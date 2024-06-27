@@ -65,10 +65,10 @@
     @endforeach
   </select>
   <div class="reservation-summary">
-    <p>Shop&emsp;<span id="shopSummary">{{ $shop->name }}</span></p>
-    <p>Date&emsp;<span id="dateSummary"></span></p>
-    <p>Time&emsp;<span id="timeSummary"></span></p>
-    <p>Number&emsp;<span id="numberSummary"></span></p>
+    <p>Shop<span id="shopSummary" class="shopSummary">{{ $shop->name }}</span></p>
+    <p>Date<span id="dateSummary" class="date-summary"></span></p>
+    <p>Time<span id="timeSummary" class="timeSummary"></span></p>
+    <p>Number<span id="numberSummary" class="numberSummary"></span></p>
   </div>
 
   <button type="submit" class="reservation-button">予約する</button>

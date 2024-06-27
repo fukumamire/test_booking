@@ -122,8 +122,12 @@
   font-size: 20px;
 }
 
-.shopSummary,.date-summary,.timeSummary,.numberSummary{
-  padding-left: 3em;/* フォントサイズに基づくスペースを提供 */
+.shopSummary,.date-summary,.timeSummary{
+  margin-left: 3.0em;/* フォントサイズに基づくスペースを提供 */
+}
+
+.numberSummary{
+  margin-left: 2.0em;
 }
 
 /* 「予約する」ボタンが青色の枠の端から端まで広がるようにするために、ボタンのCSSを調整 */
