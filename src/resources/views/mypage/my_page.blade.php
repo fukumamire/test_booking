@@ -36,7 +36,7 @@
             @endforeach
           </div>
 
-          <label class="booking__title hover__color--steelblue">
+          {{-- <label class="booking__title hover__color--steelblue">
             <input type="radio" name="tab" class="booking__title-input">
             予約履歴
           </label>
@@ -44,7 +44,7 @@
             @foreach ($histories as $booking)
             @include('partials.booking_history', ['booking' => $booking, 'loopIteration' => $loop->iteration])
             @endforeach
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>
