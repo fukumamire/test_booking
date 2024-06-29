@@ -73,7 +73,7 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 | id         | unsigned bigint  | 〇          |            | 〇       |             |
 | shop_id    | INT              |             | 〇         | 〇       | 〇           |
 | name       | VARCHAR          |             |            | 〇       |             |
-| created_at | timestamp        |             |            |          |             |
+| created_at | timestamp        |             |           |          |             |
 | updated_at | timestamp        |             |            |          |             |
 
 ### shop_images テーブル
