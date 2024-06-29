@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Pagination\Paginator;
 use App\Models\Shop;
 use App\Models\Area;
 use App\Models\Genre;
@@ -55,4 +56,28 @@ class ShopController extends Controller
     $genres = Genre::select('name')->distinct()->get(); // ジャンルの名前を選択し、重複を除去して取得
     return view('index', compact('shops', 'areas', 'genres')); // 'index'ビューに渡すデータを準備
   }
+
+  // 飲食店詳細ページ
+
+  public function detail($shopId)
+  {
+    $backRoute = url('/');
+    $shop = Shop::find($shopId); // Eloquentを使用して店舗情報を取得
+    return view('detail', compact('shop', 'backRoute'));
+  }
+  // public function detail(Request $request)
+  // {
+  //   $user = Auth::user();
+  //   $userId = Auth::id();
+  //   $shop = Shop::find($request->shop_id);
+  //   $review = Review::where('user_id', $userId)->where('shop_id', $shop->id)->first();
+  //   $from = $request->input('from');
+  //   // 戻りルートを設定
+  //   $backRoute = match ($from) {
+  //     'mypage' => '/mypage',
+  //     default => '/'
+  //   };
+
+  //   return view('detail', compact('user', 'shop', 'review', 'avgRating', 'countFavorites', 'backRoute'));
+  // }
 }

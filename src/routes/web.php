@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Route::get('/thanks', function () {
 });
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
-Route::view('/done', 'done');
+Route::view('/done', 'done')->name('done');
 
 
 //会員登録画面を作成するために便宜　店舗一覧
@@ -46,15 +47,44 @@ Route::get('/', function () {
 Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 // 検索機能
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
-Route::post('/favorite/{shop}', [ShopController::class, 'favorite'])->name('favorite');
-Route::delete('/unfavorite/{shop}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
+
+// マイページ関係
 
 Route::get('/mypage', function () {
-    return view('mypage.mypage');
+    return view('mypage.my_page');
 })->name('mypage');
 
+// ログインしているユーザーのみがマイページにアクセスできるようにする
+Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')->middleware('auth');
 
-// Route::get('/mypage', function () {
-//     return view('mypage.mypage');
-// })->middleware('auth')->name('mypage');
+
+
+Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+
+Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
+
+
+// 予約をキャンセルするルートの定義
+Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'])->name('bookings.cancel');
+
+
+Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
+
+Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
+
+
+
+
+// Route::post(
+//     '/favorite/{shop_id}',
+//     [ShopController::class, 'favorite']
+// )->name('favorite');
+// Route::delete('/unfavorite/{shop_id}', [ShopController::class, 'unfavorite'])->name('unfavorite');
+
+
+
+//2024/6/17店舗詳細＆予約画面
+Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
+
+Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');

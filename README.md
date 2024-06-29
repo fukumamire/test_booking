@@ -15,12 +15,12 @@ phpMyAdmin:：http://localhost:8080/
 
 ログイン機能、お気に入り追加/削除、検索
 
-###　店舗一覧について
+### 店舗一覧について
 ・店舗画像URLを複数DBに保存できるようになっています。
 
 
 ## 使用技術（実行環境）
-Laravel 8.x、PHP 7.4.9、docker、laravel-fortify
+Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 
 ## テーブル設計とER図
 ![ER図](https://github.com/fukumamire/Booking-restaurant/assets/136237535/45573023-a614-4c26-8210-94c88733e11a)

@@ -1,129 +1,115 @@
 .header__right {
-    display: flex;
-    width: 60%; 
-    justify-content: flex-end; 
-    margin-top: 40px;
-    margin-left: 40px;
+  display: flex;
+  width: 80%;
+  justify-content: flex-end;
+  margin-top: 40px;
+  margin-left: 40px;
 }
 
-.header__search{
-    display: flex;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px gray;
-    background-color: #fff;
-    font-size: 1.2rem;
-    width: 65%;
+.header__search {
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px gray;
+  background-color: #fff;
+  font-size: 1.2rem;
+  width: 65%;
 }
-
-
 
 .select-box__label {
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    width: 25%;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  width: 25%;
 }
 
-
 .select-box__label::after {
-    position: absolute;
-    right: 5px;
-    width: 10px;
-    height: 7px;
-    background-color: lightgray;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    content: "";
-    pointer-events: none;
+  position: absolute;
+  right: 5px;
+  width: 10px;
+  height: 7px;
+  background-color: lightgray;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  content: "";
+  pointer-events: none;
 }
 
 .select-box__item {
-    appearance: none;
-    width: 100%;
-    height: 20px;
-    padding-left: 8px;
-    border: none;
-    border-right: 1px solid #cccccc;
-    background-color: #fff;
-    color: black;
-    cursor: pointer;
-    font-size: 1.2rem;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  padding-left: 8px;
+  border: none;
+  border-right: 1px solid #cccccc;
+  background-color: #fff;
+  color: black;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 
 .select-box__item:focus {
-    outline: none;
+  outline: none;
 }
 
 .select-box__option {
-    height: 39px;
+  height: 39px;
 }
-
 
 /* 検索欄　アイコンと検索入力 */
 .search__item {
-    display: flex;
-    align-items: center; /* アイテムを垂直方向に中央揃え */
-    justify-content: flex-start; /* アイテムを左寄せ */
-    border-radius: 3px;
-    width: 70%; 
+  display: flex;
+  align-items: center; /* アイテムを垂直方向に中央揃え */
+  justify-content: flex-start; /* アイテムを左寄せ */
+  border-radius: 3px;
+  width: 80%;
 }
 
 .search__item-label {
-    display: flex;
-    align-items: center; /* アイコンとテキストを垂直方向に中央揃え */
-    width: calc(100% - 50px); /* アイコンの幅を考慮して調整 */
+  display: flex;
+  align-items: center; /* アイコンとテキストを垂直方向に中央揃え */
+  width: calc(100% - 50px); /* アイコンの幅を考慮して調整 */
 }
 
-
 .search__item-input {
-   flex-grow: 1; /* 入力フィールドが残りのスペースを占有するように */
-    height: 45px;
-    padding: 0 5px;
-    border: none;
-    outline: none;
+  flex-grow: 1; /* 入力フィールドが残りのスペースを占有するように */
+  height: 45px;
+  padding: 0 5px;
+  border: none;
+  outline: none;
 }
 
 .search__item-input::placeholder {
-    color: black;
-    font-weight: bold;
+  color: black;
+  font-weight: bold;
 }
 
 .search__item-button {
-    margin-right: 5px; /* アイコンと入力フィールドの間にスペースを設ける */
+  margin-right: 5px; /* アイコンと入力フィールドの間にスペースを設ける */
 }
-
-
 
 .shop__wrap {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;/* 子要素が1行に収まらない場合、新たな行に折り返して配置 */
-    padding: 0 10px;
-    margin: auto;
-    margin-top: 100px; 
+  display: flex;
+  justify-content: flex-start; /* アイテムを左揃えで配置 */
+  flex-wrap: wrap; /* 子要素が1行に収まらない場合、新たな行に折り返して配置 */
+  padding: 0 10px;
+  margin: auto;
+  margin-top: 100px;
 }
 
-
 .shop__content {
-    width: 260px;
-    height: 80%;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px gray;
-    background-color: #fff;
-    margin: 15px 0.5%;  /* 上下に15px、左右に0.5%のマージン */
-    /* 最初と最後の要素のマージンを0に */
-    &:first-child,
-    &:last-child {
-       margin: 15px 0.5%; /* 最初と最後の要素にも標準のマージンを適用 */
-    }
+  width: calc(100% / 4 - 20px); /* 4アイテムが並ぶように幅を調整 */
+  margin: 10px; /* 均等なマージンを設定 */
+  border: none;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px gray;
+  background-color: #fff;
 }
 
 .shop__image {
-    width: 100%;
-    height: 50%;
-    object-fit: cover;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 .shop__item {
@@ -133,243 +119,83 @@
 }
 
 .shop__title {
-    font-weight: bold;
-    font-size: 1.6rem;
-    margin: 5pt 0; /* 上下に5pxのマージンを追加 */
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin: 5pt 0; /* 上下に5pxのマージンを追加 */
 }
 
 .shop__tag {
-    display: flex;
-    font-size: 1.2rem;
-    margin-top: 5px;
-    margin-bottom: 5px;
+  display: flex;
+  font-size: 1.2rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .shop__tag-info {
-    margin: 0;
-    padding-right: 5px;
+  margin: 0;
+  padding-right: 5px;
 }
 
 .shop__button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
 }
 
 .shop__button-detail {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    background-color: rgb(33, 44, 103);
-    border: 1px solid rgb(63, 90, 242);
-    border-radius: 5px;
-    color: #fff;
-    padding: 0 16px;
-    height: 40px;
-    cursor: pointer;
-    font-size: 1.0rem;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  background-color: rgb(33, 44, 103);
+  border: 1px solid rgb(63, 90, 242);
+  border-radius: 5px;
+  color: #fff;
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
 .shop__button-detail:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
-
-.shop__button-favorite-btn {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    border: none;
-    background-color: #fff;
-    background: url('path_to_favorite_icon') no-repeat center center;
-    background-size: contain;
-}
-
-.shop__button-favorite-btn.favorite {
-    background: url('path_to_favorite_active_icon') no-repeat center center;
-    background-size: contain;
-}
-
-.shop__button-favorite-btn.not-favorite:hover {
-    opacity: 0.6;
-}
-
 
 /* お気に入り */
 .heart {
   width: 100px;
   height: 100px;
-  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png) no-repeat;
-  background-position: -10px  0;
+  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png)
+    no-repeat;
+  background-position: -10px 0;
   cursor: pointer;
-  border: none; 
+  border: none;
 }
 
-.heart:hover {
+.heart:hover,.heart-active:hover {
   background-position: -2810px 0;
   -webkit-transition: background 1s steps(28);
   transition: background 1s steps(28);
 }
 
-@media screen and (max-width: 768px) {
-    .header__right {
-        display: none;
-    }
+.heart-active {
+  background-position: -2810px 0;
+}
 
-    .drawer__hidden-search {
-        display: none;
-    }
+/* ページネーションのcustom　横並び */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
 
-    .header__right--hidden {
-        display: inline-block;
-    }
+.pagination li {
+  font-size: 1.2em; /* サイズを大きくします */
+  padding: 0.5rem 1rem; /* 内側のパディングを増やす */
+  border-radius: 5px; /* 角を丸くします */
+  background-color: #f8f9fa; /* 基本的な背景色 */
+}
 
-    .drawer__open-search {
-        display: flex;
-        height: 32px;
-        width: 32px;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        z-index: 101;
-        cursor: pointer;
-        background-color: rgb(63, 90, 242);
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-    }
-
-    .drawer__open:hover {
-        opacity: 0.8;
-    }
-
-    .drawer__open-search span {
-        content: url("../images/search.svg");
-        height: 20px;
-        width: 20px;
-        display: block;
-        transition: 0.2s;
-        position: absolute;
-    }
-
-    .search__content {
-        width: 100%;
-        height: 45%;
-        min-height: 250px;
-        position: fixed;
-        top: -100%;
-        left: 0;
-        z-index: 100;
-        background: #eee;
-        transition: 0.5s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .search__form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .search__select {
-        display: flex;
-        justify-content: center;
-        padding-top: 50px;
-    }
-
-    .select-box__label {
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-        margin: 0 10px;
-        height: 35px;
-        width: 110px;
-    }
-
-    .select-box__item {
-        border: none;
-        margin: 0 10px;
-        height: 35px;
-    }
-
-    .search__text {
-        display: block;
-        margin-top: 5px;
-        margin: 20px 0;
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 2px 2px 5px gray;
-        height: 35px;
-        width: 240px;
-    }
-
-    .search__item {
-        height: 35px;
-        width: 100%;
-    }
-
-    .sort__select {
-        display: block;
-        width: 240px;
-        margin-top: 5px;
-        margin-bottom: 20px;
-    }
-
-    .sort__label {
-        width: 100%;
-        margin: 0;
-    }
-
-    .sort__item {
-        margin: 0;
-    }
-
-    #drawer__input-search:checked ~ .drawer__open-search span {
-        content: url("../images/batsu.svg");
-    }
-
-    /* アイコンがクリックされたらメニューを表示 */
-    #drawer__input-search:checked ~ .search__content {
-        top: 0; /* メニューを画面に入れる */
-    }
-
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 98;
-    }
-
-    #drawer__input-search:checked ~ .overlay {
-        display: block;
-    }
-
-    .form__button {
-        margin: auto;
-        display: block;
-        background-color: rgb(63, 90, 242);
-        border: 1px solid rgb(63, 90, 242);
-        border-radius: 5px;
-        color: #fff;
-        padding: 3px 0;
-        width: 60px;
-        cursor: pointer;
-    }
-
-    .form__button:hover {
-        opacity: 0.8;
-    }
-
-    .shop__wrap {
-        justify-content: center;
-        gap: 15px 30px;
-    }
-
-
+.pagination li.active {
+  background-color: #007bff; /* 現在のページ番号に対して背景色を変更 */
+  color: white; /* テキスト色を白にします */
 }
