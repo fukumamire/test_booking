@@ -64,8 +64,6 @@ Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('boo
 
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
 
-// 予約編集
-Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
 
 // 予約をキャンセルするルートの定義
 Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'])->name('bookings.cancel');
