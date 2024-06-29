@@ -68,38 +68,6 @@ class BookingController extends Controller
     return redirect()->route('done');
   }
 
-  // /**編集ページ今はなし
-  //  * 予約を編集するためのページを表示する.
-  //  *
-  //  * @param  \App\Models\Booking  $booking
-  //  * @return \Illuminate\View\View
-  //  */
-  // public function edit(Booking $booking)
-  // {
-  //   return view('mypage.my_page', compact('booking'));
-  // }
-
-  /**
-   * 予約を更新する
-   */
-  public function update(Request $request, Booking $booking)
-  {
-    $validatedData = $request->validate([
-      // ここでバリデーションルールを定義
-      'date' => 'required|date',
-      'time' => 'required|date_format:H:i',
-      'number_of_people' => 'required|integer',
-    ], [
-      'date.required' => '予約日は必須です',
-      'time.required' => '予約時間は必須です',
-      'number_of_people.required' => '人数は必須です',
-    ]);
-
-    $booking->update($validatedData);
-
-    return redirect()->route('mypage')->with('success', '予約を更新しました');
-  }
-
   /**
    * 予約をキャンセルする
    */
