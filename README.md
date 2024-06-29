@@ -1,5 +1,5 @@
 # 飲食店予約アプリ
-
+<img width="1437" alt="shop_all" src="https://github.com/fukumamire/Booking-restaurant/assets/136237535/a9e04dd0-b233-4ffb-b932-ab726090c805">
 
 ## 作成した目的
 自社で予約サービスを持ちたい。
