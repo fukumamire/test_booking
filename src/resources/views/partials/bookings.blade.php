@@ -6,8 +6,9 @@
       <a href="{{ route('bookings.show', ['booking' => $booking->id]) }}" class="booking__header__title">
     </a>
     <div class="booking__header-button">
-      <form method="POST" action="{{ route('bookings.cancel', ['booking' => $booking->id]) }}" class="header__form">
+      <form id="cancelForm" method="POST" action="{{ route('bookings.cancel', ['booking' => $booking->id]) }}" class="header__form">
         @csrf
+        @method('DELETE')
         <button type="submit" class="form__button form__button--cancel">
           <img src="{{ asset('images/cancel.png') }}" alt="キャンセル" class="form__button-img white-image">
         </button>
@@ -27,3 +28,7 @@
     <p><span class="number-label">Number</span> {{ $booking->number_of_people }}人</p>
   </div>
 </div>
+
+@section('script')
+<script src="{{ asset('js/cancelBooking.js') }}"></script>
+@endsection
