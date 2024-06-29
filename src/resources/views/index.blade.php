@@ -10,8 +10,8 @@
     <label class="select-box__label">
       <select name="area" class="select-box__item">
         <option value="">All area</option>
-        @foreach ($areas?? [] as $area)
-        <option class="select-box__option" value="{{ $area->id }}" {{ request('area') == $area->id? 'selected' : '' }}>{{ $area->name }}</option>
+        @foreach ($areas ?? [] as $area)
+        <option class="select-box__option" value="{{ $area->id }}" {{ request('area') == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
         @endforeach
       </select>
     </label>
@@ -19,8 +19,8 @@
     <label class="select-box__label">
       <select name="genre" class="select-box__item">
         <option value="">All genre</option>
-        @foreach ($genres?? [] as $genre)
-        <option class="select-box__option" value="{{ $genre->name }}" {{ request('genre') == $genre->name? 'selected' : '' }}>{{ $genre->name }}</option>
+        @foreach ($genres ?? [] as $genre)
+        <option class="select-box__option" value="{{ $genre->name }}" {{ request('genre') == $genre->name ? 'selected' : '' }}>{{ $genre->name }}</option>
         @endforeach
       </select>
     </label>
@@ -34,7 +34,6 @@
     </div>
   </div>
 </form>
-
 @endsection
 
 @section('content')
@@ -62,7 +61,7 @@
       </div>
       <div class="shop__button">
         <a href="{{ route('shop.detail', ['shop' => $shop->id]) }}" class="shop__button-detail">詳しくみる</a>
-        <button class="heart {{ $shop->is_favorite ? 'favorite' : 'not-favorite' }}" aria-label="お気に入り"></button>
+        <button class="heart {{ $shop->is_favorite? 'heart-active' : 'heart' }}" data-shop-id="{{ $shop->id }}" aria-label="お気に入り" onclick="toggleFavorite(this, {{ $shop->id }}"></button>
       </div>
     </div>
   </div>
@@ -78,5 +77,5 @@
 @section('script')
 <script src="{{ asset('js/search.js') }}"></script>
 <script src="{{ asset('js/index.js') }}"></script>
-
+<script src="{{ asset('js/toggleFavorite.js') }}"></script>
 @endsection

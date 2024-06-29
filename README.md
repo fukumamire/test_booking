@@ -15,7 +15,7 @@ phpMyAdmin:：http://localhost:8080/
 
 ログイン機能、お気に入り追加/削除、検索
 
-### 店舗一覧について
+###　店舗一覧について
 ・店舗画像URLを複数DBに保存できるようになっています。
 
 
@@ -23,106 +23,6 @@ phpMyAdmin:：http://localhost:8080/
 Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 
 ## テーブル設計とER図
-
-## テーブル定義
-
-### users テーブル
-
-| カラム名   | 型             | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|----------------|-------------|------------|----------|-------------|
-| id         | bigint         | 〇          | 〇         | 〇       |             |
-| name       | VARCHAR        |             |            | 〇       |             |
-| email      | VARCHAR        |             | 〇         | 〇       |             |
-| password   | VARCHAR        |             |            | 〇       |             |
-| created_at | timestamp      |             |            | 〇       |             |
-| updated_at | timestamp      |             |            | 〇       |             |
-
-### shops テーブル
-
-| カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------------|-------------|------------|----------|-------------|
-| id         | unsigned bigint  | 〇          | 〇         | 〇       |             |
-| name       | VARCHAR          |             |            | 〇       |             |
-| outline    | TEXT             |             |            |          |             |
-| created_at | timestamp        |             |            |          |             |
-| updated_at | timestamp        |             |            |          |             |
-
-### shop_areas テーブル (中間テーブル)
-
-| カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------------|-------------|------------|----------|-------------|
-| id         | unsigned bigint  | 〇          | 〇         | 〇       |             |
-| shop_id    | unsigned bigint  |             | 〇         | 〇       | 〇           |
-| area_id    | unsigned bigint  |             | 〇         | 〇       | 〇           |
-| created_at | timestamp        |             |            |          |             |
-| updated_at | timestamp        |             |            |          |             |
-
-### areas テーブル
-
-| カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------------|-------------|------------|----------|-------------|
-| id         | unsigned bigint  | 〇          | 〇         | 〇       |             |
-| name       | VARCHAR          |             |            | 〇       |             |
-| created_at | timestamp        |             |            |          |             |
-| updated_at | timestamp        |             |            |          |             |
-
-### genres テーブル
-
-| カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------------|-------------|------------|----------|-------------|
-| id         | unsigned bigint  | 〇          |            | 〇       |             |
-| shop_id    | INT              |             | 〇         | 〇       | 〇           |
-| name       | VARCHAR          |             |            | 〇       |             |
-| created_at | timestamp        |             |           |          |             |
-| updated_at | timestamp        |             |            |          |             |
-
-### shop_images テーブル
-
-| カラム名       | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|----------------|------------------|-------------|------------|----------|-------------|
-| id             | unsigned bigint  | 〇          | 〇         | 〇       |             |
-| shop_id        | INT (bigint)     |             | 〇         | 〇       | 〇           |
-| shop_image_url | VARCHAR(255)     |             |            | 〇       |             |
-| created_at     | timestamp        |             |            | 〇       |             |
-| updated_at     | timestamp        |             |            | 〇       |             |
-
-### shop_bookings テーブル
-
-| カラム名   | 型         | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------|-------------|------------|----------|-------------|
-| id         |            | 〇          | 〇         | 〇       |             |
-| shop_id    |            |             |            | 〇       |             |
-| user_id    |            |             |            | 〇       |             |
-| created_at |            |             |            | 〇       |             |
-| updated_at |            |             |            | 〇       |             |
-
-### bookings テーブル
-
-| カラム名         | 型         | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------------|------------|-------------|------------|----------|-------------|
-| id               | INT(bigint)| 〇          |            | 〇       |             |
-| user_id          | INT(bigint)|             |            | 〇       |             |
-| shop_id          | INT(bigint)|             |            | 〇       |             |
-| date             | DATE       |             |            | 〇       |             |
-| time             | TIME       |             |            | 〇       |             |
-| number_of_people | INT        |             |            | 〇       |             |
-| status           | VARCHAR    |             |            | 〇       |             |
-| created_at       | timestamp  |             |            |          |             |
-| updated_at       | timestamp  |             |            |          |             |
-
-### favorites テーブル
-
-| カラム名   | 型         | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------|-------------|------------|----------|-------------|
-| id         | INT(bigint)| 〇          | 〇         |          |             |
-| user_id    | INT(bigint)|             |            | 〇       |             |
-| shop_id    | INT(bigint)|             |            | 〇       |             |
-| created_at | timestamp  |             |            |          |             |
-| updated_at | timestamp  |             |            |          |             |
-
-### ER図
-![ER図](https://github.com/fukumamire/Booking-restaurant/assets/136237535/45573023-a614-4c26-8210-94c88733e11a)
-
 
 # 環境構築
 ## Dockerビルド

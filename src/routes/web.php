@@ -45,9 +45,13 @@ Route::get('/', function () {
 
 
 Route::get('/', [ShopController::class, 'index'])->name('shops.index');
+
 // 検索機能
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 
+
+// お気に入りボタン　ハート
+Route::post('/shops/{shop}/toggle-favorite', [ShopController::class, 'toggleFavorite'])->name('shops.toggleFavorite');
 
 // マイページ関係
 
@@ -72,15 +76,6 @@ Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'
 Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
 
 Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
-
-
-
-
-// Route::post(
-//     '/favorite/{shop_id}',
-//     [ShopController::class, 'favorite']
-// )->name('favorite');
-// Route::delete('/unfavorite/{shop_id}', [ShopController::class, 'unfavorite'])->name('unfavorite');
 
 
 

@@ -36,4 +36,16 @@ class Shop extends Model
   {
     return $this->favoritedBy->contains($user->id);
   }
+
+
+  // お気に入り機能　ハートボタン　
+
+  public function toggleFavorite()
+  {
+    if ($this->is_favorite) {
+      $this->update(['is_favorite' => false]);
+    } else {
+      $this->update(['is_favorite' => true]);
+    }
+  }
 }
