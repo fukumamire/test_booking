@@ -53,6 +53,12 @@ Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.sear
 // お気に入りボタン　ハート
 Route::post('/shops/{shop}/toggle-favorite', [ShopController::class, 'toggleFavorite'])->name('shops.toggleFavorite');
 
+// お気に入りを追加
+Route::post('/shops/{shop}/favorite', [ShopController::class, 'favorite'])->name('favorite');
+
+// お気に入りを削除
+Route::delete('/shops/{shop}/unfavorite', [ShopController::class, 'unfavorite'])->name('unfavorite');
+
 // マイページ関係
 
 Route::get('/mypage', function () {
@@ -65,18 +71,11 @@ Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')-
 
 
 Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
-
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
 
 
 // 予約をキャンセルするルートの定義
 Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'])->name('bookings.cancel');
-
-
-Route::post('/favorite/{shop}', [BookingController::class, 'favorite'])->name('favorite');
-
-Route::delete('/unfavorite/{shop}', [BookingController::class, 'unfavorite'])->name('unfavorite');
-
 
 
 //2024/6/17店舗詳細＆予約画面

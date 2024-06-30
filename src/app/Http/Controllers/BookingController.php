@@ -112,22 +112,6 @@ class BookingController extends Controller
     }
   }
 
-  public function favorite(Shop $shop)
-  {
-    $user = Auth::user();
-    $user->favorite($shop);
-
-    return redirect()->route('mypage')->with('success', 'お気に入りを追加しました');
-  }
-
-  public function unfavorite(Shop $shop)
-  {
-    $user = Auth::user();
-    $user->unfavorite($shop);
-
-    return redirect()->route('mypage')->with('success', 'お気に入りを削除しました');
-  }
-
   // 指定して予約した詳細　マイページ
   public function show(Booking $booking)
   {

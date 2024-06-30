@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Shop extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['name', 'outline'];
+  protected $fillable = ['name', 'outline', 'is_favorite'];
 
   public function areas()
   {
@@ -31,21 +32,24 @@ class Shop extends Model
     return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
   }
 
-  // ユーザーがその店舗をお気に入り登録しているか
   public function isFavoriteBy(User $user)
   {
     return $this->favoritedBy->contains($user->id);
   }
 
-
-  // お気に入り機能　ハートボタン　
-
   public function toggleFavorite()
   {
-    if ($this->is_favorite) {
-      $this->update(['is_favorite' => false]);
-    } else {
-      $this->update(['is_favorite' => true]);
+    $user = Auth::user();
+
+    if ($user) {
+      if ($user->favorites->where('shop_id', $this->id)->exists()) {
+        $user->favorites->detach($this->id);
+        $this->is_favorite = false;
+      } else {
+        $user->favorites->attach($this->id);
+        $this->is_favorite = true;
+      }
+      $this->save();
     }
   }
 }
