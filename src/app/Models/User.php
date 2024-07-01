@@ -44,16 +44,19 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
+   // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
-    return $this->hasMany(Favorite::class);
+    return $this->hasMany(Favorite::class, 'user_id');
   }
 
+  // お気に入り登録
   public function favorite(Shop $shop)
   {
     $this->favorites()->create(['shop_id' => $shop->id]);
   }
 
+  // お気に入り解除
   public function unfavorite(Shop $shop)
   {
     $this->favorites()->where('shop_id', $shop->id)->delete();
@@ -69,7 +72,8 @@ class User extends Authenticatable
       $this->favorites()->create(['shop_id' => $shop->id]);
     }
   }
-
+  
+ // お気に入り登録しているかどうかを確認
   public function hasFavorited(Shop $shop)
   {
     return $this->favorites()->where('shop_id', $shop->id)->exists();
