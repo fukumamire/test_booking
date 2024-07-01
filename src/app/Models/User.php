@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Shop;
+use App\Models\Favorite;
 
 class User extends Authenticatable
 {
@@ -45,30 +46,32 @@ class User extends Authenticatable
 
   public function favorites()
   {
-    return $this->belongsToMany(Shop::class, 'favorites')->withTimestamps();
+    return $this->hasMany(Favorite::class);
   }
 
   public function favorite(Shop $shop)
   {
-    $this->favorites()->attach($shop->id);
+    $this->favorites()->create(['shop_id' => $shop->id]);
   }
 
   public function unfavorite(Shop $shop)
   {
-    $this->favorites()->detach($shop->id);
+    $this->favorites()->where('shop_id', $shop->id)->delete();
   }
 
   public function toggleFavorite(Shop $shop)
   {
-    if ($this->hasFavorited($shop)) {
-      $this->unfavorite($shop);
+    $favorite = $this->favorites()->where('shop_id', $shop->id)->first();
+
+    if ($favorite) {
+      $favorite->delete();
     } else {
-      $this->favorite($shop);
+      $this->favorites()->create(['shop_id' => $shop->id]);
     }
   }
 
   public function hasFavorited(Shop $shop)
   {
-    return $this->favorites->contains($shop->id);
+    return $this->favorites()->where('shop_id', $shop->id)->exists();
   }
 }
