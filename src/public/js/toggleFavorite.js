@@ -1,16 +1,13 @@
-// toggleFavorite.js
-
 async function toggleFavorite(button, shopId) {
   const isLoggedIn = await checkLoginStatus(); // ユーザーがログインしているかどうかを判定
 
   if (!isLoggedIn) {
-    window.location.href = '/request_login'; // ログインしていない場合はログインページへリダイレクト
+    window.location.href = '/request_login'; // ログインしていない場合は会員登録　ログインへリダイレクト
     return;
   }
 
-  const isFavorite = await checkIsFavorite(shopId); // お気に入り状態を判定
-  const url = isFavorite ? `/shops/${shopId}/unfavorite` : `/shops/${shopId}/favorite`;
-  const method = isFavorite ? 'DELETE' : 'POST';
+  const url = `/shops/${shopId}/toggle-favorite`; // 常にこのURLを使用
+  const method = 'POST'; // メソッドはPOST固定
 
   try {
     const response = await fetch(url, {
@@ -26,19 +23,13 @@ async function toggleFavorite(button, shopId) {
     if (data.success) {
       // UIの更新処理
       // 例: ボタンのクラスを切り替えるなど
-      button.classList.toggle('heart-active'); // ここではクラス名を適宜変更してください
+      button.classList.toggle('heart-active'); // ここではクラス名を適宜変更
     } else {
       console.error('Error toggling favorite:', data.error);
     }
   } catch (error) {
     console.error('Network error:', error);
   }
-}
-
-async function checkIsFavorite(shopId) {
-  const response = await fetch(`/api/shops/${shopId}/is-favorite`);
-  const data = await response.json();
-  return data.is_favorite;
 }
 
 async function checkLoginStatus() {
