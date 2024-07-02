@@ -19,8 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// 保護したいルートにauth:sanctumミドルウェアを適用
+Route::middleware('auth:sanctum')->get('/check-login-status', [UserController::class, 'checkLoginStatus']);
 
-Route::get('/check-login-status', [UserController::class, 'checkLoginStatus']);
+// Route::get('/check-login-status', [UserController::class, 'checkLoginStatus']);
 
 
 Route::get('/shops/{shop}/is-favorite', [ShopController::class, 'isFavorite']);
