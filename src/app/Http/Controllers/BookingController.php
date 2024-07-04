@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Favorite;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -21,14 +22,14 @@ class BookingController extends Controller
     $bookings = Booking::where('user_id', $user->id)
       ->where('status', 'active')
       ->get();
-    $histories = Booking::where('user_id', $user->id)
-      ->where('status', 'completed')
-      ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
+    // $histories = Booking::where('user_id', $user->id)
+    //   ->where('status', 'completed')
+    //   ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
 
     // ユーザーのお気に入りの店舗を直接取得
-    $favoriteShops = $user->favorites()->with('shops')->get()->pluck('shops');
-
-    return view('mypage.my_page', compact('bookings', 'histories', 'favoriteShops'));
+    $favoriteShops = Favorite::with('shop', 'shop.areas', 'shop.genres')->where('user_id', $user->id)->get();
+    // $favoriteShops = Favorite::where('user_id', $user->id)->get() ?? collect();
+    return view('mypage.my_page', compact('bookings', 'favoriteShops'));
   }
 
   public function store(Request $request)

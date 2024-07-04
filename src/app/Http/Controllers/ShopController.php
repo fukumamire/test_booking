@@ -60,118 +60,94 @@ class ShopController extends Controller
     return view('index', compact('shops', 'areas', 'genres')); // 'index'ビューに渡すデータを準備
   }
 
-  // お気に入りボタン
-
-  public function favorite(Shop $shop)
+  // お気に入りをトグルするメソッド
+  public function toggleFavorite(Shop $shop)
   {
     if (!Auth::check()) {
       return response()->json(['error' => 'Not authenticated'], 401);
     }
 
-    $favorite = new Favorite;
-    $favorite->shop_id = $shop->id;
-    $favorite->user_id = Auth::user()->id;
-    $favorite->save();
+    $user = Auth::user();
+    $shop->toggleFavorite($user);
 
-    return response()->json(['success' => true, 'is_favorite' => true]);
-  }
+    $isFavorite = $shop->isFavoriteBy($user);
 
-  public function unfavorite(Shop $shop)
-  {
-    if (!Auth::check()) {
-      return response()->json(['error' => 'Not authenticated'], 401);
-    }
-
-    $favorite = Favorite::where('shop_id', $shop->id)->where('user_id', Auth::user()->id)->first();
-    if ($favorite) {
-      $favorite->delete();
-      return response()->json(['success' => true, 'is_favorite' => false]);
-    }
-
-    return response()->json(['error' => 'Favorite not found'], 404);
+    return response()->json(['success' => true, 'is_favorite' => $isFavorite]);
   }
 
   // 現在の店舗がユーザーのお気に入りリストに含まれているかどうかを判定
-  public function isFavorite(Request $request, Shop $shop)
+  public function isFavorite(Shop $shop)
   {
     if (!Auth::check()) {
       return response()->json(['error' => 'Not authenticated'], 401);
     }
 
-    $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', Auth::id())->exists();
+    $isFavorite = $shop->isFavoriteBy(Auth::user());
     return response()->json(['is_favorite' => $isFavorite]);
   }
 
-  // お気に入りをトグルするメソッド
-  public function toggleFavorite(Request $request, Shop $shop)
-  {
-    $userId = auth()->id(); // 認証済みユーザーのIDを取得
-
-    if (!$userId) {
-      return response()->json(['error' => 'Not authenticated'], 401);
-    }
-
-    return DB::transaction(function () use ($shop, $userId) {
-      $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->first();
-
-      if ($isFavorite) {
-        $isFavorite->delete();
-        return ['success' => true, 'is_favorite' => false];
-      } else {
-        $favorite = new Favorite(['shop_id' => $shop->id, 'user_id' => $userId]);
-        $favorite->save();
-        return ['success' => true, 'is_favorite' => true];
-      }
-    });
-  }
-  // ログイン済みであれば、お気に入り登録できる状況
-  // public function toggleFavorite(Request $request, Shop $shop)
+  // お気に入りボタン
+  // public function favorite(Shop $shop)
   // {
-  //   $userId = auth()->id(); // 認証済みユーザーのIDを取得
-
-  //   // お気に入り状態のトグル処理
-  //   $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->first();
-
-  //   if ($isFavorite) {
-  //     // お気に入りから削除するロジック
-  //     $isFavorite->delete();
-  //     return response()->json(['success' => true, 'is_favorite' => false]);
-  //   } else {
-  //     // お気に入りに追加するロジック
-  //     $favorite = new Favorite;
-  //     $favorite->shop_id = $shop->id;
-  //     $favorite->user_id = $userId;
-  //     $favorite->save();
-  //     return response()->json(['success' => true, 'is_favorite' => true]);
+  //   if (!Auth::check()) {
+  //     return response()->json(['error' => 'Not authenticated'], 401);
   //   }
+
+  //   $favorite = new Favorite;
+  //   $favorite->shop_id = $shop->id;
+  //   $favorite->user_id = Auth::user()->id;
+  //   $favorite->save();
+
+  //   return response()->json(['success' => true, 'is_favorite' => true]);
   // }
 
+  // public function unfavorite(Shop $shop)
+  // {
+  //   if (!Auth::check()) {
+  //     return response()->json(['error' => 'Not authenticated'], 401);
+  //   }
 
+  //   $favorite = Favorite::where('shop_id', $shop->id)->where('user_id', Auth::user()->id)->first();
+  //   if ($favorite) {
+  //     $favorite->delete();
+  //     return response()->json(['success' => true, 'is_favorite' => false]);
+  //   }
 
+  //   return response()->json(['error' => 'Favorite not found'], 404);
+  // }
+
+  // // 現在の店舗がユーザーのお気に入りリストに含まれているかどうかを判定
+  // public function isFavorite(Request $request, Shop $shop)
+  // {
+  //   if (!Auth::check()) {
+  //     return response()->json(['error' => 'Not authenticated'], 401);
+  //   }
+
+  //   $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', Auth::id())->exists();
+  //   return response()->json(['is_favorite' => $isFavorite]);
+  // }
+
+  // // お気に入りをトグルするメソッド
   // public function toggleFavorite(Request $request, Shop $shop)
   // {
   //   $userId = auth()->id(); // 認証済みユーザーのIDを取得
-  //   $shop = Shop::find($request->shopId); // ショップを検索
 
-  //   if (!$shop) {
-  //     return response()->json(['error' => 'Shop not found'], 404);
+  //   if (!$userId) {
+  //     return response()->json(['error' => 'Not authenticated'], 401);
   //   }
 
-  //   // お気に入り状態のトグル処理（例）
-  //   $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->exists();
+  //   return DB::transaction(function () use ($shop, $userId) {
+  //     $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->first();
 
-  //   if ($isFavorite) {
-  //     // お気に入りから削除するロジック
-  //     $favorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->delete();
-  //     return response()->json(['success' => true, 'is_favorite' => false]);
-  //   } else {
-  //     // お気に入りに追加するロジック
-  //     $favorite = new Favorite;
-  //     $favorite->shop_id = $shop->id;
-  //     $favorite->user_id = $userId;
-  //     $favorite->save();
-  //     return response()->json(['success' => true, 'is_favorite' => true]);
-  //   }
+  //     if ($isFavorite) {
+  //       $isFavorite->delete();
+  //       return ['success' => true, 'is_favorite' => false];
+  //     } else {
+  //       $favorite = new Favorite(['shop_id' => $shop->id, 'user_id' => $userId]);
+  //       $favorite->save();
+  //       return ['success' => true, 'is_favorite' => true];
+  //     }
+  //   });
   // }
 
   // 飲食店詳細ページ
