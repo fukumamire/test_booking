@@ -1,7 +1,32 @@
 let token = localStorage.getItem('authToken'); // ローカルストレージからトークンを取得
 
 document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('.heart,.heart-active').forEach(function (element) {
+  document.querySelectorAll('.heart').forEach(async function (element) {
+    const shopId = element.dataset.shopId;
+
+    try {
+      const response = await fetch(`/api/shops/${shopId}/is-favorite`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // tokenはサーバーから取得した認証トークン
+          'Accept': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+
+      if (data.is_favorite) {
+        element.classList.add('heart-active'); // お気に入り状態ならクラスを追加
+      }
+    } catch (error) {
+      console.error('Error fetching favorite status:', error);
+    }
+  });
+
+  document.querySelectorAll('.heart').forEach(function (element) {
     element.addEventListener('click', function () {
       toggleFavorite(this, element.dataset.shopId); // data-shop-id属性を使用してshopIdを取得
     });
@@ -15,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    const url = `/shops/${shopId}/toggle-favorite`; // 常にこのURLを使用
+    const url = `/api/shops/${shopId}/toggle-favorite`; // 常にこのURLを使用
     const method = 'POST'; // メソッドはPOST固定
 
     try {
@@ -50,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function checkLoginStatus() {
     try {
-      const response = await fetch('/api/check-login-status', { // エンドポイントのURLを確認
+      const response = await fetch('/api/check-login-status', {
         headers: {
           'Authorization': `Bearer ${token}`, // tokenはサーバーから取得した認証トークン
           'Accept': 'application/json',

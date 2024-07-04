@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Models\Shop;
 use App\Models\Area;
@@ -102,25 +103,76 @@ class ShopController extends Controller
   }
 
   // お気に入りをトグルするメソッド
-  public function toggleFavorite(Shop $shop)
+  public function toggleFavorite(Request $request, Shop $shop)
   {
-    if (!Auth::check()) {
+    $userId = auth()->id(); // 認証済みユーザーのIDを取得
+
+    if (!$userId) {
       return response()->json(['error' => 'Not authenticated'], 401);
     }
 
-    $favorite = Favorite::where('shop_id', $shop->id)->where('user_id', Auth::user()->id)->first();
+    return DB::transaction(function () use ($shop, $userId) {
+      $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->first();
 
-    if ($favorite) {
-      $favorite->delete();
-      return response()->json(['success' => true, 'is_favorite' => false]);
-    } else {
-      $newFavorite = new Favorite;
-      $newFavorite->shop_id = $shop->id;
-      $newFavorite->user_id = Auth::user()->id;
-      $newFavorite->save();
-      return response()->json(['success' => true, 'is_favorite' => true]);
-    }
+      if ($isFavorite) {
+        $isFavorite->delete();
+        return ['success' => true, 'is_favorite' => false];
+      } else {
+        $favorite = new Favorite(['shop_id' => $shop->id, 'user_id' => $userId]);
+        $favorite->save();
+        return ['success' => true, 'is_favorite' => true];
+      }
+    });
   }
+  // ログイン済みであれば、お気に入り登録できる状況
+  // public function toggleFavorite(Request $request, Shop $shop)
+  // {
+  //   $userId = auth()->id(); // 認証済みユーザーのIDを取得
+
+  //   // お気に入り状態のトグル処理
+  //   $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->first();
+
+  //   if ($isFavorite) {
+  //     // お気に入りから削除するロジック
+  //     $isFavorite->delete();
+  //     return response()->json(['success' => true, 'is_favorite' => false]);
+  //   } else {
+  //     // お気に入りに追加するロジック
+  //     $favorite = new Favorite;
+  //     $favorite->shop_id = $shop->id;
+  //     $favorite->user_id = $userId;
+  //     $favorite->save();
+  //     return response()->json(['success' => true, 'is_favorite' => true]);
+  //   }
+  // }
+
+
+
+  // public function toggleFavorite(Request $request, Shop $shop)
+  // {
+  //   $userId = auth()->id(); // 認証済みユーザーのIDを取得
+  //   $shop = Shop::find($request->shopId); // ショップを検索
+
+  //   if (!$shop) {
+  //     return response()->json(['error' => 'Shop not found'], 404);
+  //   }
+
+  //   // お気に入り状態のトグル処理（例）
+  //   $isFavorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->exists();
+
+  //   if ($isFavorite) {
+  //     // お気に入りから削除するロジック
+  //     $favorite = Favorite::where('shop_id', $shop->id)->where('user_id', $userId)->delete();
+  //     return response()->json(['success' => true, 'is_favorite' => false]);
+  //   } else {
+  //     // お気に入りに追加するロジック
+  //     $favorite = new Favorite;
+  //     $favorite->shop_id = $shop->id;
+  //     $favorite->user_id = $userId;
+  //     $favorite->save();
+  //     return response()->json(['success' => true, 'is_favorite' => true]);
+  //   }
+  // }
 
   // 飲食店詳細ページ
 

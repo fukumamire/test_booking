@@ -50,8 +50,8 @@ Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 
 
-// お気に入りボタン　ハート　　トグルする
-Route::post('/shops/{shop}/toggle-favorite', [ShopController::class, 'toggleFavorite'])->name('shops.toggleFavorite');
+// お気に入りボタン　ハート　　トグルする　api.phpにも似たようなコードがあるため伏せる
+// Route::post('/shops/{shop}/toggle-favorite', [ShopController::class, 'toggleFavorite'])->name('shops.toggleFavorite');
 
 
 // マイページ関係
