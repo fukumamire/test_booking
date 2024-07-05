@@ -72,3 +72,7 @@
   </div>
 </div>
 @endsection
+
+@section('script')
+<script src="{{ asset('js/toggleFavorite.js') }}"></script>
+@endsection

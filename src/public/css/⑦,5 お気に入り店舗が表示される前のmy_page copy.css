@@ -1,0 +1,191 @@
+/*bookings.blade.php  shop.blade.phpも含む*/
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mypage__wrap {
+  display: flex;
+  margin-top: 70px;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.left__side, .right__side {
+  width: 45%;
+}
+
+.user__name {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.booking__wrap {
+  display: flex;
+  flex-direction: column;
+  padding-left: 15px;
+}
+
+.booking__tab {
+  display: flex;
+  flex-direction: column;
+}
+
+.booking__title {
+  font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
+  font-weight: bold;
+  padding-bottom: 20px;
+  color: lightgrey;
+  cursor: pointer;
+  border: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.booking__title-input {
+  display: none;
+}
+
+.booking__content-wrap {
+  display: none;
+  width: 100%;
+}
+
+.booking__title:has(:checked) {
+  color: black;
+  border: 1px solid #eee;
+}
+
+.booking__title:has(:checked) + .booking__content-wrap {
+  display: block;
+}
+
+.booking__content {
+  margin-bottom: 20px;
+  padding: 10px 10% 30px 10%;
+  background-color: rgb(84, 124, 243);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 1.6rem;
+}
+
+.booking__content--steelblue {
+  background-color: steelblue;
+}
+
+.booking__header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header__title {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+
+}
+
+.booking__header__title {
+  text-decoration: none;
+  color: inherit;
+}
+.clock-icon {
+  width: 20px; 
+  height: auto;
+  margin-right: 5px; /* アイコンとテキストの間にスペースを設ける */
+  filter: invert(1); /* 画像の色を反転させて白に変更 */
+}
+
+.booking__header__title::before,
+.booking-history__header__title::before {
+  content: "";
+  background: url(../../images/clock.svg) no-repeat;
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  padding-left: 50px;
+}
+
+
+.booking__header-button {
+  display: flex;
+  align-items: center;
+}
+
+.header__form:not(:nth-child(1)) {
+  margin-left: 15px;
+}
+
+.form__button--cancel {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.form__button-img {
+  width: 25px;
+  height: 25px;
+}
+
+.form__button-img:hover {
+  opacity: 0.6;
+}
+
+.white-image {
+  /* アイコン（時計　キャンセル）反転させて白くを設定 */
+  filter: brightness(0) invert(1);
+}
+
+.shop-label,.date-label,.time-label {
+  margin-right: 3.3em; /* 「Shop」項目と店名等との間にスペース*/
+}
+.number-label{
+  margin-right: 2.0em;
+}
+
+
+.favorite__title {
+  font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
+  font-weight: bold;
+  padding-bottom: 20px;
+  color: black;
+  margin: 0;
+}
+
+.shop__wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+.table__header {
+  width: 95px;
+  text-align: left;
+  font-weight: normal;
+  padding: 5px 0;
+}
+
+@media screen and (max-width: 768px) {
+  .user__name {
+    margin: 0 auto;
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .mypage__wrap {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .left__side, .right__side {
+    width: 100%;
+  }
+}

@@ -78,6 +78,5 @@
 
 @section('script')
 <script src="{{ asset('js/search.js') }}"></script>
-<script src="{{ asset('js/index.js') }}"></script>
 <script src="{{ asset('js/toggleFavorite.js') }}"></script>
 @endsection
