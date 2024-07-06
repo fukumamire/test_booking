@@ -96,40 +96,51 @@
 }
 
 .shop__content {
-  width: calc(100% / 4 - 20px); /* 4アイテムが並ぶように幅を調整 */
+  width: calc(100% / 4 - 20px); /* 既存の幅の設定 */
+  height: calc(100% / 4 - 20px); /* 幅と同じ値を高さに設定 */
   margin: 10px; /* 均等なマージンを設定 */
   border: none;
   border-radius: 5px;
   box-shadow: 2px 2px 5px gray;
   background-color: #fff;
+  display: flex; /* コンテンツを中央に配置するため */
+  flex-direction: column; /* コンテンツを垂直方向に配置 */
+  justify-content: center; /* コンテンツを垂直方向に中央揃え */
+  align-items: center; /* コンテンツを水平方向に中央揃え */
 }
 
 .shop__image {
   width: 100%;
-  height: 50%;
-  object-fit: cover;
+  height: 100%; /* 高さを幅に合わせる */
+  object-fit: contain; /* 画像を正方形に合わせる */
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
 }
 
+
 .shop__item {
   width: 100%;
-  height: 40%;
+  height: 100%; /* .shop__contentに合わせて高さを100%に設定 */
   margin: 10px;
 }
+
 
 .shop__title {
   font-weight: bold;
   font-size: 1.6rem;
-  margin: 5pt 0; /* 上下に5pxのマージンを追加 */
+  margin: 5px 0; /* 上下に5pxのマージンを追加 */
+  padding-left: 20px;
 }
+
 
 .shop__tag {
   display: flex;
   font-size: 1.2rem;
   margin-top: 5px;
   margin-bottom: 5px;
+  padding-left: 20px;
 }
+
 
 .shop__tag-info {
   margin: 0;
@@ -140,7 +151,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 5px 0;
+  margin: -30px 0;
 }
 
 .shop__button-detail {
@@ -151,11 +162,13 @@
   border: 1px solid rgb(63, 90, 242);
   border-radius: 5px;
   color: #fff;
+  margin-left: 20px;
   padding: 0 16px;
   height: 40px;
   cursor: pointer;
   font-size: 1rem;
 }
+
 
 .shop__button-detail:hover {
   opacity: 0.8;
@@ -171,12 +184,13 @@
   border: none;
 }
 
+
 .heart {
-  background-position: -10px 0;
+  background-position: 10px 0;
 }
 
 .heart-active {
-  background-position: -2810px 0;
+  background-position: -2790px 0;
 }
 
 .heart:hover,.heart-active:hover {
@@ -184,26 +198,6 @@
   transition: background 1s steps(28);
 }
 
-
-/* .heart {
-  width: 100px;
-  height: 100px;
-  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png)
-    no-repeat;
-  background-position: -10px 0;
-  cursor: pointer;
-  border: none;
-}
-
-.heart:hover,.heart-active:hover {
-  background-position: -2810px 0;
-  -webkit-transition: background 1s steps(28);
-  transition: background 1s steps(28);
-}
-
-.heart-active {
-  background-position: -2810px 0;
-} */
 
 /* ページネーションのcustom　横並び */
 .pagination {
