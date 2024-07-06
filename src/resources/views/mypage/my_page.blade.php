@@ -61,7 +61,7 @@
             <div class="shop__button">
               <a href="{{ route('shop.detail', ['shop' => $favorite->shop->id]) }}" class="shop__button-detail">詳しくみる</a>
               <div class="stage">
-                <button class="heart" data-shop-id="{{ $favorite->shop->id }}" aria-label="お気に入り" type="button"></button>
+                <button class="heart heart-active" data-shop-id="{{ $favorite->shop->id }}" aria-label="お気に入り" type="button"></button>
               </div>
             </div>
           </div>
