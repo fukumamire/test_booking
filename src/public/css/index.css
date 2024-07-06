@@ -1,3 +1,13 @@
+.alert-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999; /* 他の要素と重なるのを防ぐために高めにする */
+  background-color: rgba(255, 255, 255, 255, 0.9); /* 背景色を透明に */
+}
+
+
 .header__right {
   display: flex;
   width: 80%;

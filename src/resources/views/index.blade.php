@@ -5,6 +5,12 @@
 @endsection
 
 @section('header')
+@if($message)
+<div class="alert alert-warning">
+  {{ $message }}
+</div>
+@endif
+
 <form id="search__form" class="header__right" action="{{ route('shops.search') }}" method="get">
   <div class="header__search">
     <label class="select-box__label">
@@ -29,12 +35,13 @@
       <div class="search__item-button"></div>
       <label class="search__item-label">
         <img src="search.png" alt="searchアイコン" />
-        <input type="text" name="word" class="search__item-input" placeholder="Search..." value="{{ request('word') }}">
+        <input type="text" name="keyword" class="search__item-input" placeholder="Search..." value="{{ request('keyword') }}">
       </label>
     </div>
   </div>
 </form>
 @endsection
+
 
 @section('content')
 <div class="shop__wrap">
