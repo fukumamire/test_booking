@@ -1,5 +1,7 @@
 /*bookings.blade.php  shop.blade.phpも含む*/
 
+/* my_page.css */
+
 .container {
   display: flex;
   flex-direction: column;
@@ -10,7 +12,8 @@
   display: flex;
   margin-top: 70px;
   justify-content: space-between;
-  width: 100%;
+  align-items: start; /* 子要素の上端を基準に配置 */
+  /* width: 100%; */
 }
 
 .left__side, .right__side {
@@ -22,7 +25,6 @@
   font-weight: bold;
   margin: 0;
   padding-bottom: 20px;
-  text-align: center;
 }
 
 .booking__wrap {
@@ -39,15 +41,15 @@
 .booking__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
   font-weight: bold;
-  padding-bottom: 20px;
-  color: lightgrey;
+  padding-top: 80px;
+  padding-bottom: 10px;
   cursor: pointer;
-  border: 1px solid #eee;
   margin-bottom: 10px;
 }
 
 .booking__title-input {
   display: none;
+  padding-top: 50px;
 }
 
 .booking__content-wrap {
@@ -59,7 +61,7 @@
   color: black;
   border: 1px solid #eee;
 }
-
+/* 予約の表示 */
 .booking__title:has(:checked) + .booking__content-wrap {
   display: block;
 }
@@ -86,13 +88,13 @@
   display: flex;
   align-items: center;
   margin: 16px 0;
-
 }
 
 .booking__header__title {
   text-decoration: none;
   color: inherit;
 }
+
 .clock-icon {
   width: 20px; 
   height: auto;
@@ -111,17 +113,9 @@
   padding-left: 50px;
 }
 
-/* .booking-history__header__title::before {
-  background: url(../../images/clock_steelblue.svg) no-repeat;
-} */
-
 .booking__header-button {
   display: flex;
   align-items: center;
-}
-
-.header__form:not(:nth-child(1)) {
-  margin-left: 15px;
 }
 
 .form__button--cancel {
@@ -142,17 +136,16 @@
 }
 
 .white-image {
-  /* アイコン（時計　キャンセル）反転させて白くを設定 */
-  filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1); /* アイコン（時計　キャンセル）反転させて白くを設定 */
 }
 
 .shop-label,.date-label,.time-label {
-  margin-right: 3.3em; /* 「Shop」項目と店名等との間にスペース*/
+  margin-right: 3.3em; /* 「Shop」項目と店名等との間にスペース */
 }
+
 .number-label{
   margin-right: 2.0em;
 }
-
 
 .favorite__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
@@ -169,11 +162,91 @@
   justify-content: flex-start;
 }
 
-.table__header {
-  width: 95px;
-  text-align: left;
-  font-weight: normal;
-  padding: 5px 0;
+.shop__content {
+  width: calc((100% / 2) - 20px);
+  margin: 5px; /* 均等なマージンを設定 */
+  border: none;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px gray;
+  background-color: #fff;
+}
+
+.shop__image {
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.shop__item {
+  width: 100%;
+  height: 40%;
+  margin: 10px;
+}
+
+.shop__title {
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin: 5pt 0; /* 上下に5pxのマージンを追加 */
+}
+
+.shop__tag {
+  display: flex;
+  font-size: 1.2rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.shop__tag-info {
+  margin: 0;
+  padding-right: 5px;
+}
+
+.shop__button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.shop__button-detail {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  background-color: rgb(33, 44, 103);
+  border: 1px solid rgb(63, 90, 242);
+  border-radius: 5px;
+  color: #fff;
+  padding: 0 16px;
+  height: 40px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.shop__button-detail:hover {
+  opacity: 0.8;
+}
+
+.heart,.heart-active {
+  width: 100px;
+  height: 100px;
+  background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png) no-repeat;
+  cursor: pointer;
+  border: none;
+}
+
+.heart {
+  background-position: -10px 0;
+}
+
+.heart-active {
+  background-position: -2810px 0;
+}
+
+.heart:hover,.heart-active:hover {
+  -webkit-transition: background 1s steps(28);
+  transition: background 1s steps(28);
 }
 
 @media screen and (max-width: 768px) {

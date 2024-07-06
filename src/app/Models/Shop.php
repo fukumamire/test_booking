@@ -10,7 +10,7 @@ class Shop extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['name', 'outline', 'is_favorite'];
+  protected $fillable = ['name', 'outline'];
 
   public function areas()
   {
@@ -27,29 +27,41 @@ class Shop extends Model
     return $this->hasMany(ShopImage::class);
   }
 
+  // Favorite モデルを通じて User モデルとの関連付けを定義
+  public function favorites()
+  {
+    return $this->hasMany(Favorite::class);
+  }
+
+  // User モデルとの関連付けを Favorite モデルを通じて行う
   public function favoritedBy()
   {
     return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
   }
 
+  // public function favoritedBy()
+  // {
+  //   return $this->belongsToMany(User::class, 'favorites')->using(Favorite::class)->withTimestamps();
+  // }
+
+  // ユーザーがお気に入り登録しているかどうかを確認
   public function isFavoriteBy(User $user)
   {
-    return $this->favoritedBy->contains($user->id);
+    return $this->favorites()->where('user_id', $user->id)->exists();
   }
 
-  public function toggleFavorite()
+  // お気に入り登録・解除の処理
+  public function toggleFavorite(User $user)
   {
-    $user = Auth::user();
+    $favorite = $this->favorites()->where('user_id', $user->id)->first();
 
-    if ($user) {
-      if ($user->favorites->where('shop_id', $this->id)->exists()) {
-        $user->favorites->detach($this->id);
-        $this->is_favorite = false;
-      } else {
-        $user->favorites->attach($this->id);
-        $this->is_favorite = true;
-      }
-      $this->save();
+    if ($favorite) {
+      $favorite->delete(); // お気に入り解除
+      $this->is_favorite = false;
+    } else {
+      $this->favorites()->create(['user_id' => $user->id]); // お気に入り登録
+      // $this->is_favorite = true;
     }
+    // $this->save();
   }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Favorite;
 use App\Models\Shop;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -21,14 +22,14 @@ class BookingController extends Controller
     $bookings = Booking::where('user_id', $user->id)
       ->where('status', 'active')
       ->get();
-    $histories = Booking::where('user_id', $user->id)
-      ->where('status', 'completed')
-      ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
+    // $histories = Booking::where('user_id', $user->id)
+    //   ->where('status', 'completed')
+    //   ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
 
     // ユーザーのお気に入りの店舗を直接取得
-    $favoriteShops = $user->favorites()->with('shops')->get()->pluck('shops');
-
-    return view('mypage.my_page', compact('bookings', 'histories', 'favoriteShops'));
+    $favoriteShops = Favorite::with('shop', 'shop.areas', 'shop.genres')->where('user_id', $user->id)->get();
+    // $favoriteShops = Favorite::where('user_id', $user->id)->get() ?? collect();
+    return view('mypage.my_page', compact('bookings', 'favoriteShops'));
   }
 
   public function store(Request $request)
@@ -65,38 +66,6 @@ class BookingController extends Controller
 
     // 予約成功後のリダイレクト
     return redirect()->route('done');
-  }
-
-  // /**編集ページ今はなし
-  //  * 予約を編集するためのページを表示する.
-  //  *
-  //  * @param  \App\Models\Booking  $booking
-  //  * @return \Illuminate\View\View
-  //  */
-  // public function edit(Booking $booking)
-  // {
-  //   return view('mypage.my_page', compact('booking'));
-  // }
-
-  /**
-   * 予約を更新する
-   */
-  public function update(Request $request, Booking $booking)
-  {
-    $validatedData = $request->validate([
-      // ここでバリデーションルールを定義
-      'date' => 'required|date',
-      'time' => 'required|date_format:H:i',
-      'number_of_people' => 'required|integer',
-    ], [
-      'date.required' => '予約日は必須です',
-      'time.required' => '予約時間は必須です',
-      'number_of_people.required' => '人数は必須です',
-    ]);
-
-    $booking->update($validatedData);
-
-    return redirect()->route('mypage')->with('success', '予約を更新しました');
   }
 
   /**

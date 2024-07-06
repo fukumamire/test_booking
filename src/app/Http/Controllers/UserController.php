@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-  public function checkLoginStatus()
+  public function checkLoginStatus(Request $request)
   {
-    return response()->json(['isLoggedIn' => Auth::check()]);
+    return response()->json(['isLoggedIn' => !is_null($request->user())]);
   }
 }

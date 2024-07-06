@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Shop;
+use App\Models\Favorite;
 
 class User extends Authenticatable
 {
@@ -43,32 +44,38 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
+   // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
-    return $this->belongsToMany(Shop::class, 'favorites')->withTimestamps();
+    return $this->hasMany(Favorite::class, 'user_id');
   }
 
+  // お気に入り登録
   public function favorite(Shop $shop)
   {
-    $this->favorites()->attach($shop->id);
+    $this->favorites()->create(['shop_id' => $shop->id]);
   }
 
+  // お気に入り解除
   public function unfavorite(Shop $shop)
   {
-    $this->favorites()->detach($shop->id);
+    $this->favorites()->where('shop_id', $shop->id)->delete();
   }
 
   public function toggleFavorite(Shop $shop)
   {
-    if ($this->hasFavorited($shop)) {
-      $this->unfavorite($shop);
+    $favorite = $this->favorites()->where('shop_id', $shop->id)->first();
+
+    if ($favorite) {
+      $favorite->delete();
     } else {
-      $this->favorite($shop);
+      $this->favorites()->create(['shop_id' => $shop->id]);
     }
   }
-
+  
+ // お気に入り登録しているかどうかを確認
   public function hasFavorited(Shop $shop)
   {
-    return $this->favorites->contains($shop->id);
+    return $this->favorites()->where('shop_id', $shop->id)->exists();
   }
 }

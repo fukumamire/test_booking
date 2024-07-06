@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\LogoutController;
+/*
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,8 +21,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// 保護したいルートにauth:sanctumミドルウェアを適用
+Route::middleware('auth:sanctum')->get('/check-login-status', [UserController::class, 'checkLoginStatus']);
 
-Route::get('/check-login-status', [UserController::class, 'checkLoginStatus']);
+
+Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
 
 
-Route::get('/shops/{shop}/is-favorite', [ShopController::class, 'isFavorite']);
+// お気に入り　関係
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/shops/{shop}/is-favorite', [ShopController::class, 'isFavorite']);
+    Route::post('/shops/{shop}/toggle-favorite', [ShopController::class, 'toggleFavorite']);
+});
