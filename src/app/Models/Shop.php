@@ -39,10 +39,6 @@ class Shop extends Model
     return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
   }
 
-  // public function favoritedBy()
-  // {
-  //   return $this->belongsToMany(User::class, 'favorites')->using(Favorite::class)->withTimestamps();
-  // }
 
   // ユーザーがお気に入り登録しているかどうかを確認
   public function isFavoriteBy(User $user)
@@ -60,8 +56,6 @@ class Shop extends Model
       $this->is_favorite = false;
     } else {
       $this->favorites()->create(['user_id' => $user->id]); // お気に入り登録
-      // $this->is_favorite = true;
     }
-    // $this->save();
   }
 }

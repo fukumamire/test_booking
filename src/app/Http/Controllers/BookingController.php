@@ -22,13 +22,11 @@ class BookingController extends Controller
     $bookings = Booking::where('user_id', $user->id)
       ->where('status', 'active')
       ->get();
-    // $histories = Booking::where('user_id', $user->id)
-    //   ->where('status', 'completed')
-    //   ->get() ?? collect(); // $bookingsが取得できない場合は空のコレクションを返す
+
 
     // ユーザーのお気に入りの店舗を直接取得
     $favoriteShops = Favorite::with('shop', 'shop.areas', 'shop.genres')->where('user_id', $user->id)->get();
-    // $favoriteShops = Favorite::where('user_id', $user->id)->get() ?? collect();
+
     return view('mypage.my_page', compact('bookings', 'favoriteShops'));
   }
 
