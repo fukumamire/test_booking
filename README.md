@@ -13,19 +13,16 @@ phpMyAdmin:：http://localhost:8080/
 
 ## 機能一覧
 
-ログイン機能、お気に入り追加/削除、検索
-
-###　店舗一覧について
-・店舗画像URLを複数DBに保存できるようになっています。
-
+会員登録、ログイン、ログアウト、ユーザー情報取得、ユーザー飲食店お気に入り一覧取得、ユーザー飲食店予約情報取得、飲食店一覧取得、飲食店詳細取得、飲食店お気に入り追加、飲食店お気に入り削除、飲食店予約情報追加、飲食店予約情報削除、エリアで検索する、ジャンルで検索する、店名で検索する
 
 ## 使用技術（実行環境）
 Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 
-## テーブル設計とER図
+## ER図
 
+![Booking-restaurant](https://github.com/fukumamire/Booking-restaurant/assets/136237535/108d49af-cbc5-4c12-9b76-c66af9714294)
 
-## テーブル定義
+## テーブル設計
 
 ### users テーブル
 
