@@ -47,7 +47,7 @@ class ShopController extends Controller
     $genres = Genre::select('name')->distinct()->get();
 
     // 検索結果が空の場合はエラーメッセージを設定
-    $message = $shops->isEmpty() ? 'お探しの飲食店はございません。再度検索してください' : null;
+    $message = $shops->isEmpty() ? 'お探しの飲食店はございません。再度検索してください。' : null;
 
     return view('index', compact('shops', 'areas', 'genres', 'message'));
   }
