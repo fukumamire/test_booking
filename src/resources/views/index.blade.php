@@ -34,7 +34,7 @@
     <div class="search__item">
       <div class="search__item-button"></div>
       <label class="search__item-label">
-        <img src="search.png" alt="searchアイコン" />
+        <img id="searchIcon" src="search.png" alt="searchアイコン" />
         <input type="text" name="keyword" class="search__item-input" placeholder="Search..." value="{{ request('keyword') }}">
       </label>
     </div>
@@ -78,6 +78,9 @@
 @endsection
 
 @section('script')
+<script>
+  window.searchIconPath = "{{ asset('search.png') }}"; // グローバル変数として定義
+</script>
 <script src="{{ asset('js/search.js') }}"></script>
 <script src="{{ asset('js/toggleFavorite.js') }}"></script>
 @endsection

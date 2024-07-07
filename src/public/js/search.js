@@ -1,9 +1,24 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const searchForm = document.getElementById('search__form');
-  searchForm.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
+document.addEventListener("DOMContentLoaded", function () {
+  const searchForm = document.getElementById("search__form");
+  searchForm.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
       event.preventDefault();
       searchForm.submit();
     }
   });
+
+  // 画像の読み込みとDOMへの追加
+  const searchIcon = new Image();
+  searchIcon.src = window.searchIconPath; // グローバル変数を使用
+  searchIcon.onload = function () {
+    const existingIcon = document.getElementById('searchIcon'); // 既存のアイコンをIDで選択
+    if (existingIcon) {
+      existingIcon.src = this.src; // 既存のアイコンのsrcを新しく読み込んだ画像のsrcに置き換え
+    } else {
+      // ここで新しいアイコンを追加する処理は不要です。既存のアイコンが存在しない場合の処理は別の条件で行うか、または不要です。
+    }
+  };
+  searchIcon.onerror = function () {
+    console.error('Failed to load the search icon image.');
+  };
 });
