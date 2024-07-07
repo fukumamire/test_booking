@@ -13,7 +13,7 @@
   margin-top: 70px;
   justify-content: space-between;
   align-items: start; /* 子要素の上端を基準に配置 */
-  /* width: 100%; */
+  width: 100%;
 }
 
 .left__side, .right__side {
@@ -226,6 +226,14 @@
 
 .shop__button-detail:hover {
   opacity: 0.8;
+}
+
+/* 予約状況やお気に入り店舗がない場合のレイアウト */
+.booking__placeholder, .favorite__placeholder {
+padding: 20px;
+font-size: 1.4rem;
+color: #999;
+text-align: center;
 }
 
 .heart,.heart-active {
