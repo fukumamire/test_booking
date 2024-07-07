@@ -42,13 +42,28 @@ header #overlay-button.overlay-button {
     display: block; /* ブロック要素にすることでハンバーガーアイコンが正しく表示 */
     margin: 80px 20px 0 80px;  
     padding: 30px 10px;
-    z-index: 5;
+    z-index: 10000; /* 他の要素よりも高く設定 */
     cursor: pointer;
     user-select: none;
     background-color: blue;
     border-radius: 5px;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); /* 影の追加 */
+    position: relative; /* z-indexを適用するためにrelativeを設定 */
 }
+
+/* header #overlay-button.overlay-button {
+    display: block;  */
+    /* ブロック要素にすることでハンバーガーアイコンが正しく表示 */
+    /* margin: 80px 20px 0 80px;  
+    padding: 30px 10px;
+    z-index: 5;
+    cursor: pointer;
+    user-select: none;
+    background-color: blue;
+    border-radius: 5px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);  */
+    /* 影の追加 */
+/* } */
 
 header #overlay-button.overlay-button span {
     display: block; 
@@ -56,12 +71,38 @@ header #overlay-button.overlay-button span {
     width: 45px; /* 中央の線の長さ一番長く */
     border-radius: 2px;
     background-color: white;
+    position: relative; /* z-indexを適用するためにrelativeを設定 */
+    transition: all 0.2s ease-in-out;
+    z-index: 10000; /* 他の要素よりも高く設定 */
+}
+
+
+/* header #overlay-button.overlay-button span {
+    display: block; 
+    height: 4px;
+    width: 45px;  */
+    /* 中央の線の長さ一番長く */
+    /* border-radius: 2px;
+    background-color: white;
     position: relative;
     display: block;
     transition: all 0.2s ease-in-out;
-}
+} */
 
 header #overlay-button.overlay-button span:before, 
+header #overlay-button.overlay-button span:after {
+    content: ""; 
+    height: 4px;
+    border-radius: 2px;
+    background-color: white;
+    position: absolute;
+    transition: all 0.2s ease-in-out;
+    visibility: visible; 
+    z-index: 10000; /* 他の要素よりも高く設定 */
+}
+
+
+/* header #overlay-button.overlay-button span:before, 
 header #overlay-button.overlay-button span:after {
     content: ""; 
     height: 4px;
@@ -71,7 +112,7 @@ header #overlay-button.overlay-button span:after {
     content: "";
     transition: all 0.2s ease-in-out;
     visibility: visible; 
-}
+} */
 
 header #overlay-button.overlay-button span:before {
     top: -10px;
@@ -110,7 +151,7 @@ header .overlay-menu {
     height: 100vh;
     width: 100vw;
     background: #fff;
-    z-index: 2;
+    z-index: 9999;
     visibility: hidden;
     position: fixed;
     top: 0;

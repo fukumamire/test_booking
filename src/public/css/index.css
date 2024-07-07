@@ -6,7 +6,7 @@
   padding: 1rem 2rem calc(1rem + 10px);
   background: #fff100;
   font-size: 20px;
-  z-index: 9999; /* 他の要素と重なるのを防ぐために高めにする */
+  z-index: 9997; /* 他の要素と重なるのを防ぐために高めにする */
   display: inline-block; /* インラインブロック要素として扱う */
 }
 
@@ -96,7 +96,8 @@
 .search__item-input {
   flex-grow: 1; /* 入力フィールドが残りのスペースを占有するように */
   height: 45px;
-  padding: 0 5px;
+  padding: 0 20px;
+  font-size: 20px;
   border: none;
   outline: none;
 }
