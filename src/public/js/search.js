@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
     if (existingIcon) {
       existingIcon.src = this.src; // 既存のアイコンのsrcを新しく読み込んだ画像のsrcに置き換え
     } else {
-      // ここで新しいアイコンを追加する処理は不要です。既存のアイコンが存在しない場合の処理は別の条件で行うか、または不要です。
     }
   };
   searchIcon.onerror = function () {
