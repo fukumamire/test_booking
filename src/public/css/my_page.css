@@ -158,6 +158,19 @@
   margin-right: 2.0em;
 }
 
+/* 予約変更モーダルウィンドウ */
+.close-button {
+font-size: 50px;
+/* ✖ボタンのサイズ */
+}
+
+.date-input, .time-input, .number-input{
+  font-size: 30px; /* テキストサイズを大きくする */
+  width: 50%; /* 幅を親要素に合わせる */
+  height: auto; /* 高さを自動的に調整 */
+}
+
+
 .favorite__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
   font-weight: bold;

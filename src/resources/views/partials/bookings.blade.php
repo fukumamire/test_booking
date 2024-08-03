@@ -9,23 +9,30 @@
     <div class="booking__header-button">
       {{-- 予約変更ボタンの設定 --}}
       <button type="button" class="form__button form__button--change" data-id="{{ $booking->id }}" onclick="openModal({!! $booking->id !!)"><img src="{{ asset('images/pencil.png') }}" alt="変更" class="form__button-img white-image"></button>
-  {{-- 変更ボタンがクリックされた時に表示　モーダルウィンドウ --}}
+
+      {{-- 変更ボタンがクリックされた時に表示　モーダルウィンドウ --}}
       <div id="changeModal{{ $booking->id }}" class="modal">
-        <div class="modal-content">
-          <span class="close-button">&times;</span>
-          <form id="changeForm{{ $booking->id }}" method="POST" action="{{ route('bookings.update', ['booking' => $booking->id]) }}" class="header__form">
-            @csrf
-            @method('PUT')
-            <label for="date">日付:</label>
-            <input type="date" name="date" value="{{ $booking->date }}" required>
-            <label for="time">時間:</label>
-            <input type="time" name="time" value="{{ $booking->time }}" required>
-            <label for="number_of_people">人数:</label>
-            <input type="number" name="number_of_people" value="{{ $booking->number_of_people }}" min="1" required>
-            <button type="submit">予約変更</button>
-          </form>
-        </div>
+  <div class="modal-content booking-modal-content">
+    <span class="close-button">&times;</span>
+    <form id="changeForm{{ $booking->id }}" method="POST" action="{{ route('bookings.update', ['booking' => $booking->id]) }}" class="header__form">
+      @csrf
+      @method('PUT')
+      <div class="form-group">
+        <label for="date">日付:</label>
+        <input type="date" name="date" value="{{ $booking->date }}" class="date-input" required>
       </div>
+      <div class="form-group">
+        <label for="time">時間:</label>
+        <input type="time" name="time" value="{{ $booking->time }}" class="time-input" required>
+      </div>
+      <div class="form-group">
+        <label for="number_of_people">人数:</label>
+        <input type="number" name="number_of_people" value="{{ $booking->number_of_people }}" min="1" class="number-input" required>
+      </div>
+      <button type="submit">予約変更</button>
+    </form>
+  </div>
+</div>
 
       {{-- 予約キャンセル --}}
       <form id="cancelForm{{ $booking->id }}" method="POST" action="{{ route('bookings.cancel', ['booking' => $booking->id]) }}" class="header__form">
