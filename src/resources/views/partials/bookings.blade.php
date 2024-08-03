@@ -6,10 +6,10 @@
       <a href="{{ route('bookings.show', ['booking' => $booking->id]) }}" class="booking__header__title">
     </a>
 
-    {{-- 予約変更ボタンの設定 --}}
-    <button type="button" class="form__button form__button--change" data-id="{{ $booking->id }}" onclick="openModal({!! $booking->id !!)"><img src="{{ asset('images/pencil.png') }}" alt="変更" class="form__button-img white-image">予約変更</button>
-    
     <div class="booking__header-button">
+      {{-- 予約変更ボタンの設定 --}}
+      <button type="button" class="form__button form__button--change" data-id="{{ $booking->id }}" onclick="openModal({!! $booking->id !!)"><img src="{{ asset('images/pencil.png') }}" alt="変更" class="form__button-img white-image"></button>
+      
       <form id="cancelForm{{ $booking->id }}" method="POST" action="{{ route('bookings.cancel', ['booking' => $booking->id]) }}" class="header__form">
         @csrf
         @method('DELETE')

@@ -102,7 +102,7 @@
   filter: invert(1); /* 画像の色を反転させて白に変更 */
 }
 
-.booking__header__title::before,
+/* .booking__header__title::before,
 .booking-history__header__title::before {
   content: "";
   background: url(../../images/clock.svg) no-repeat;
@@ -111,15 +111,26 @@
   height: 25px;
   display: inline-block;
   padding-left: 50px;
-}
+} */
+
 
 .booking__header-button {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 20%; 
 }
 
+.form__button--change {
+  border: none; /* ボタンの枠を削除 */
+  background-color: transparent; /* ボタンの背景色を透明に設定 */
+  cursor: pointer; /* カーソルをポインターに変更して、クリック可能であることを示す */
+  margin-top: 10px;
+  padding: 0;
+}
+
+
 .form__button--cancel {
-  margin: 0;
   padding: 0;
   background-color: transparent;
   border: none;
