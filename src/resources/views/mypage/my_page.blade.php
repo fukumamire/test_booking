@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/my_page.css') }}">
+<link rel="stylesheet" href="{{ asset('css/modal.css') }}">
 @endsection
 @section('content')
 <div class="container">
