@@ -66,6 +66,31 @@ class BookingController extends Controller
     return redirect()->route('done');
   }
 
+  // 予約変更のメソッド
+  public function update(Request $request, Booking $booking)
+  {
+    $request->validate([
+      'date' => 'required|date',
+      'time' => 'required',
+      'number_of_people' => 'required|integer|min:1',
+    ]);
+
+    $booking->update($request->only(['date', 'time', 'number_of_people']));
+
+    // 予約変更履歴を保存
+    $booking->changes()->create([
+      'user_id' => auth()->id(),
+      'old_booking_date' => $booking->date,
+      'old_booking_time' => $booking->time,
+      'old_number_of_people' => $booking->number_of_people,
+      'new_booking_date' => $request->date,
+      'new_booking_time' => $request->time,
+      'new_number_of_people' => $request->number_of_people,
+    ]);
+
+    return back()->with('success', '予約を変更しました。');
+  }
+
   /**
    * 予約をキャンセルする
    */

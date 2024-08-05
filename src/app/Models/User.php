@@ -78,4 +78,10 @@ class User extends Authenticatable
   {
     return $this->favorites()->where('shop_id', $shop->id)->exists();
   }
+
+  // 予約変更
+  public function bookingChanges()
+  {
+    return $this->hasMany(BookingChange::class);
+  }
 }
