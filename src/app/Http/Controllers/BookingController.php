@@ -19,7 +19,8 @@ class BookingController extends Controller
   public function showMyPage()
   {
     $user = Auth::user();
-    $bookings = Booking::where('user_id', $user->id)
+    // 予約情報を取得し、予約変更履歴も一緒に取得
+    $bookings = Booking::with('changes')->where('user_id', $user->id)
       ->where('status', 'active')
       ->get();
 

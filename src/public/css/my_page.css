@@ -102,6 +102,15 @@
   filter: invert(1); /* 画像の色を反転させて白に変更 */
 }
 
+.booking__change-history::before {
+  content: "";
+  background: url('/images/clock.svg') no-repeat; /* 修正されたパス */
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+  display: inline-block;
+  padding-right: 10px; /* アイコンとテキストの間にスペースを設ける */
+}
 /* .booking__header__title::before,
 .booking-history__header__title::before {
   content: "";
