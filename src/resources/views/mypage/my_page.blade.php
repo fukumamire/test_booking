@@ -25,24 +25,45 @@
 
   <div class="mypage__wrap">
     <div class="left__side">
-      <div class="booking__wrap">
-        <div class="booking__tab">
-          <label class="booking__title hover__color--blue">
-            <input type="radio" name="tab" class="booking__title-input" checked>
-            予約状況
-          </label>
-          <div class="booking__content-wrap">
-            @if (isset($bookings) && count($bookings) > 0)
-            @foreach ($bookings as $booking)
-            @include('partials.bookings', ['booking' => $booking, 'loopIteration' => $loop->iteration])
-            @endforeach
-            @else
-            <div class="booking__placeholder">予約はありません</div>
-            @endif
+    <div class="booking__wrap">
+      <div class="booking__tab">
+        <label class="booking__title hover__color--blue">
+          <input type="radio" name="tab" id="booking-status" class="booking__title-input" checked>
+          予約状況
+        </label>
+        <label class="booking__title hover__color--blue">
+          <input type="radio" name="tab" id="booking-history" class="booking__title-input">
+          予約履歴
+        </label>
+        <div class="booking__content-wrap">
+          <!-- 予約状況の内容 -->
+          @if (isset($bookings) && count($bookings) > 0)
+          @foreach ($bookings as $booking)
+          @include('partials.bookings', ['booking' => $booking, 'loopIteration' => $loop->iteration])
+          @endforeach
+          @else
+          <div class="booking__placeholder">予約はありません</div>
+          @endif
+        </div>
+        <div class="booking__history-wrap">
+          <!-- 予約履歴の内容 -->
+          @if (isset($bookings) && count($bookings) > 0)
+          @foreach ($bookings as $booking)
+          @foreach ($booking->changes as $change)
+          <div class="booking__change-history">
+            <p>変更日: {{ $change->changed_at }}</p>
+            <p>変更前: {{ $change->old_booking_date }} {{ $change->old_booking_time }} {{ $change->old_number_of_people }}人</p>
+            <p>変更後: {{ $change->new_booking_date }} {{ $change->new_booking_time }} {{ $change->new_number_of_people }}人</p>
           </div>
+          @endforeach
+          @endforeach
+          @else
+          <div class="booking__placeholder">予約変更履歴はありません</div>
+          @endif
         </div>
       </div>
     </div>
+  </div>
 
     <div class="right__side">
       <p class="user__name">{{ Auth::user()->name }}さん</p>
@@ -79,8 +100,8 @@
       </div>
     </div>
   </div>
-  @endsection
+@endsection
 
-  @section('script')
-  <script src="{{ asset('js/toggleFavorite.js') }}"></script>
-  @endsection
+@section('script')
+<script src="{{ asset('js/toggleFavorite.js') }}"></script>
+@endsection
