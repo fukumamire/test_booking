@@ -54,9 +54,7 @@
 }
 
 .booking__content-wrap {
-  display: none;
-  /* display: block; */
-  /* 初期状態で表示 */
+  display: block; /* 初期状態で表示 */
   width: 100%;
 }
 
@@ -107,7 +105,8 @@
 
 /* 予約履歴 */
 .booking__history-wrap {
-  display: none;
+  display: none; 
+  width: 100%;
 }
 
 .booking__change-history::before {
