@@ -58,7 +58,7 @@
   </div>
 
   {{-- 各予約情報の後にその予約の変更履歴を表示 --}}
-  <input type="radio" name="tab" class="reservation__title-input">
+  {{-- <input type="radio" name="tab" class="reservation__title-input">
                 予約履歴
   @if ($bookings->count())
     @foreach ($bookings as $booking)
@@ -80,7 +80,7 @@
         @endif
       </div>
     @endforeach
-@endif
+@endif --}}
 </div>
 
 @section('script')

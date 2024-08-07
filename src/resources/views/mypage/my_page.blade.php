@@ -25,28 +25,30 @@
 
   <div class="mypage__wrap">
     <div class="left__side">
-    <div class="booking__wrap">
-      <div class="booking__tab">
-        <label class="booking__title hover__color--blue">
-          <input type="radio" name="tab" id="booking-status" class="booking__title-input" checked>
-          予約状況
-        </label>
-        <label class="booking__title hover__color--blue">
-          <input type="radio" name="tab" id="booking-history" class="booking__title-input">
-          予約履歴
-        </label>
+      <div class="booking__wrap">
+        <div class="booking__tab">
+          <label class="booking__title hover__color--blue" for="booking-status">
+            <input type="radio" name="tab" id="booking-status" class="booking__title-input" checked>予約状況
+          </label>
+
+          <label class="booking__title hover__color--blue" for="booking-history">
+            <input type="radio" name="tab" id="booking-history" class="booking__title-input">
+            予約履歴
+          </label>
+
+        </div>
+        <!-- 予約情報を表示するコンテナ -->
         <div class="booking__content-wrap">
-          <!-- 予約状況の内容 -->
           @if (isset($bookings) && count($bookings) > 0)
           @foreach ($bookings as $booking)
-          @include('partials.bookings', ['booking' => $booking, 'loopIteration' => $loop->iteration])
+          @include('partials.bookings', ['booking' => $booking])
           @endforeach
           @else
           <div class="booking__placeholder">予約はありません</div>
           @endif
         </div>
+        <!-- 予約履歴を表示するコンテナ -->
         <div class="booking__history-wrap">
-          <!-- 予約履歴の内容 -->
           @if (isset($bookings) && count($bookings) > 0)
           @foreach ($bookings as $booking)
           @foreach ($booking->changes as $change)
@@ -63,7 +65,6 @@
         </div>
       </div>
     </div>
-  </div>
 
     <div class="right__side">
       <p class="user__name">{{ Auth::user()->name }}さん</p>
@@ -100,8 +101,11 @@
       </div>
     </div>
   </div>
+</div>
+
 @endsection
 
 @section('script')
 <script src="{{ asset('js/toggleFavorite.js') }}"></script>
+<script src="{{ asset('js/tabToggle.js') }}"></script>
 @endsection
