@@ -92,13 +92,17 @@
 }
 
 
-.booking__content {
+.booking__content, .booking__change-history {
   margin-bottom: 20px;
   padding: 10px 10% 30px 10%;
   background-color: rgb(84, 124, 243);
   border-radius: 5px;
   color: #fff;
   font-size: 1.6rem;
+}
+
+.booking__change-history {
+  border: 1px solid #ccc; /* 枠線を追加（オプション） */
 }
 
 .booking__content--steelblue {
