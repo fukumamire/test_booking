@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="{{ asset('css/my_page.css') }}">
 <link rel="stylesheet" href="{{ asset('css/modal.css') }}">
 @endsection
+
 @section('content')
 <div class="container">
   <!-- バリデーションエラーの表示 -->
@@ -10,7 +11,6 @@
   <div class="alert alert-danger">
     <ul>
       @foreach ($errors->all() as $error)
-      <li>{{ $error }}</li>
       @endforeach
     </ul>
   </div>
@@ -26,19 +26,15 @@
   <div class="mypage__wrap">
     <div class="left__side">
       <div class="booking__wrap">
-        <div class="booking__tab">
-          <label class="booking__title hover__color--blue" for="booking-status">
-            <input type="radio" name="tab" id="booking-status" class="booking__title-input" checked>予約状況
-          </label>
+        <!-- タブ部分 -->
+        <input type="radio" name="tabs" id="booking-status" checked>
+        <label class="booking__title" for="booking-status">予約状況</label>
+        
+        <input type="radio" name="tabs" id="booking-history">
+        <label class="booking__title" for="booking-history">予約履歴</label>
 
-          <label class="booking__title hover__color--blue" for="booking-history">
-            <input type="radio" name="tab" id="booking-history" class="booking__title-input">
-            予約履歴
-          </label>
-
-        </div>
         <!-- 予約情報を表示するコンテナ -->
-        <div class="booking__content-wrap">
+        <div id="booking-status-content" class="booking__content-wrap booking__status">
           @if (isset($bookings) && count($bookings) > 0)
           @foreach ($bookings as $booking)
           @include('partials.bookings', ['booking' => $booking])
@@ -47,8 +43,9 @@
           <div class="booking__placeholder">予約はありません</div>
           @endif
         </div>
+
         <!-- 予約履歴を表示するコンテナ -->
-        <div class="booking__history-wrap">
+        <div id="booking-history-content" class="booking__content-wrap booking__history">
           @if (isset($bookings) && count($bookings) > 0)
           @foreach ($bookings as $booking)
           @foreach ($booking->changes as $change)
@@ -107,5 +104,4 @@
 
 @section('script')
 <script src="{{ asset('js/toggleFavorite.js') }}"></script>
-<script src="{{ asset('js/tabToggle.js') }}"></script>
 @endsection

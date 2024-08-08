@@ -33,10 +33,36 @@
   padding-left: 15px;
 }
 
-.booking__tab {
-  display: flex;
-  flex-direction: row;/* 「予約状況」タブと「予約履歴」タブをう横並び*/
+.booking__wrap input[type="radio"] {
+  display: none; /* ラジオボタンを非表示 */
 }
+
+.booking__wrap label.booking__title {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.booking__wrap label.booking__title:hover {
+  background-color: #ddd;
+}
+
+
+.booking__wrap input[type="radio"]:checked + label.booking__title {
+  background-color: #4285f4;
+  color: #fff;
+}
+
+
+/* .booking__tab {
+  display: flex;
+  flex-direction: row;
+  /* 「予約状況」タブと「予約履歴」タブをう横並び*/
+/* } */ 
 
 .booking__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
@@ -46,26 +72,25 @@
   cursor: pointer;
   margin-bottom: 10px;
   margin-right: 20px; /* タブ間のスペースを確保 */
+  cursor: pointer;
 }
 
-.booking__title-input {
+/* .booking__title-input {
   display: none;
-  /* padding-top: 50px; */
-}
+} */
 
 .booking__content-wrap {
-  display: block; /* 初期状態で表示 */
+  display: none; 
   width: 100%;
 }
 
-.booking__title:has(:checked) {
-  color: black;
-  border: 1px solid #eee;
-}
-/* 予約の表示 */
-.booking__title:has(:checked) + .booking__content-wrap {
+
+/* チェックされたタブに対応するコンテンツを表示 */
+#booking-status:checked ~ #booking-status-content,
+#booking-history:checked ~ #booking-history-content {
   display: block;
 }
+
 
 .booking__content {
   margin-bottom: 20px;
