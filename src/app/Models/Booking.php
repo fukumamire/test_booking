@@ -38,4 +38,9 @@ class Booking extends Model
       self::STATUS_COMPLETED => '完了',
     ][$this->attributes['status']] ?? '不明';
   }
+
+  public function changes()
+  {
+    return $this->hasMany(BookingChange::class);
+  }
 }

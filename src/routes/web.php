@@ -38,7 +38,7 @@ Route::get('/thanks', function () {
 Route::view('/done', 'done')->name('done');
 
 
-//会員登録画面を作成するために便宜　店舗一覧
+//会員登録画面　店舗一覧
 Route::get('/', function () {
     return view('index');
 })->name('home');
@@ -61,8 +61,9 @@ Route::get('/mypage', function () {
 Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')->middleware('auth');
 
 
-
 Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
+
+// 予約変更
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
 
 

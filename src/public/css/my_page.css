@@ -33,10 +33,36 @@
   padding-left: 15px;
 }
 
-.booking__tab {
-  display: flex;
-  flex-direction: column;
+.booking__wrap input[type="radio"] {
+  display: none; /* ラジオボタンを非表示 */
 }
+
+.booking__wrap label.booking__title {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.booking__wrap label.booking__title:hover {
+  background-color: #ddd;
+}
+
+
+.booking__wrap input[type="radio"]:checked + label.booking__title {
+  background-color: #4285f4;
+  color: #fff;
+}
+
+
+/* .booking__tab {
+  display: flex;
+  flex-direction: row;
+  /* 「予約状況」タブと「予約履歴」タブをう横並び*/
+/* } */ 
 
 .booking__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
@@ -45,34 +71,34 @@
   padding-bottom: 10px;
   cursor: pointer;
   margin-bottom: 10px;
-}
-
-.booking__title-input {
-  display: none;
-  padding-top: 50px;
+  margin-right: 20px; /* タブ間のスペースを確保 */
+  cursor: pointer;
 }
 
 .booking__content-wrap {
-  display: none;
+  display: none; 
   width: 100%;
 }
 
-.booking__title:has(:checked) {
-  color: black;
-  border: 1px solid #eee;
-}
-/* 予約の表示 */
-.booking__title:has(:checked) + .booking__content-wrap {
+
+/* チェックされたタブに対応するコンテンツを表示 */
+#booking-status:checked ~ #booking-status-content,
+#booking-history:checked ~ #booking-history-content {
   display: block;
 }
 
-.booking__content {
+
+.booking__content, .booking__change-history {
   margin-bottom: 20px;
   padding: 10px 10% 30px 10%;
   background-color: rgb(84, 124, 243);
   border-radius: 5px;
   color: #fff;
   font-size: 1.6rem;
+}
+
+.booking__change-history {
+  border: 1px solid #ccc; /* 枠線を追加（オプション） */
 }
 
 .booking__content--steelblue {
@@ -102,24 +128,40 @@
   filter: invert(1); /* 画像の色を反転させて白に変更 */
 }
 
-.booking__header__title::before,
-.booking-history__header__title::before {
+/* 予約履歴 */
+.booking__history-wrap {
+  display: none; 
+  width: 100%;
+}
+
+.booking__change-history::before {
   content: "";
-  background: url(../../images/clock.svg) no-repeat;
+  background: url('/images/clock.svg') no-repeat; /* 修正されたパス */
   vertical-align: middle;
   width: 25px;
   height: 25px;
   display: inline-block;
-  padding-left: 50px;
+  padding-right: 10px; /* アイコンとテキストの間にスペースを設ける */
 }
+
 
 .booking__header-button {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 20%; 
 }
 
+.form__button--change {
+  border: none; /* ボタンの枠を削除 */
+  background-color: transparent; /* ボタンの背景色を透明に設定 */
+  cursor: pointer; /* カーソルをポインターに変更して、クリック可能であることを示す */
+  margin-top: 10px;
+  padding: 0;
+}
+
+
 .form__button--cancel {
-  margin: 0;
   padding: 0;
   background-color: transparent;
   border: none;
@@ -146,6 +188,19 @@
 .number-label{
   margin-right: 2.0em;
 }
+
+/* 予約変更モーダルウィンドウ */
+.close-button {
+font-size: 50px;
+/* ✖ボタンのサイズ */
+}
+
+.date-input, .time-input, .number-input{
+  font-size: 30px; /* テキストサイズを大きくする */
+  width: 50%; /* 幅を親要素に合わせる */
+  height: auto; /* 高さを自動的に調整 */
+}
+
 
 .favorite__title {
   font-size: clamp(1.2rem, 0.6288rem + 1.34vw, 2rem);
