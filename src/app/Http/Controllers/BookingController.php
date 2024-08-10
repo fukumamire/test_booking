@@ -20,11 +20,11 @@ class BookingController extends Controller
   public function showMyPage()
   {
     $user = Auth::user();
-    // 予約情報を取得し、予約変更履歴も一緒に取得
-    $bookings = Booking::with('changes')->where('user_id', $user->id)
+    // 予約情報と予約変更履歴を取得し、さらにそれぞれの予約に関連する店舗情報も取得
+    $bookings = Booking::with(['changes', 'shop']) // 予約情報と予約変更履歴、および各予約の店舗情報をロード
+      ->where('user_id', $user->id)
       ->where('status', 'active')
       ->get();
-
 
     // ユーザーのお気に入りの店舗を直接取得
     $favoriteShops = Favorite::with('shop', 'shop.areas', 'shop.genres')->where('user_id', $user->id)->get();
@@ -70,36 +70,36 @@ class BookingController extends Controller
 
   // 予約変更のメソッド
   public function update(Request $request, Booking $booking)
-    {
-        $request->validate([
-          'date' => 'required|date',
-          'time' => 'required',
-          'number_of_people' => 'required|integer|min:1',
-        ]);
+  {
+    $request->validate([
+      'date' => 'required|date',
+      'time' => 'required',
+      'number_of_people' => 'required|integer|min:1',
+    ]);
 
-        DB::transaction(function () use ($request, $booking) { // トランザクションを開始
-            // 予約を更新する前に、変更前の情報を取得
-            $oldDate = $booking->date;
-            $oldTime = $booking->time;
-            $oldNumberOfPeople = $booking->number_of_people;
+    DB::transaction(function () use ($request, $booking) { // トランザクションを開始
+      // 予約を更新する前に、変更前の情報を取得
+      $oldDate = $booking->date;
+      $oldTime = $booking->time;
+      $oldNumberOfPeople = $booking->number_of_people;
 
-            // 予約情報を更新
-            $booking->update($request->only(['date', 'time', 'number_of_people']));
+      // 予約情報を更新
+      $booking->update($request->only(['date', 'time', 'number_of_people']));
 
-            // 予約変更履歴を保存
-            $booking->changes()->create([
-              'user_id' => auth()->id(),
-              'old_booking_date' => $oldDate,
-              'old_booking_time' => $oldTime,
-              'old_number_of_people' => $oldNumberOfPeople,
-              'new_booking_date' => $request->date,
-              'new_booking_time' => $request->time,
-              'new_number_of_people' => $request->number_of_people,
-            ]);
-        });
+      // 予約変更履歴を保存
+      $booking->changes()->create([
+        'user_id' => auth()->id(),
+        'old_booking_date' => $oldDate,
+        'old_booking_time' => $oldTime,
+        'old_number_of_people' => $oldNumberOfPeople,
+        'new_booking_date' => $request->date,
+        'new_booking_time' => $request->time,
+        'new_number_of_people' => $request->number_of_people,
+      ]);
+    });
 
-        return back()->with('success', '予約を変更しました。');
-    }
+    return back()->with('success', '予約を変更しました。');
+  }
   /**
    * 予約をキャンセルする
    */

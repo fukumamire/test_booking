@@ -53,6 +53,7 @@
             <p>変更日: {{ $change->changed_at }}</p>
             <p>変更前: {{ $change->old_booking_date }} {{ $change->old_booking_time }} {{ $change->old_number_of_people }}人</p>
             <p>変更後: {{ $change->new_booking_date }} {{ $change->new_booking_time }} {{ $change->new_number_of_people }}人</p>
+            <p>店舗名: {{ $booking->shop->name }}</p>
           </div>
           @endforeach
           @endforeach
