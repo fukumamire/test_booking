@@ -1,6 +1,8 @@
 # 飲食店予約アプリ
 <img width="1437" alt="shop_all" src="https://github.com/fukumamire/todo/assets/136237535/54a24a32-84a0-4c31-a2f0-69c4943134ae">
 
+
+
 ## 作成した目的
 自社で予約サービスを持ちたいという依頼があったため
 
@@ -20,7 +22,7 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 
 ## ER図
 
-![Booking-restaurant](https://github.com/fukumamire/Booking-restaurant/assets/136237535/108d49af-cbc5-4c12-9b76-c66af9714294)
+![ER図予約変更テーブル追加](https://github.com/user-attachments/assets/6db7800f-468e-41a6-82c6-4fd8e9decd97)
 
 ## テーブル設計
 
@@ -108,6 +110,38 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 | shop_id    | INT(bigint)|             |            | 〇       |             |
 | created_at | timestamp  |             |            |          |             |
 | updated_at | timestamp  |             |            |          |             |
+
+## bookings_changes テーブル
+
+このテーブルは、予約の変更履歴を追跡するために使用されます。
+
+| カラム名                | 型          | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY                    |
+|-------------------------|-------------|-------------|------------|----------|--------------------------------|
+| id                    | BIGINT      | 〇           |            | 〇        |                                |
+| booking_id            | BIGINT      |             |            | 〇        | 外部キー booking_id           |
+| user_id               | BIGINT      |             |            | 〇        | 外部キー user_id              |
+| old_booking_date      | DATE        |             |            | 〇        |                                |
+| old_booking_time      | TIME        |             |            | 〇        |                                |
+| old_number_of_people  | INTEGER     |             |            | 〇        |                                |
+| new_booking_date      | DATE        |             |            | 〇        |                                |
+| new_booking_time      | TIME        |             |            | 〇        |                                |
+| new_number_of_people  | INTEGER     |             |            | 〇        |                                |
+| changed_at            | TIMESTAMP   |             |            |          |                                |
+| created_at            | TIMESTAMP   |             |            | 〇        |                                |
+| updated_at            | TIMESTAMP   |             |            | 〇        |                                |
+### 説明
+- **id**: プライマリキーとして使用される自動増分のID。
+- **booking_id**: 予約を参照する外部キー。
+- **user_id**: ユーザーを参照する外部キー。
+- **old_booking_date**: 予約変更前の日付。
+- **old_booking_time**: 予約変更前の時間。
+- **old_number_of_people**: 予約変更前の人数。
+- **new_booking_date**: 予約変更後の日付。
+- **new_booking_time**: 予約変更後の時間。
+- **new_number_of_people**: 予約変更後の人数。
+- **changed_at**: 変更が行われた日時（`nullable`）。
+- **created_at**: レコードの作成日時。Laravelによって自動的に管理
+- **updated_at**: レコードの最終更新日時。Laravelによって自動的に管理されます
 
 
 # 環境構築
