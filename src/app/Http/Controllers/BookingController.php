@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Booking;
 use App\Models\Favorite;
 use App\Models\Shop;
@@ -69,29 +70,36 @@ class BookingController extends Controller
 
   // 予約変更のメソッド
   public function update(Request $request, Booking $booking)
-  {
-    $request->validate([
-      'date' => 'required|date',
-      'time' => 'required',
-      'number_of_people' => 'required|integer|min:1',
-    ]);
+    {
+        $request->validate([
+          'date' => 'required|date',
+          'time' => 'required',
+          'number_of_people' => 'required|integer|min:1',
+        ]);
 
-    $booking->update($request->only(['date', 'time', 'number_of_people']));
+        DB::transaction(function () use ($request, $booking) { // トランザクションを開始
+            // 予約を更新する前に、変更前の情報を取得
+            $oldDate = $booking->date;
+            $oldTime = $booking->time;
+            $oldNumberOfPeople = $booking->number_of_people;
 
-    // 予約変更履歴を保存
-    $booking->changes()->create([
-      'user_id' => auth()->id(),
-      'old_booking_date' => $booking->date,
-      'old_booking_time' => $booking->time,
-      'old_number_of_people' => $booking->number_of_people,
-      'new_booking_date' => $request->date,
-      'new_booking_time' => $request->time,
-      'new_number_of_people' => $request->number_of_people,
-    ]);
+            // 予約情報を更新
+            $booking->update($request->only(['date', 'time', 'number_of_people']));
 
-    return back()->with('success', '予約を変更しました。');
-  }
+            // 予約変更履歴を保存
+            $booking->changes()->create([
+              'user_id' => auth()->id(),
+              'old_booking_date' => $oldDate,
+              'old_booking_time' => $oldTime,
+              'old_number_of_people' => $oldNumberOfPeople,
+              'new_booking_date' => $request->date,
+              'new_booking_time' => $request->time,
+              'new_number_of_people' => $request->number_of_people,
+            ]);
+        });
 
+        return back()->with('success', '予約を変更しました。');
+    }
   /**
    * 予約をキャンセルする
    */
