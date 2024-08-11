@@ -5,6 +5,8 @@
 @endsection
 
 @section('header')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="login-status" content="{{ Auth::check() ? 'true' : 'false' }}">
 @if($message)
 <div class="alert alert-warning">
   {{ $message }}
@@ -44,6 +46,7 @@
 
 
 @section('content')
+
 <div class="shop__wrap">
   @foreach ($shops as $shop)
   <div class="shop__content">
@@ -63,7 +66,7 @@
       <div class="shop__button">
         <a href="{{ route('shop.detail', ['shop' => $shop->id]) }}" class="shop__button-detail">詳しくみる</a>
         <div class="stage">
-          <button class="heart {{ $shop->is_favorite? 'heart-active' : 'heart' }}" data-shop-id="{{ $shop->id }}" aria-label="お気に入り"  type="button"></button>
+          <button class="heart {{ $shop->is_favorite ? 'heart-active' : 'heart' }}" data-shop-id="{{ $shop->id }}" aria-label="お気に入り" type="button" onclick="toggleFavorite(this, {{ $shop->id }})"></button>
         </div>
       </div>
     </div>
