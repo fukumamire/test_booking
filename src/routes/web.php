@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
-
+use App\Http\Controllers\ReviewController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,3 +75,7 @@ Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
 
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+
+
+// 評価機能
+Route::post('/review/{shop}/store', [ReviewController::class, 'store'])->name('review.store');
