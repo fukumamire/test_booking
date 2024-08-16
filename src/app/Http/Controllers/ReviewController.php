@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Auth; // Authファサードをインポート
 
 class ReviewController extends Controller
 {
+
+  public function create($shopId)
+  {
+    $shop = Shop::findOrFail($shopId); // IDを使って店舗を取得
+    return view('review', ['shop' => $shop]);
+  }
+
+  // public function create($shopId)
+  // {
+  //   $shop = Shop::findOrFail($shopId); // IDを使って店舗を取得
+  //   return view('review', ['shop' => $shop]);
+  // }
+
   public function store(Request $request, Shop $shop)
   {
     $request->validate([
@@ -28,6 +41,7 @@ class ReviewController extends Controller
     $review->comment = $request->comment;
     $review->save();
 
-    return back()->with('success', 'レビューが正常に提出されました。');
+    return redirect()->route('shop.show', $shop->id)->with('success', 'レビューが正常に提出されました。');
+    // return back()->with('success', 'レビューが正常に提出されました。');
   }
 }

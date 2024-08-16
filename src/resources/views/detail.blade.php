@@ -10,6 +10,8 @@
     <div class="header-container">
       <a href="{{ $backRoute }}" class="header__back">&lt;</a>
       <h1 class="shop-name">{{ $shop->name }}</h1>
+      <a href="{{ route('review.create', $shop->id) }}">新しいレビューを書く</a>
+      <a href="{{ route('shop.reviews', $shop->id) }}">この店舗のレビューを見る</a>
     </div>
 
     <div class="shop-images">
