@@ -11,8 +11,9 @@
 }
 
 .review-note {
-  font-size: 14px;
-  color: #666;
+  font-size: 20px;
+  background-color: #f8f67c; 
+  color: #0f0f0e;
   margin-bottom: 20px;
 }
 
@@ -25,11 +26,18 @@
 
 .shop-name {
   font-weight: bold;
-  font-size: 24px;
+  font-size: 30px;
 }
 
 .shop-details {
-  font-size: 16px;
+  font-size: 18px;
+}
+
+.shop-image {
+  width: 100%; /* 親要素の幅に合わせる */
+  height: auto; /* 高さを自動的に調整 */
+  max-width: 300px; /* 最大幅を設定 */
+  margin-bottom: 10px; /* 画像とテキスト間の余白 */
 }
 
 .review-rating {
@@ -82,6 +90,26 @@
   box-sizing: border-box;
   resize: vertical;
 }
+/* タイトルの(任意） */
+.optional-label {
+  color: rgb(103, 103, 103);
+  font-weight: bold;
+  float: right;
+}
+/* 本文の（必須） */
+.required-text {
+  color: red; /* テキスト色を赤にする */
+  font-weight: bold; /* 太字にする */
+  float: right;
+
+}
+/* 本文関係 */
+.min-length-text {
+  color: rgb(130, 18, 121); /* テキスト色を赤にする */
+  font-weight: bold; /* 太字にする */
+}
+
+
 
 button {
   background-color: #007bff;
@@ -90,6 +118,7 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 14px;
 }
 
 .alert {

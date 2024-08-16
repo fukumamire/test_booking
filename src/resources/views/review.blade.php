@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="review-container">
-  <h2 class="review-header">飲食店レビューを書く</h2>
+  <h1 class="review-header">飲食店レビューを書く</h1>
   <p class="review-note">来店前のレビュー投稿はご遠慮ください</p>
 
   <form action="{{ route('review.store', $shop->id) }}" method="post" class="review-form" enctype="multipart/form-data">
@@ -17,13 +17,21 @@
     <p class="shop-details">
         エリア:
         @foreach ($shop->areas as $area)
-            {{ $area->name }}{{ $loop->last ? '' : ', ' }}
+            {{ $area->name }}{{ $loop->last ? '' : ', ' }},
         @endforeach
         ジャンル:
         @foreach ($shop->genres as $genre)
             {{ $genre->name }}{{ $loop->last ? '' : ', ' }}
         @endforeach
+        <br>
+        {{ $shop->outline }}
     </p>
+        
+      @if($shop->images->isNotEmpty())
+        @foreach ($shop->images as $image)
+            <img src="{{ $image->shop_image_url }}" alt="{{ $shop->name }}" class="shop-image">
+        @endforeach
+      @endif
     </div>
 
 
@@ -41,7 +49,7 @@
     </div>
 
     <div class="review-title">
-      <label for="title">タイトル：<span>(任意)</span>
+      <label for="title" class="title">タイトル：<span  class="optional-label">(任意)</span></label>
         <input type="text" id="title" name="title" value="{{ old('title') }}" maxlength="20">
         @error('title')
         <span class="error">{{ $message }}</span>
@@ -49,8 +57,9 @@
     </div>
 
     <div class="review-body">
-      <label for="comment">本文：<span>(必須)</span>
+      <label for="comment" class="comment" >本文：<span class="required-text">(必須) </span></label>
         <textarea id="comment" name="comment" minlength="20" maxlength="400" required>{{ old('comment') }}</textarea>
+        <span class="min-length-text">20文字以上記載してください</span>
         @error('comment')
         <span class="error">{{ $message }}</span>
         @enderror
