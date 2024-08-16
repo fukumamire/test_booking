@@ -16,12 +16,6 @@ class ReviewController extends Controller
     return view('review', ['shop' => $shop]);
   }
 
-  // public function create($shopId)
-  // {
-  //   $shop = Shop::findOrFail($shopId); // IDを使って店舗を取得
-  //   return view('review', ['shop' => $shop]);
-  // }
-
   public function store(Request $request, Shop $shop)
   {
     $request->validate([
@@ -42,6 +36,5 @@ class ReviewController extends Controller
     $review->save();
 
     return redirect()->route('shop.show', $shop->id)->with('success', 'レビューが正常に提出されました。');
-    // return back()->with('success', 'レビューが正常に提出されました。');
   }
 }
