@@ -68,7 +68,9 @@
   color: orange;
 }
 
-.stars input:checked ~ label {
+
+.stars input:checked + label,
+.stars input:checked + label ~ label {
   color: orange;
 }
 
@@ -96,6 +98,7 @@
   font-weight: bold;
   float: right;
 }
+
 /* 本文の（必須） */
 .required-text {
   color: red; /* テキスト色を赤にする */

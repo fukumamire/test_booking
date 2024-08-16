@@ -13,20 +13,20 @@
     @csrf
 
     <div class="shop-info">
-    <h3 class="shop-name">{{ $shop->name }}</h3>
-    <p class="shop-details">
-        エリア:
-        @foreach ($shop->areas as $area)
+      <h3 class="shop-name">{{ $shop->name }}</h3>
+      <p class="shop-details">
+          エリア:
+          @foreach ($shop->areas as $area)
             {{ $area->name }}{{ $loop->last ? '' : ', ' }},
-        @endforeach
-        ジャンル:
-        @foreach ($shop->genres as $genre)
+          @endforeach
+          ジャンル:
+          @foreach ($shop->genres as $genre)
             {{ $genre->name }}{{ $loop->last ? '' : ', ' }}
-        @endforeach
-        <br>
-        {{ $shop->outline }}
-    </p>
-        
+          @endforeach
+          <br>
+          {{ $shop->outline }}
+      </p>
+
       @if($shop->images->isNotEmpty())
         @foreach ($shop->images as $image)
             <img src="{{ $image->shop_image_url }}" alt="{{ $shop->name }}" class="shop-image">
@@ -34,13 +34,12 @@
       @endif
     </div>
 
-
     <div class="review-rating">
       <p class="rating-label">評価：</p>
       <div class="stars">
-        @for ($i = 5; $i >= 1 ; $i--)
-        <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
-        <label for="star{{ $i }}">★</label>
+        @for ($i = 1; $i <= 5; $i++)
+          <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
+          <label for="star{{ $i }}">★</label>
         @endfor
       </div>
       @error('rating')
@@ -57,7 +56,7 @@
     </div>
 
     <div class="review-body">
-      <label for="comment" class="comment" >本文：<span class="required-text">(必須) </span></label>
+      <label for="comment" class="comment">本文：<span class="required-text">(必須)</span></label>
         <textarea id="comment" name="comment" minlength="20" maxlength="400" required>{{ old('comment') }}</textarea>
         <span class="min-length-text">20文字以上記載してください</span>
         @error('comment')
@@ -80,6 +79,7 @@
 @endif
 @endsection
 
+@section('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelector('.review-form').addEventListener('submit', function(e) {
@@ -89,5 +89,18 @@ document.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
         }
     });
+
+    const stars = document.querySelectorAll('.stars input[type="radio"]');
+    stars.forEach(star => {
+        star.addEventListener('change', () => {
+            stars.forEach(s => s.nextElementSibling.classList.remove('active'));
+            let currentStar = star;
+            while(currentStar) {
+                currentStar.nextElementSibling.classList.add('active');
+                currentStar = currentStar.previousElementSibling ? currentStar.previousElementSibling.querySelector('input') : null;
+            }
+        });
+    });
 });
 </script>
+@endsection
