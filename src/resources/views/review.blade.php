@@ -11,7 +11,7 @@
 
   <form action="{{ route('review.store', $shop->id) }}" method="post" class="review-form" enctype="multipart/form-data">
     @csrf
-
+    <input type="hidden" name="shop_id" value="{{ $shop->id }}">
     <div class="shop-info">
       <h3 class="shop-name">{{ $shop->name }}</h3>
       <p class="shop-details">
@@ -82,13 +82,13 @@
 @section('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.review-form').addEventListener('submit', function(e) {
-        var comment = document.getElementById('comment');
-        if (comment.value.length < 20) {
-            alert('本文は20文字以上でなければなりません。');
-            e.preventDefault();
-        }
-    });
+    // document.querySelector('.review-form').addEventListener('submit', function(e) {
+    //     var comment = document.getElementById('comment');
+    //     if (comment.value.length < 20) {
+    //         alert('本文は20文字以上でなければなりません。');
+    //         e.preventDefault();
+    //     }
+    // });
 
     const stars = document.querySelectorAll('.stars input[type="radio"]');
     stars.forEach(star => {
