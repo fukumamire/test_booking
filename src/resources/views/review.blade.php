@@ -82,14 +82,6 @@
 @section('scripts')
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // document.querySelector('.review-form').addEventListener('submit', function(e) {
-    //     var comment = document.getElementById('comment');
-    //     if (comment.value.length < 20) {
-    //         alert('本文は20文字以上でなければなりません。');
-    //         e.preventDefault();
-    //     }
-    // });
-
     const stars = document.querySelectorAll('.stars input[type="radio"]');
     stars.forEach(star => {
         star.addEventListener('change', () => {

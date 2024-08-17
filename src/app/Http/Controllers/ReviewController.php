@@ -31,7 +31,7 @@ class ReviewController extends Controller
     if (!Auth::check()) { // ユーザーがログインしていない場合
       return redirect()->route('request_login')->withErrors(['user_not_authenticated' => 'ログインしてください。']);
     }
-    
+
     $shopId = $request->input('shop_id'); // リクエストから shop_id を取得
     $shop = Shop::findOrFail($shopId); // shop_id で店舗を見つけます。
 
@@ -43,6 +43,6 @@ class ReviewController extends Controller
     $review->comment = $request->comment;
     $review->save();
 
-    return redirect()->route('shop.show', $shop->id)->with('success', 'レビューが正常に提出されました。');
+    return redirect()->route('shop.detail', $shop->id)->with('success', 'レビューが正常に提出されました。');
   }
 }
