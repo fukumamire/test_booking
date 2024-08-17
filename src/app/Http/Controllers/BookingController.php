@@ -95,6 +95,7 @@ class BookingController extends Controller
         'new_booking_date' => $request->date,
         'new_booking_time' => $request->time,
         'new_number_of_people' => $request->number_of_people,
+        'changed_at' => now(), // 現在の日時を設定
       ]);
     });
 

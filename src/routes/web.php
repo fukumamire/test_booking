@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
-
+use App\Http\Controllers\ReviewController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,3 +75,12 @@ Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
 
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+
+// レビューフォーム（入力）を表示するルート
+Route::get('/review/{shop}/create', [ReviewController::class, 'create'])->name('review.create');
+
+// 評価　レビューを保存
+Route::post('/review/store', [ReviewController::class, 'store'])->name('review.store');
+
+//店舗のレビューページ
+Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name('shop.reviews');

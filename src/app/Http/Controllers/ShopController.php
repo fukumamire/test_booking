@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Models\Shop;
 use App\Models\Area;
 use App\Models\Genre;
 use App\Models\Favorite;
+use App\Models\Review; // Reviewクラスのインポートを追加
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class ShopController extends Controller
 {
@@ -95,5 +98,13 @@ class ShopController extends Controller
     $backRoute = url('/');
     $shop = Shop::find($shopId); // Eloquentを使用して店舗情報を取得
     return view('detail', compact('shop', 'backRoute'));
+  }
+
+
+//特定の店舗のレビューを取得してビューに渡すメソッド
+  public function showReviews(Shop $shop)
+  {
+    $reviews = Review::where('shop_id', $shop->id)->get();
+    return view('shop_reviews', ['shop' => $shop, 'reviews' => $reviews]);
   }
 }

@@ -143,6 +143,28 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 - **created_at**: レコードの作成日時。Laravelによって自動的に管理
 - **updated_at**: レコードの最終更新日時。Laravelによって自動的に管理されます
 
+## reviewsテーブル
+| カラム名    | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
+|-------------|--------------|-------------|------------|----------|-------------|
+| id          | bigint       | 〇           |            | 〇        |             |
+| shop_id     | bigint       |             |            | 〇        | 〇           |
+| user_id     | bigint       |             |            | 〇        | 〇           |
+| rating      | tiny int      |             |            | 〇        |             |
+| title       | VARCHAR(20)  |             |            |          |             |
+| comment     | text         |             |            | 〇        |             |
+| created_at  | timestamp    |             |            |          |             |
+| updated_at  | timestamp    |             |            |          |             |
+### 説明
+
+このテーブルは、ユーザーが飲食店に対して投稿するレビューを保存するためのものです。各カラムの詳細は以下の通りです。
+
+- `id`: レビューの一意の識別子 (PRIMARY KEY)。
+- `shop_id`: レビュー対象の店舗のID (FOREIGN KEY)。
+- `user_id`: レビューを書いたユーザーのID (FOREIGN KEY)。
+- `rating`: 店舗の評価（1から5の星の数）。
+- `title`: レビューのタイトル (任意)。
+- `comment`: レビューの本文。
+- `created_at`/`updated_at`: レビューが作成・更新された日時。
 
 # 環境構築
 ## Dockerビルド
