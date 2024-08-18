@@ -1,9 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ReviewController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use App\Services\QrCodeService;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -84,3 +88,19 @@ Route::post('/review/store', [ReviewController::class, 'store'])->name('review.s
 
 //店舗のレビューページ
 Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name('shop.reviews');
+
+
+//2要素認証　
+Route::get('/two-factor-challenge', function () {
+    return view('auth.two-factor-challenge');
+})->middleware(['auth', 'verified'])->name('two-factor.login');
+
+//
+Route::get('/qr-code', function (Request $request) {
+    $user = $request->user();
+    $qrCodeUrl = QrCodeService::generate($user->twoFactorQrCodeUrl());
+
+    return view('auth.qr-code', [
+        'qrCodeUrl' => $qrCodeUrl,
+    ]);
+})->middleware(['auth', 'verified'])->name('qr-code');
