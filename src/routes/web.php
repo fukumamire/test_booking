@@ -99,3 +99,13 @@ Route::get('/two-factor-challenge', function () {
 // QRコード
 Route::get('/reservation/qrcode/{bookingId}', [BookingController::class, 'generateQrCode'])->name('reservation.qrcode');
 Route::get('/reservation/scan', [BookingController::class, 'authenticateReservation'])->name('reservation.scan');
+
+// QRコード 予約認証　成功　予約完了
+Route::get('/reservation/success', function () {
+    return view('done');
+})->name('reservation.success');
+
+// 予約認証に失敗時
+Route::get('/reservation/failure', function () {
+    return view('reservation_failure');
+})->name('reservation.failure');

@@ -69,6 +69,8 @@ class BookingController extends Controller
     $booking->time = $request->time;
     $booking->number_of_people = $request->number_of_people;
     $booking->status = Booking::STATUS_ACTIVE; // 予約状態を 'active' に設定
+    // QRコード用のトークンを生成して予約情報に保存
+    $booking->qr_code_token = base64_encode(random_bytes(16)); //例としてランダムなバイト列をエンコード
     $booking->save();
 
     // 予約成功後のリダイレクト
@@ -139,7 +141,7 @@ class BookingController extends Controller
 
     return view('qrcode', ['qrCode' => $qrCodeDataUri]); // QRコードを表示するビューに渡す
   }
-  
+
   // QRコードのスキャンと認証メソッド
   public function authenticateReservation(Request $request)
   {
