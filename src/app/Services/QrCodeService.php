@@ -6,7 +6,6 @@ use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 
 
-
 class QrCodeService
 {
   public function generate(string $data): string
@@ -17,11 +16,7 @@ class QrCodeService
 
     $writer = new PngWriter();
 
-    try {
-      $result = $writer->write($qrCode);
-      return $result->getDataUri();
-    } catch (\Exception $e) {
-      throw new \Exception('Failed to generate QR code: ' . $e->getMessage(), 500);
-    }
+    // QRコードを生成し、データURI形式で返す
+    return $writer->write($qrCode)->getDataUri();
   }
 }

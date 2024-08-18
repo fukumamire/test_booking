@@ -6,6 +6,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ReviewController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use App\Http\Controllers\ReservationController;
 use App\Services\QrCodeService;
 
 /*
@@ -95,12 +96,6 @@ Route::get('/two-factor-challenge', function () {
     return view('auth.two-factor-challenge');
 })->middleware(['auth', 'verified'])->name('two-factor.login');
 
-//
-Route::get('/qr-code', function (Request $request) {
-    $user = $request->user();
-    $qrCodeUrl = QrCodeService::generate($user->twoFactorQrCodeUrl());
-
-    return view('auth.qr-code', [
-        'qrCodeUrl' => $qrCodeUrl,
-    ]);
-})->middleware(['auth', 'verified'])->name('qr-code');
+// QRコード
+Route::get('/reservation/qrcode/{bookingId}', [BookingController::class, 'generateQrCode'])->name('reservation.qrcode');
+Route::get('/reservation/scan', [BookingController::class, 'authenticateReservation'])->name('reservation.scan');
