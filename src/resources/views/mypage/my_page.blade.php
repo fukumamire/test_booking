@@ -62,7 +62,7 @@
           @endif
         </div>
       </div>
-    </div>
+    </div>{{-- partials/bookings.blade.php --}}
 
     <div class="right__side">
       <p class="user__name">{{ Auth::user()->name }}さん</p>

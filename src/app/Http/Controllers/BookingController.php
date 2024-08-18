@@ -139,10 +139,10 @@ class BookingController extends Controller
     $qrCodeUrl = route('reservation.scan', ['token' => $token]); // スキャン時にアクセスするURLを生成
     $qrCodeDataUri = $this->qrCodeService->generate($qrCodeUrl); // 依存注入されたQrCodeServiceを使用してQRコードを生成
 
-    return view('qrcode', ['qrCode' => $qrCodeDataUri]); // QRコードを表示するビューに渡す
+    return view('auth.qr-code', ['qrCode' => $qrCodeDataUri]); // QRコードを表示するビューに渡す
   }
 
-  // QRコードのスキャンと認証メソッド
+  // 店舗側　QRコードのスキャンと認証メソッド
   public function authenticateReservation(Request $request)
   {
     $token = $request->query('token'); // URLからトークンを取得
