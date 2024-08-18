@@ -98,7 +98,8 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 | time             | TIME       |             |            | 〇       |             |
 | number_of_people | INT        |             |            | 〇       |             |
 | status           | VARCHAR    |             |            | 〇       |             |
-| created_at       | timestamp  |             |            |          |             |
+| qr_code_token    | VARCHAR    |             |            | 〇       |             |
+| created_at       | timestamp  |             |   〇       |          |             |
 | updated_at       | timestamp  |             |            |          |             |
 
 ### favorites テーブル
