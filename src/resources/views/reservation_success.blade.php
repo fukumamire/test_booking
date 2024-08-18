@@ -8,8 +8,10 @@
 
 <body class="done-page">
   <div class="content__wrap">
-    <h2>予約が見つかりませんでした</h2>
-    <p class="content__text">QRコードをもう一度スキャンしてください。</p>
+    <h2>予約が確認できました。</h2>
+    <p class="content__text">
+      ご来店ありがとうごさいます。
+    </p>
     <a class="content__button" href="/">戻る</a>
   </div>
 </body>
