@@ -6,8 +6,9 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ReviewController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
-use App\Http\Controllers\ReservationController;
+
 use App\Services\QrCodeService;
+use App\Http\Controllers\QrCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,10 +98,10 @@ Route::get('/two-factor-challenge', function () {
 })->middleware(['auth', 'verified'])->name('two-factor.login');
 
 // QRコード
-Route::get('/reservation/qrcode/{bookingId}', [BookingController::class, 'generateQrCode'])->name('reservation.qrcode');
+Route::get('/reservation/qrcode/{bookingId}', [QrCodeController::class, 'generateQrCode'])->name('reservation.qrcode');
 
 // QRコードがスキャンされた後に実行される処理
-Route::get('/reservation/scan', [BookingController::class, 'authenticateReservation'])->name('reservation.scan');
+Route::get('/reservation/scan', [QrCodeController::class, 'authenticateReservation'])->name('reservation.scan');
 
 // 店舗側　QRコード 予約認証　成功　予約完了
 Route::get('/reservation/success', function () {

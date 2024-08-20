@@ -40,7 +40,7 @@ class Shop extends Model
   }
 
 
-  // ユーザーがお気に入り登録しているかどうかを確認
+  // ユーザーがお気に入り登録しているかどうかを確認　特定のユーザーに対してお気に入り状態を判定する
   public function isFavoriteBy(User $user)
   {
     return $this->favorites()->where('user_id', $user->id)->exists();
