@@ -15,7 +15,7 @@ phpMyAdmin:：http://localhost:8080/
 
 ## 機能一覧
 
-会員登録、ログイン、ログアウト、ユーザー情報取得、ユーザー飲食店お気に入り一覧取得、ユーザー飲食店予約情報取得、飲食店一覧取得、飲食店詳細取得、飲食店お気に入り追加、飲食店お気に入り削除、飲食店予約情報追加、飲食店予約情報削除、エリアで検索する、ジャンルで検索する、店名で検索する
+会員登録、ログイン、ログアウト、ユーザー情報取得、ユーザー飲食店お気に入り一覧取得、ユーザー飲食店予約情報取得、飲食店一覧取得、飲食店詳細取得、飲食店お気に入り追加、飲食店お気に入り削除、飲食店予約情報追加、飲食店予約情報削除、予約変更、評価機能、エリアで検索する、ジャンルで検索する、店名で検索する
 
 ## 使用技術（実行環境）
 Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
@@ -98,7 +98,8 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 | time             | TIME       |             |            | 〇       |             |
 | number_of_people | INT        |             |            | 〇       |             |
 | status           | VARCHAR    |             |            | 〇       |             |
-| created_at       | timestamp  |             |            |          |             |
+| qr_code_token    | VARCHAR    |             |            | 〇       |             |
+| created_at       | timestamp  |             |   〇       |          |             |
 | updated_at       | timestamp  |             |            |          |             |
 
 ### favorites テーブル

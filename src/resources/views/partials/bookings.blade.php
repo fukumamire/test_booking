@@ -44,6 +44,7 @@
       </form>
     </div>
   </div>
+
   <div class="booking__details">
     <p><span class="shop-label">Shop </span>{{ $booking->shop->name }}</p>
     <p><span class="date-label">Date</span> {{ $booking->date }} </p>
@@ -55,32 +56,8 @@
       @endif
     </p>
     <p><span class="number-label">Number</span> {{ $booking->number_of_people }}人</p>
+    <a href="{{ route('reservation.qrcode', ['bookingId' => $booking->id]) }}" class="btn btn-primary">QRコードを表示</a>
   </div>
-
-  {{-- 各予約情報の後にその予約の変更履歴を表示 --}}
-  {{-- <input type="radio" name="tab" class="reservation__title-input">
-                予約履歴
-  @if ($bookings->count())
-    @foreach ($bookings as $booking)
-      <div class="booking__content">
-        <!-- 予約情報の表示 -->
-        <p>予約ID: {{ $booking->id }}</p>
-        <p>予約日時: {{ $booking->date }} {{ $booking->time }}</p>
-        <p>人数: {{ $booking->number_of_people }}人</p>
-
-        <!-- 予約変更履歴の表示 -->
-        @if ($booking->changes)
-          @foreach ($booking->changes as $change)
-            <div class="booking__change-history">
-              <p>変更日: {{ $change->changed_at }}</p>
-              <p>変更前: {{ $change->old_booking_date }} {{ $change->old_booking_time }} {{ $change->old_number_of_people }}人</p>
-              <p>変更後: {{ $change->new_booking_date }} {{ $change->new_booking_time }} {{ $change->new_number_of_people }}人</p>
-            </div>
-          @endforeach
-        @endif
-      </div>
-    @endforeach
-@endif --}}
 </div>
 
 @section('script')

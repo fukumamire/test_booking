@@ -66,6 +66,10 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(1000)->by($throttleKey);
         });
 
+        // 二要素認証のチャレンジビューをカスタマイズ
+        Fortify::twoFactorChallengeView(function () {
+            return view('auth.two-factor-challenge');
+        });
         // RateLimiter::for('two-factor', function (Request $request) {
         //     return Limit::perMinute(5)->by($request->session()->get('login.id'));
         // });
