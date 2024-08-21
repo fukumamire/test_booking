@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking; 
+use App\Models\Booking;
 use App\Services\QrCodeService;
 use Illuminate\Http\Request;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class QrCodeController extends Controller
 {
-  
+
   protected $qrCodeService;
 
   public function __construct(QrCodeService $qrCodeService)
@@ -44,6 +44,4 @@ class QrCodeController extends Controller
       return redirect()->route('reservation.failure');
     }
   }
-
-
 }

@@ -10,6 +10,8 @@ class QrCodeService
   public function generate(string $data): string
   {
     // QRコードを生成し、データURI形式で返す
-    return QrCode::format('png')->size(300)->generate($data);
+    $qrCodeBinaryData = QrCode::format('png')->size(300)->generate($data);
+    return 'data:image/png;base64,' . base64_encode($qrCodeBinaryData);
+    
   }
 }

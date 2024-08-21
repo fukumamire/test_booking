@@ -13,7 +13,7 @@
       <div class="card-body text-center">
         <img src="{{ $qrCode }}" alt="QR Code" class="img-fluid">
         <p class="mt-3">
-          Please scan this QR code with your authenticator app.
+          このQRコードを来店時にお見せください
         </p>
       </div>
     </div>
