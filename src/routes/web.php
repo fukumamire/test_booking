@@ -10,7 +10,6 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 use App\Services\QrCodeService;
 use App\Http\Controllers\QrCodeController;
 
-
 use App\Http\Controllers\Auth\AdminAuthController;
 /*
 |--------------------------------------------------------------------------
