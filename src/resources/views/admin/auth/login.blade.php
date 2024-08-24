@@ -13,14 +13,14 @@
     <form action="{{ route('admin.login.submit') }}" method="post" class="login-form">
       @csrf
       <div class="form-group">
-        <img src="auth-img/mail.png" alt="mailアイコン"  width="30">
+        <img src="{{ asset('auth-img/mail.png') }}" alt="mailアイコン"  width="30">
         <input type="email" id="email" name="email" placeholder="email" value="{{ old('email') }}">
         @error('email')
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
       <div class="form-group">
-        <img src="auth-img/key.png" alt="keyアイコン" width="30">
+        <img src="{{ asset('auth-img/key.png') }}" alt="keyアイコン" width="30">
         <input type="password" id="password" name="password" placeholder="password">
         @error('password')
           <div class="error-message">{{ $message }}</div>
