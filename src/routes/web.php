@@ -10,6 +10,8 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 use App\Services\QrCodeService;
 use App\Http\Controllers\QrCodeController;
 
+
+use App\Http\Controllers\Auth\AdminAuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,11 +42,11 @@ Route::get('/thanks', function () {
     return view('auth.thanks');
 });
 
-// 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示
+// 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示　予約完了の画面へ
 Route::view('/done', 'done')->name('done');
 
 
-//会員登録画面　店舗一覧
+//店舗一覧
 Route::get('/', function () {
     return view('index');
 })->name('home');
@@ -112,3 +114,9 @@ Route::get('/reservation/success', function () {
 Route::get('/reservation/failure', function () {
     return view('reservation_failure');
 })->name('reservation.failure');
+
+
+
+// 管理者用ログイルート
+Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
