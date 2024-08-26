@@ -6,9 +6,10 @@
 
 @section('content')
 <body class="login-page">
+  
   <div class="login-container">
     <div class="login-header">
-      <h2>Admin</h2>
+      <h2>Administrator Login</h2>
     </div>
     <form action="{{ route('admin.login.submit') }}" method="post" class="login-form">
       @csrf

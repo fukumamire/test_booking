@@ -21,6 +21,7 @@ class CreateBookingsTable extends Migration
       $table->time('time');
       $table->integer('number_of_people');
       $table->string('status');
+      $table->string('qr_code_token')->unique()->nullable();
       $table->timestamps();
     });
   }

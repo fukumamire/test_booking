@@ -5,10 +5,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ReviewController;
+use App\Models\User;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 use App\Services\QrCodeService;
 use App\Http\Controllers\QrCodeController;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\AdminAuthController;
 /*
@@ -115,7 +117,16 @@ Route::get('/reservation/failure', function () {
 })->name('reservation.failure');
 
 
+// 管理者登録
+Route::get('/admin/register', function () {
+    return view('admin.auth.register');
+})->middleware(['guest']);
+
+Route::post('/admin/register', [App\Http\Controllers\Admin\RegisterController::class, 'store'])->middleware(['guest']);
+
 
 // 管理者用ログイルート
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+
+
