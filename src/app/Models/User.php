@@ -9,11 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Shop;
 use App\Models\Favorite;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
   use HasApiTokens, HasFactory, Notifiable;
-
+  use HasRoles;
   /**
    * The attributes that are mass assignable.
    *
@@ -44,7 +45,7 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
-   // Favorite モデルを通じて Shop モデルとの関連付け
+  // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
     return $this->hasMany(Favorite::class, 'user_id');
@@ -72,8 +73,8 @@ class User extends Authenticatable
       $this->favorites()->create(['shop_id' => $shop->id]);
     }
   }
-  
- // お気に入り登録しているかどうかを確認
+
+  // お気に入り登録しているかどうかを確認
   public function hasFavorited(Shop $shop)
   {
     return $this->favorites()->where('shop_id', $shop->id)->exists();
