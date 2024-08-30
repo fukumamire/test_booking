@@ -140,4 +140,23 @@ return [
 
     'store' => 'default',
   ],
+
+  'roles' => [
+    'admin' => ['super-admin'],
+    'shop_manager' => ['shop-manager'],
+    'user' => ['user']
+  ],
+
+  'permissions' => [
+    'admin' => [
+      'manage-shops',
+      'manage-users'
+    ],
+    'shop_manager' => [
+      'manage-shop-info',
+      'check-bookings'
+    ],
+    'user' => []
+  ]
+
 ];
