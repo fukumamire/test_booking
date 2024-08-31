@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +19,8 @@ class DatabaseSeeder extends Seeder
 			ShopAreasSeeder::class,
 			GenresTableSeeder::class,
 		]);
+
+
 
 		// 管理者を作成（既存の場合はスキップ）
 		if (!User::where('email', 'admin@example.com')->exists()) {
@@ -32,33 +35,42 @@ class DatabaseSeeder extends Seeder
 
 	private function createAdminUser()
 	{
-		$adminId = User::create([
-			'name' => 'Admin',
-			'email' => 'admin@example.com',
-			'password' => Hash::make('password'),
-		])->id;
+		DB::transaction(function () {
+			$adminId = User::create([
+				'name' => 'Admin',
+				'email' => 'admin@example.com',
+				'password' => Hash::make('password'),
+			])->id;
 
-		$superAdminRole = \Spatie\Permission\Models\Role::create(['name' => 'super-admin']);
-		DB::table('model_has_roles')->insert([
-			'role_id' => $superAdminRole->id,
-			'model_type' => 'App\Models\User',
-			'model_id' => $adminId,
-		]);
+			$superAdminRole =  \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'super-admin']);
+			$admin = User::find($adminId);
+
+			// 既存の関連付けを削除してから、新しい関連付けを追加
+			$admin->removeRole($superAdminRole);
+			$admin->assignRole($superAdminRole);
+
+			echo "Admin user created and assigned super-admin role\n";
+		});
 	}
 
 	private function createShopManagerUser()
 	{
-		$shopManagerId = User::create([
-			'name' => 'Shop Manager',
-			'email' => 'shop-manager@example.com',
-			'password' => Hash::make('password'),
-		])->id;
+		DB::transaction(function () {
+			$shopManagerId = User::create([
+				'name' => 'Shop Manager',
+				'email' => 'shop-manager@example.com',
+				'password' => Hash::make('password'),
+			])->id;
 
-		$shopManagerRole = \Spatie\Permission\Models\Role::create(['name' => 'shop-manager']);
-		DB::table('model_has_roles')->insert([
-			'role_id' => $shopManagerRole->id,
-			'model_type' => 'App\Models\User',
-			'model_id' => $shopManagerId,
-		]);
+			$shopManagerRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'shop-manager']);
+
+			$shopManager = User::find($shopManagerId);
+
+			// 既存の関連付けを削除してから、新しい関連付けを追加
+			$shopManager->removeRole($shopManagerRole);
+			$shopManager->assignRole($shopManagerRole);
+
+			echo "Shop Manager user created and assigned shop-manager role\n";
+		});
 	}
 }
