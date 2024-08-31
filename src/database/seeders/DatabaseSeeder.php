@@ -42,7 +42,11 @@ class DatabaseSeeder extends Seeder
 			'password' => Hash::make('password'),
 		]);
 
-		$superAdminRole = DB::table('roles')->firstOrCreate(['name' => 'super-admin']);
+		$superAdminRole = DB::table('roles')->firstOrCreate(
+			['name' => 'super-admin'],
+			['guard_name' => 'web']
+		);
+
 		DB::table('model_has_roles')->updateOrInsert([
 			'role_id' => $superAdminRole->id,
 			'model_type' => 'App\Models\User',
@@ -62,7 +66,11 @@ class DatabaseSeeder extends Seeder
 			'password' => Hash::make('password'),
 		]);
 
-		$shopManagerRole = DB::table('roles')->firstOrCreate(['name' => 'shop-manager']);
+		$shopManagerRole = DB::table('roles')->firstOrCreate(
+			['name' => 'shop-manager'],
+			['guard_name' => 'web']
+		);
+
 		DB::table('model_has_roles')->updateOrInsert([
 			'role_id' => $shopManagerRole->id,
 			'model_type' => 'App\Models\User',
