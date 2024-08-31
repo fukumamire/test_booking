@@ -14,7 +14,8 @@ class ShopImageSeeder extends Seeder
 	 */
 	public function run()
 	{
-		DB::table('shop_images')->insert([
+		$existingIds = DB::table('shop_images')->pluck('id')->toArray();
+		$imagesToInsert = [
 			[
 				'id' => 1,
 				'shop_id' => 1,
@@ -155,6 +156,17 @@ class ShopImageSeeder extends Seeder
 				'created_at' => now(),
 				'updated_at' => now(),
 			],
-		]);
+		];
+
+		$imagesToInsert = array_filter($imagesToInsert, function ($image) use ($existingIds) {
+			return !in_array($image['id'], $existingIds);
+		});
+
+		if (!empty($imagesToInsert)) {
+			DB::table('shop_images')->insert($imagesToInsert);
+			echo "Added " . count($imagesToInsert) . " new shop images.\n";
+		} else {
+			echo "新しいshopの画像の追加はありません。\n";
+		}
 	}
 }
