@@ -122,11 +122,9 @@ Route::get('/admin/register', function () {
     return view('admin.auth.register');
 })->middleware(['guest']);
 
-Route::post('/admin/register', [App\Http\Controllers\Admin\RegisterController::class, 'store'])->middleware(['guest']);
+Route::post('/admin/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'store'])->middleware(['guest']);
 
 
 // 管理者用ログイルート
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
-
-
