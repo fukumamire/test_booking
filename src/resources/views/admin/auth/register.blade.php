@@ -11,7 +11,7 @@
       <h2>Administrator register</h2>
     </div>
     <form action="{{ route('admin.register') }}" method="post" class="registration-form">
-      @csrfP
+      @csrf
       <div class="form-group">
         <img src="{{ asset('auth-img/male.png') }}" alt="userアイコン" width="30">
         <input type="text" id="username" name="name" placeholder="username" value="{{ old('name') }}">

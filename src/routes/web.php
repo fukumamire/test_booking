@@ -13,6 +13,10 @@ use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\AdminAuthController;
+
+use App\Http\Controllers\Admin\UsersController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -125,6 +129,15 @@ Route::get('/admin/register', function () {
 Route::post('/admin/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'store'])->middleware(['guest']);
 
 
-// 管理者用ログイルート
+// 管理者用ログインルート
 Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
+
+//管理者用　店舗代表者作成など
+Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
+    Route::resource('users', UsersController::class)->except(['show']);
+
+    Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
+
+    Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
+});
