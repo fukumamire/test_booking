@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Spatie\Permission\Models\Role;
+
 class AdminRegisterController extends Controller
 {
   public function __construct()
@@ -28,6 +30,12 @@ class AdminRegisterController extends Controller
     ]);
 
     $user = User::create($validatedData);
+
+    // super-admin ロールを取得または作成
+    $superAdminRole = Role::where('name', 'super-admin')->firstOrCreate(['name' => 'super-admin']);
+    
+    // ユーザーに super-admin ロールを割り当て
+    $user->assignRole($superAdminRole);
 
     Auth::guard('admin')->login($user);
 
