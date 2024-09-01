@@ -140,4 +140,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
 
     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
+
+    // 店舗代表者登録完了画面
+    Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
+
 });
