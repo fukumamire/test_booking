@@ -26,6 +26,6 @@ class UsersController extends Controller
     $user = User::create($validatedData);
     $user->assignRole('shop-manager');
 
-    return redirect()->route('users.shop-manager-done')->with('success', '新しい店舗代表者を追加しました。');
+    return redirect()->route('users.shop-manager-done')->with('success', '新しい店舗代表者の登録が完了しました。');
   }
 }
