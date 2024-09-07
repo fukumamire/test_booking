@@ -10,7 +10,7 @@
     <div class="registration-header">
       <h2>Administrator register</h2>
     </div>
-    <form action="{{ route('admin.register') }}" method="post" class="registration-form">
+    <form action="{{ route('admin.register.submit') }}" method="post" class="registration-form">
       @csrf
       <div class="form-group">
         <img src="{{ asset('auth-img/male.png') }}" alt="userアイコン" width="30">
@@ -28,8 +28,15 @@
       </div>
       <div class="form-group">
         <img src="{{ asset('auth-img/key.png') }}" alt="keyアイコン" width="30">
-        <input type="password" id="password" name="password" placeholder="password">
+        <input type="password" id="password" name="password" placeholder="パスワード">
         @error('password')
+          <div class="error-message">{{ $message }}</div>
+        @enderror
+      </div>
+      <div class="form-group">
+        <img src="{{ asset('auth-img/key.png') }}" alt="keyアイコン" width="30">
+        <input type="password" id="confirm_password" name="password_confirmation" placeholder="確認用パスワード">
+        @error('password_confirmation')
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
