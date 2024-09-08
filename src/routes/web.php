@@ -31,12 +31,12 @@ use App\Http\Controllers\Admin\UsersController;
 
 // 会員登録ページ
 Route::get('/register', function () {
-   return view('auth.register');
+  return view('auth.register');
 })->middleware('guest')->name('register');
 
 // ログインページ
 Route::get('/login', function () {
-   return view('auth.login');
+  return view('auth.login');
 })->middleware('guest')->name('login');
 
 //　コントローラ等使用せず　会員登録、ログインを促すページ
@@ -45,7 +45,7 @@ Route::view('/request_login', 'auth.request_login')->name('request_login');
 
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
 Route::get('/thanks', function () {
-   return view('auth.thanks');
+  return view('auth.thanks');
 });
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示　予約完了の画面へ
@@ -54,7 +54,7 @@ Route::view('/done', 'done')->name('done');
 
 //店舗一覧
 Route::get('/', function () {
-   return view('index');
+  return view('index');
 })->name('home');
 
 
@@ -68,7 +68,7 @@ Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.sear
 // マイページ関係
 
 Route::get('/mypage', function () {
-   return view('mypage.my_page');
+  return view('mypage.my_page');
 })->name('mypage');
 
 // ログインしているユーザーのみがマイページにアクセスできるようにする
@@ -102,7 +102,7 @@ Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name
 
 //2要素認証　
 Route::get('/two-factor-challenge', function () {
-   return view('auth.two-factor-challenge');
+  return view('auth.two-factor-challenge');
 })->middleware(['auth', 'verified'])->name('two-factor.login');
 
 // QRコード
@@ -113,12 +113,12 @@ Route::get('/reservation/scan', [QrCodeController::class, 'authenticateReservati
 
 // 店舗側　QRコード 予約認証　成功　予約完了
 Route::get('/reservation/success', function () {
-   return view('reservation_success');
+  return view('reservation_success');
 })->name('reservation.success');
 
 // 店舗側　予約認証に失敗時
 Route::get('/reservation/failure', function () {
-   return view('reservation_failure');
+  return view('reservation_failure');
 })->name('reservation.failure');
 
 
@@ -130,34 +130,37 @@ Route::post('/admin/login', [App\Http\Controllers\Auth\AdminLoginController::cla
 //管理者用　ルート
 Route::group(['prefix' => 'admin'], function () {
 
-   //管理者登録画面表示　ゲストのみアクセス可能ルート
+  //管理者登録画面表示　ゲストのみアクセス可能ルート
 
-   Route::get('/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
+  Route::get('/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
 
-   //管理者保存ルート
-   Route::post('/admin/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
-
-
-   // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
-   Route::group(['middleware' => ['auth']], function () {
-      // 管理者用ホームページ画面の表示
-      Route::view('/index', 'admin.index')->name('admin.index');
-
-      //店舗代表者作成関係
-      Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
-
-      Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
-
-      Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
-
-      // 店舗代表者登録完了画面
-      Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
-   });
+  //管理者保存ルート
+  Route::post('/admin/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
 
 
-   // 管理者専用ホームページ（admin.index）便宜作成
+  // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
+  Route::group(['middleware' => ['auth']], function () {
+    // 管理者用ホームページ画面の表示
+    Route::view('/index', 'admin.index')->name('admin.index');
 
-   Route::get('/admin/index', function () {
-      return view('admin.index');
-   });
+    //店舗代表者作成関係
+    Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
+
+    Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
+
+    Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
+
+    // 店舗代表者登録完了画面
+    Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
+  });
 });
+
+
+// 管理者専用ホームページ（admin.index）便宜作成
+
+Route::get('/admin/index', function () {
+  return view('admin.index');
+});
+
+// 管理者　ユーザー一覧を表示するためのデータ取得
+Route::get('/admin/user/index', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('admin.user.index');

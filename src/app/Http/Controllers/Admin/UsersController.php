@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Role;
 
 class UsersController extends Controller
 {
-  //店舗代表者を作成するためのフォームを表示するビューを返す
+  //管理者が店舗代表者を作成するためのフォームを表示するビュー
   public function createShopManager(Request $request)
   {
     return view('admin.users.create-shop-manager');
@@ -27,5 +27,12 @@ class UsersController extends Controller
     $user->assignRole('shop-manager');
 
     return redirect()->route('users.shop-manager-done')->with('success', '新しい店舗代表者の登録が完了しました。');
+  }
+  //管理者画面からユーザー一覧を表示する際　ユーザーデータを取得
+  public function index()
+  {
+    $users = User::with('roles')->paginate(5);
+    $roles = Role::all();
+    return view('admin.users.user_index', compact('users', 'roles'));
   }
 }
