@@ -153,4 +153,11 @@ Route::group(['prefix' => 'admin'], function () {
       // 店舗代表者登録完了画面
       Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
    });
+
+
+   // 管理者専用ホームページ（admin.index）便宜作成
+
+   Route::get('/admin/index', function () {
+      return view('admin.index');
+   });
 });
