@@ -6,6 +6,9 @@
 
 @section('content')
 <div class="container">
+  <div class="back-button">
+    <a href="/admin/index" class="btn btn-secondary">管理者専用ページへ戻る</a>
+  </div>
   <h1 class="page-title">ユーザー一覧</h1>
   <div class="table__wrap">
     <table class="user__table">
@@ -34,23 +37,23 @@
         @endforeach
       </tbody>
     </table>
-  </div>
-  <div class="pagination-wrap">
-    @if ($users->lastPage() > 1)
-    <ul class="pagination">
-      @if ($users->currentPage() > 1)
-      <li><a href="{{ $users->url(1) }}">最初のページ</a></li>
+
+    <div class="pagination-wrap">
+      @if ($users->lastPage() > 1)
+      <ul class="pagination">
+        @if ($users->currentPage() > 1)
+        <li><a href="{{ $users->url(1) }}">最初のページ</a></li>
+        @endif
+        @for ($i = 1; $i <= $users->lastPage(); $i++)
+          <li class="{{ ($users->currentPage() == $i) ? ' active' : '' }}">
+            <a href="{{ $users->url($i) }}">{{ $i }}</a>
+          </li>
+          @endfor
+          @if ($users->currentPage() < $users->lastPage())
+            <li><a href="{{ $users->url($users->lastPage()) }}">最後のページ</a></li>
+            @endif
+      </ul>
       @endif
-      @for ($i = 1; $i <= $users->lastPage(); $i++)
-        <li class="{{ ($users->currentPage() == $i) ? ' active' : '' }}">
-          <a href="{{ $users->url($i) }}">{{ $i }}</a>
-        </li>
-        @endfor
-        @if ($users->currentPage() < $users->lastPage())
-          <li><a href="{{ $users->url($users->lastPage()) }}">最後のページ</a></li>
-          @endif
-    </ul>
-    @endif
+    </div>
   </div>
-</div>
-@endsection
+  @endsection
