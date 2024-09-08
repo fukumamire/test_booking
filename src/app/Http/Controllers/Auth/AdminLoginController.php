@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\auth;
+namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class AdminLoginController extends Controller
 {
-  protected $redirectTo = '/admin/dashboard';
+  // protected $redirectTo = '/admin/dashboard';
 
   public function showLoginForm()
   {
@@ -23,25 +23,26 @@ class AdminLoginController extends Controller
   {
     $credentials = $request->only('email', 'password');
 
-    if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
-      return redirect()->intended($this->redirectPath());
+    if (!Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
+      return redirect()->back()->withInput($request->only('email'))
+        ->withErrors([
+          'email' => '入力されたログイン情報が正しくありません。',
+        ]);
     }
 
-    return back()->withErrors([
-      'email' => '入力されたログイン情報が正しくありません。',
-    ]);
+    return redirect()->route('admin.index');
   }
 
-  protected function validateLogin(Request $request)
-  {
-    $this->validate($request, [
-      'email' => 'required|string|email|max:255',
-      'password' => 'required|string|min:8',
-    ]);
-  }
+  // protected function validateLogin(Request $request)
+  // {
+  //   $this->validate($request, [
+  //     'email' => 'required|string|email|max:255',
+  //     'password' => 'required|string|min:8',
+  //   ]);
+  // }
 
-  protected function redirectTo()
-  {
-    return property_exists($this, 'redirectTo') ? $this->redirectTo : url('/admin/dashboard');
-  }
+  // protected function redirectTo()
+  // {
+  //   return property_exists($this, 'redirectTo') ? $this->redirectTo : url('/admin/index'); //管理者用のホームページのUR
+  // }
 }

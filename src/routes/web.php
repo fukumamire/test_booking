@@ -141,7 +141,7 @@ Route::group(['prefix' => 'admin'], function () {
   // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
   Route::group(['middleware' => ['auth']], function () {
     // 管理者用ホームページ画面の表示
-    Route::view('/index', 'admin.index')->name('admin.index');
+    Route::view('/admin/index', 'admin.index')->name('admin.index');
 
     //店舗代表者作成関係
     Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
@@ -158,9 +158,9 @@ Route::group(['prefix' => 'admin'], function () {
 
 // 管理者専用ホームページ（admin.index）便宜作成
 
-Route::get('/admin/index', function () {
-  return view('admin.index');
-});
+// Route::get('/admin/index', function () {
+//   return view('admin.index');
+// });
 
 // 管理者　ユーザー一覧を表示するためのデータ取得
 Route::get('/admin/user/index', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('admin.user.index');
