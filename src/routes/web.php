@@ -12,10 +12,9 @@ use App\Services\QrCodeService;
 use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Auth;
 
-use App\Http\Controllers\Auth\AdminAuthController;
-
 use App\Http\Controllers\Admin\UsersController;
-
+use App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\Auth\AdminLoginController;
 
 
 /*
@@ -29,12 +28,12 @@ use App\Http\Controllers\Admin\UsersController;
 |
 */
 
-// 会員登録ページ
+// 一般ユーザー会員登録ページ
 Route::get('/register', function () {
   return view('auth.register');
 })->middleware('guest')->name('register');
 
-// ログインページ
+// 一般ユーザー　ログインページ
 Route::get('/login', function () {
   return view('auth.login');
 })->middleware('guest')->name('login');
@@ -46,7 +45,7 @@ Route::view('/request_login', 'auth.request_login')->name('request_login');
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
 Route::get('/thanks', function () {
   return view('auth.thanks');
-});
+})->name('thanks');;
 
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示　予約完了の画面へ
 Route::view('/done', 'done')->name('done');
@@ -121,39 +120,67 @@ Route::get('/reservation/failure', function () {
   return view('reservation_failure');
 })->name('reservation.failure');
 
-
-
-// 管理者用ログインルート
-Route::get('/admin/login', [App\Http\Controllers\Auth\AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [App\Http\Controllers\Auth\AdminLoginController::class, 'login'])->name('admin.login.submit');
-
-//管理者用　ルート
 Route::group(['prefix' => 'admin'], function () {
+  // 管理者ログイン
+  Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+  Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
-  //管理者登録画面表示　ゲストのみアクセス可能ルート
+  // 管理者登録
+  Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
+  Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
 
-  Route::get('/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
-
-  //管理者保存ルート
-  Route::post('/admin/register', [App\Http\Controllers\Auth\AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
-
-
-  // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
+  // 認証済み管理者のみアクセス可能なルート
   Route::group(['middleware' => ['auth']], function () {
-    // 管理者用ホームページ画面の表示
-    Route::view('/admin/index', 'admin.index')->name('admin.index');
+    // 管理者ホームページ
+    Route::get('/index', function () {
+      return view('admin.index');
+    })->name('admin.index');
 
-    //店舗代表者作成関係
-    Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
+    // ユーザー管理
+    Route::resource('users', UsersController::class)->except(['show']);
 
     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
-
     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
 
-    // 店舗代表者登録完了画面
     Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
+
+    // 管理者ユーザー一覧
+    Route::get('/user/index', [UsersController::class, 'index'])->name('admin.user.index');
   });
 });
+
+
+// 管理者用ルート
+// Route::group(
+//   ['prefix' => 'admin'],
+//   function () {
+// Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+// Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+
+// //管理者登録画面表示　ゲストのみアクセス可能ルート
+
+//   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
+
+//   //管理者保存ルート
+//   Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
+//   });
+
+//   // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
+// Route::group(['middleware' => ['auth']], function () {
+//     // 管理者用ホームページ画面の表示
+//     Route::get('/admin/index', 'admin.index')->name('admin.index');
+
+//     //店舗代表者作成関係
+//     Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
+
+//     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
+
+//     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
+
+//     // 店舗代表者登録完了画面
+//     Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
+//   });
+
 
 
 // 管理者専用ホームページ（admin.index）便宜作成

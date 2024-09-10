@@ -23,69 +23,43 @@ class FortifyServiceProvider extends ServiceProvider
 {
   /**
    * Register any application services.
+   *
+   * @return void
    */
-  public function register(): void
+  public function register()
   {
+    // registerメソッド　アプリケーションが起動する際に実行されるメソッドで、サービスコンテナにサービスをバインド
     $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
     {
       public function toResponse($request)
       {
-        return redirect('/login');
+        // ログアウト時に/（ホームページ）にリダイレクト
+        return redirect('/');
       }
     });
   }
 
   /**
    * Bootstrap any application services.
+   *
+   * @return void
    */
-  public function boot(): void
+  // bootメソッドは、サービスプロバイダが全てのサービスを登録した後に実行
+  public function boot()
   {
-    //一般ユーザ―用
-    // 新規ユーザーの登録処理
+    // 新規ユーザーの設定　新規ユーザー作成時にCreateNewUserクラスを使用
     Fortify::createUsersUsing(CreateNewUser::class);
 
-    // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-    // Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-    // Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
-
-    // ユーザー登録画面を表示するためのビュー。
-    Fortify::registerView(function () {
-      return view('auth.register');
-    });
-
-    // ユーザーログイン画面を表示するためのビューを指定します。
-    // 'auth.login'は、resources/views/auth/login.blade.phpに対応します。
-    Fortify::loginView(function () {
-      return view('auth.login');
-    });
-
-    $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
-
-    RateLimiter::for('login', function (Request $request) {
-      $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
-
-      return Limit::perMinute(1000)->by($throttleKey);
-    });
-
-    // 二要素認証のチャレンジビューをカスタマイズ
-    Fortify::twoFactorChallengeView(function () {
-      return view('auth.two-factor-challenge');
-    });
-    // RateLimiter::for('two-factor', function (Request $request) {
-    //     return Limit::perMinute(5)->by($request->session()->get('login.id'));
-    // });
-
+    // authenticateUsingメソッドは、カスタム認証ロジックを定義
     Fortify::authenticateUsing(function ($request) {
       $authGuard = $request->input('guard') === 'admin' ? 'web' : null;
       $guard = Auth::guard($authGuard);
 
-      // ガードがSessionGuardであることを確認
       if ($guard instanceof \Illuminate\Auth\SessionGuard) {
         $user = $guard->getProvider()->retrieveByCredentials(
           $request->only(Fortify::username(), 'password')
         );
 
-        // ユーザーが存在しない場合はnullを返す
         if (!$user) {
           return false;
         }
@@ -93,15 +67,25 @@ class FortifyServiceProvider extends ServiceProvider
         if (
           $authGuard === 'web' && !$user->hasRole('super-admin')
         ) {
-          return false; // 管理者としてログインしようとしたが、管理者権限を持っていない
+          return false;
         }
 
         $guard->setUser($user);
-        return true; // 認証成功
+        return true;
       }
 
-      // ガードがSessionGuardでない場合の処理
       return false;
     });
+
+    // loginViewメソッドは、ログインビューをカスタマイズ
+    Fortify::loginView(function (Request $request) {
+      if ($request->is('admin/*')) {
+        return view('admin.auth.login');
+      }
+      return view('auth.login');
+    });
+
+    // ユーザー登録後に特定のリダイレクト処理（/thanks ページなどリダイレクト）を行うために使用
+    $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
   }
 }
