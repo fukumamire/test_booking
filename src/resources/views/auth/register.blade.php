@@ -33,6 +33,14 @@
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
+      <div class="form-group">
+        <img src="{{ asset('auth-img/key.png') }}" alt="keyアイコン" width="30">
+        <input type="password" id="confirm_password" name="password_confirmation" placeholder="確認用パスワード">
+        @error('password_confirmation')
+          <div class="error-message">{{ $message }}</div>
+        @enderror
+      </div>
+      
       <div class="form-submit">
         <button type="submit" class="submit-button">登録</button>
       </div>

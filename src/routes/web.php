@@ -13,7 +13,9 @@ use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\Auth\RegisterController;
+use
+  App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
 
 
@@ -29,9 +31,9 @@ use App\Http\Controllers\Auth\AdminLoginController;
 */
 
 // 一般ユーザー会員登録ページ
-Route::get('/register', function () {
-  return view('auth.register');
-})->middleware('guest')->name('register');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->middleware('guest');
+
 
 // 一般ユーザー　ログインページ
 Route::get('/login', function () {
@@ -130,7 +132,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
 
   // 認証済み管理者のみアクセス可能なルート
-  Route::group(['middleware' => ['auth']], function () {
+  Route::group(['middleware' => ['auth:admin']], function () {
     // 管理者ホームページ
     Route::get('/index', function () {
       return view('admin.index');
@@ -144,7 +146,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
 
-    // 管理者ユーザー一覧
+    // 管理者　ユーザー一覧を取得するため
     Route::get('/user/index', [UsersController::class, 'index'])->name('admin.user.index');
   });
 });
@@ -190,4 +192,4 @@ Route::group(['prefix' => 'admin'], function () {
 // });
 
 // 管理者　ユーザー一覧を表示するためのデータ取得
-Route::get('/admin/user/index', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('admin.user.index');
+// Route::get('/admin/user/index', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('admin.user.index');
