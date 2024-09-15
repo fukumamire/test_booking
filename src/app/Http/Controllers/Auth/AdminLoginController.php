@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+
 
 
 use App\Http\Controllers\Controller;
@@ -12,7 +14,6 @@ use App\Http\Controllers\Controller;
 
 class AdminLoginController extends Controller
 {
-  // protected $redirectTo = '/admin/dashboard';
 
   public function showLoginForm()
   {
@@ -23,36 +24,25 @@ class AdminLoginController extends Controller
   {
     $credentials = $request->only('email', 'password');
 
-    if (!Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
+    // ログイン処理
+    if (!Auth::guard('admin')->attempt($credentials)) {
       return redirect()->back()->withInput($request->only('email'))
         ->withErrors([
           'email' => '入力されたログイン情報が正しくありません。',
         ]);
     }
 
-    return redirect()->route('admin.index');
+    // ログイン成功後、super-adminロールを持っているか確認
+    $user = User::where('email', $request->input('email'))->first();
+
+    if (!$user->hasRole('super-admin')) {
+      Auth::guard('admin')->logout();
+      return redirect()->back()->withInput($request->only('email'))
+        ->withErrors([
+          'email' => '管理者権限がありません。',
+        ]);
+    }
+    // ログイン成功後に管理者専用画面にリダイレクト
+    return redirect()->intended('/admin/index');
   }
-
-  public function logout(Request $request)
-  {
-    Auth::guard('admin')->logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/');
-  }
-
-  // protected function validateLogin(Request $request)
-  // {
-  //   $this->validate($request, [
-  //     'email' => 'required|string|email|max:255',
-  //     'password' => 'required|string|min:8',
-  //   ]);
-  // }
-
-  // protected function redirectTo()
-  // {
-  //   return property_exists($this, 'redirectTo') ? $this->redirectTo : url('/admin/index'); //管理者用のホームページのUR
-  // }
 }

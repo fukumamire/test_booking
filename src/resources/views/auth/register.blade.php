@@ -45,6 +45,10 @@
         <button type="submit" class="submit-button">登録</button>
       </div>
     </form>
+
+    <div class="admin-register-wrapper">
+    <p class="admin-register-link">管理者として登録する場合は<a href="{{ route('admin.register') }}">こちら</a></p>
+  </div>
   </div>
 </body>
 @endsection

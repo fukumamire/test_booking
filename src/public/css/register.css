@@ -72,3 +72,19 @@ main {
 .submit-button:hover {
     background-color: darkblue;
 }
+
+.admin-register-wrapper {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.admin-register-link {
+    font-size: 20px;
+    color: #337ab7;
+    text-decoration: underline;
+}
+
+
+.admin-register-link:hover {
+    color: #23527c;
+}
