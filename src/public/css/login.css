@@ -72,3 +72,19 @@ main {
 .submit-button:hover {
     background-color: darkblue;
 }
+
+.admin-login-wrapper {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.admin-login-link {
+    font-size: 20px;
+    color: #337ab7;
+    text-decoration: underline;
+}
+
+
+.admin-login-link:hover {
+    color: #23527c;
+}

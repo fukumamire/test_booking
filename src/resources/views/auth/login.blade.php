@@ -38,5 +38,8 @@
       </div>
     @endif
   </div>
+  <div class="admin-login-wrapper">
+    <p class="admin-login-link">管理者としてログインする場合は<a href="{{ route('admin.login') }}">こちら</a></p>
+  </div>
 </body>
 @endsection
