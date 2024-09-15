@@ -13,6 +13,9 @@
     </div>
     <form action="{{ route('admin.login.submit') }}" method="post" class="login-form">
       @csrf
+      <!-- 管理者用のhidden inputを追加 -->
+      <input type="hidden" name="guard" value="admin">
+      
       <div class="form-group">
         <img src="{{ asset('auth-img/mail.png') }}" alt="mailアイコン"  width="30">
         <input type="email" id="email" name="email" placeholder="email" value="{{ old('email') }}">

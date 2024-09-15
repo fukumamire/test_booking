@@ -17,7 +17,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use
   App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
-
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +36,18 @@ Route::post('/register', [RegisterController::class, 'store'])->middleware('gues
 
 
 // 一般ユーザー　ログインページ
-Route::get('/login', function () {
-  return view('auth.login');
-})->middleware('guest')->name('login');
+Route::get('/login', [LoginController::class, 'showLoginForm'])
+  ->middleware('guest')
+  ->name('login');
+
+Route::post('/login', [LoginController::class, 'login'])
+  ->middleware('guest')
+  ->name('login.submit');
+
+// 一般ユーザー　ログアウト
+Route::post('/logout', [LoginController::class, 'logout'])
+  ->middleware('auth')
+  ->name('logout');
 
 //　コントローラ等使用せず　会員登録、ログインを促すページ
 Route::view('/request_login', 'auth.request_login')->name('request_login');
@@ -126,6 +135,9 @@ Route::group(['prefix' => 'admin'], function () {
   // 管理者ログイン
   Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
   Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
+
+  // 管理者ログアウト
+  Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
   // 管理者登録
   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');

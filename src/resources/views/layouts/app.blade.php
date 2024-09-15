@@ -22,10 +22,14 @@
         <!-- ログインしている場合のメニュー -->
         <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
         <li>
-          <form method="POST" action="{{ route('logout') }}">
+          @if(session()->has('guard') && session()->get('guard') === 'admin')
+            <form method="POST" action="{{ route('admin.logout') }}">
+          @else    
+            <form method="POST" action="{{ route('logout') }}">
+          @endif
             @csrf
             <button type="submit" class="logout-link">Logout</button>
-          </form>
+            </form>
         </li>
         <li><a href="{{ route('mypage') }}" class="nav-link">Mypage</a></li>
       @else

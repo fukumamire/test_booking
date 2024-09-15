@@ -12,6 +12,8 @@
     </div>
     <form action="{{ route('login') }}" method="post" class="login-form">
       @csrf
+      <input type="hidden" name="guard" value="web">
+      
       <div class="form-group">
         <img src="auth-img/mail.png" alt="mailアイコン"  width="30">
         <input type="email" id="email" name="email" placeholder="email" value="{{ old('email') }}">
