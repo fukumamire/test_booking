@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -26,32 +27,61 @@ class LoginController extends Controller
       'password' => ['required'],
     ]);
 
+    // 認証ガードの決定
+    $guard = $this->getGuard($request);
+
     // 認証の試行
-    if (!Auth::attempt($credentials)) {
-      // 認証失敗時の処理
-      return redirect()->back()->withErrors(['認証に失敗しました。入力内容を確認してください。']);
+    if (!Auth::guard($guard)->attempt($credentials)) {
+      $message = $this->getErrorMessage($request->input('email'));
+      return redirect()->back()->withInput()->withErrors([$message]);
     }
     // セッションの再生成
     $request->session()->regenerate();
-
-    return redirect()->route('home');
+    // リダイレクト先の決定
+    return $this->redirectTo($guard);
   }
 
   public function logout(Request $request)
   {
-    if ($this->guard() === 'admin') {
-      Auth::guard('admin')->logout();
-    } else {
-      Auth::guard()->logout();
-    }
+    $guard = $this->getGuard($request);
+
+    Auth::guard($guard)->logout();
 
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 
     return redirect('/');
   }
-  private function guard()
+  private function getGuard(Request $request)
   {
-    return session()->get('guard') ?: 'web';
+    // 管理者ログインかどうかの判断
+    $user = User::where('email', $request->input('email'))->first();
+    if ($user && $user->hasRole('super-admin')) {
+      return 'admin';
+    }
+    return 'web';
+  }
+
+  private function getErrorMessage($email)
+  {
+    $user = User::where('email', $email)->first();
+
+    if (!$user) {
+      return '会員登録をしてください';
+    } elseif ($user->hasRole('super-admin')) {
+      return '管理者ログインはこちら';
+    } else {
+      return 'メールアドレスまたはパスワードが正しくありません。再度お試しください。';
+    }
+  }
+
+  private function redirectTo($guard)
+  {
+    switch ($guard) {
+      case 'admin':
+        return redirect()->route('admin.login');
+      default:
+        return redirect()->route('register');
+    }
   }
 }

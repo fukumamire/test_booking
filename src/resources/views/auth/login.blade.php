@@ -32,6 +32,11 @@
         <button type="submit" class="submit-button">ログイン</button>
       </div>
     </form>
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        {{ $errors->first() }}
+      </div>
+    @endif
   </div>
 </body>
 @endsection
