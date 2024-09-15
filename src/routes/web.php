@@ -18,7 +18,8 @@ use
   App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LoginController;
-
+use App\Actions\Fortify\LogoutAction;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,11 +44,6 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])
 Route::post('/login', [LoginController::class, 'login'])
   ->middleware('guest')
   ->name('login.submit');
-
-// 一般ユーザー　ログアウト
-Route::post('/logout', [LoginController::class, 'logout'])
-  ->middleware('auth')
-  ->name('logout');
 
 //　コントローラ等使用せず　会員登録、ログインを促すページ
 Route::view('/request_login', 'auth.request_login')->name('request_login');
@@ -137,7 +133,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
   // 管理者ログアウト
-  Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+  // Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
   // 管理者登録
   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
@@ -164,44 +160,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-// 管理者用ルート
-// Route::group(
-//   ['prefix' => 'admin'],
-//   function () {
-// Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
-// Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
-
-// //管理者登録画面表示　ゲストのみアクセス可能ルート
-
-//   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
-
-//   //管理者保存ルート
-//   Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
-//   });
-
-//   // 管理者登録済み（認証済み）ユーザーのみアクセス可能なルート
-// Route::group(['middleware' => ['auth']], function () {
-//     // 管理者用ホームページ画面の表示
-//     Route::get('/admin/index', 'admin.index')->name('admin.index');
-
-//     //店舗代表者作成関係
-//     Route::resource('users', UsersController::class)->except(['show']); //showアクション（通常は個々のユーザーの詳細を表示するためのもの）を除外
-
-//     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
-
-//     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
-
-//     // 店舗代表者登録完了画面
-//     Route::view('/shop-manager-done', 'admin.users.shop-manager-done')->name('users.shop-manager-done');
-//   });
-
-
-
-// 管理者専用ホームページ（admin.index）便宜作成
-
-// Route::get('/admin/index', function () {
-//   return view('admin.index');
-// });
-
-// 管理者　ユーザー一覧を表示するためのデータ取得
-// Route::get('/admin/user/index', [App\Http\Controllers\Admin\UsersController::class, 'index'])->name('admin.user.index');
+//ログアウト　一般ユーザー用と管理者ユーザー用の両方に対応
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+  ->name('logout')
+  ->middleware('auth');

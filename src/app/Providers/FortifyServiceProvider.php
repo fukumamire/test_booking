@@ -28,15 +28,7 @@ class FortifyServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    // registerメソッド　アプリケーションが起動する際に実行されるメソッドで、サービスコンテナにサービスをバインド
-    $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
-    {
-      public function toResponse($request)
-      {
-        // ログアウト時に/（ホームページ）にリダイレクト
-        return redirect('/');
-      }
-    });
+
   }
 
   /**

@@ -35,31 +35,12 @@ class LoginController extends Controller
       $message = $this->getErrorMessage($request->input('email'));
       return redirect()->back()->withInput()->withErrors([$message]);
     }
+
     // セッションの再生成
     $request->session()->regenerate();
+
     // リダイレクト先の決定
     return $this->redirectTo($guard);
-  }
-
-  public function logout(Request $request)
-  {
-    $guard = $this->getGuard($request);
-
-    Auth::guard($guard)->logout();
-
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-
-    return redirect('/');
-  }
-  private function getGuard(Request $request)
-  {
-    // 管理者ログインかどうかの判断
-    $user = User::where('email', $request->input('email'))->first();
-    if ($user && $user->hasRole('super-admin')) {
-      return 'admin';
-    }
-    return 'web';
   }
 
   private function getErrorMessage($email)
@@ -83,5 +64,10 @@ class LoginController extends Controller
       default:
         return redirect()->route('register');
     }
+  }
+
+  private function getGuard(Request $request)
+  {
+    return $request->input('guard') === 'admin' ? 'web' : null;
   }
 }

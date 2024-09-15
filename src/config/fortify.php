@@ -157,4 +157,8 @@ return [
         ]),
     ],
 
+    'logout_method' => 'POST',
+    'logout_route' => 'logout',
+    'logout_redirect' => '/',
+    'logout_action' => \App\Actions\Fortify\LogoutAction::class,
 ];
