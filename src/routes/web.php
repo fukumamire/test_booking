@@ -146,6 +146,8 @@ Route::group(['prefix' => 'admin'], function () {
     // ユーザー管理
     Route::resource('users', UsersController::class)->except(['show']);
 
+    // 店舗代表者作成画面
+    Route::get('/admin/shop-manager/register', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
 

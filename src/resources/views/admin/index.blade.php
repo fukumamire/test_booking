@@ -18,7 +18,7 @@
           <a href="/admin/email-notification" class="admin-nav__link">お知らせメール作成・送信</a>
         </li>
         <li class="admin-nav__list">
-          <a href="/admin/shop-manager/register" class="admin-nav__link">店舗代表者作成</a>
+          <a href="{{ route('users.create-shop-manager') }}" class="admin-nav__link">店舗代表者作成</a>
         </li>
         <li class="admin-nav__list">
           <a href="" class="admin-nav__link">新規店舗追加</a>
