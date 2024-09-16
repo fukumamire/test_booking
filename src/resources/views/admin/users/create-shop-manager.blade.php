@@ -6,9 +6,13 @@
 
 @section('content')
 <body class="register-page">
+  
   <div class="registration-container">
+    <div class="back-button">
+    <a href="/admin/index" class="btn btn-secondary">管理者専用ページへ戻る</a>
+  </div>
     <div class="registration-header">
-      <h2>	Shop Representative Creation  ～店舗代表者作成～</h2>
+      <h2>	Shop Representative Creation</br>～店舗代表者作成～</h2>
     </div>
     <form action="{{route('users.store-shop-manager')  }}" method="post" class="registration-form">
       @csrf
