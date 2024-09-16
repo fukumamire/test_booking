@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\RegisterController;
-use
-  App\Http\Controllers\Auth\AdminRegisterController;
+use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Actions\Fortify\LogoutAction;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\EmailNotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -132,9 +132,6 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
   Route::post('/login', [AdminLoginController::class, 'login'])->name('admin.login.submit');
 
-  // 管理者ログアウト
-  // Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-
   // 管理者登録
   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
   Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
@@ -164,3 +161,7 @@ Route::group(['prefix' => 'admin'], function () {
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
   ->name('logout')
   ->middleware('auth');
+
+// お知らせメール作成・送信
+Route::get('/admin/email-notification', [EmailNotificationController::class, 'index'])->name('admin.email-notification');
+Route::post('/admin/email-notification', [EmailNotificationController::class, 'store'])->name('admin.email-notification.store');
