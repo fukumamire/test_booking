@@ -18,7 +18,7 @@ class EmailNotificationController extends Controller
     $validatedData = $request->validate([
       'subject' => 'required|string|max:255',
       'content' => 'required|string',
-      'recipients' => 'required|array|min:1',
+      'recipients.*' => 'email', // 各配列要素がメールアドレスであることを確認
     ]);
 
     try {
@@ -27,30 +27,28 @@ class EmailNotificationController extends Controller
         $validatedData['content']
       ));
 
-      return redirect()->route('admin.email-notification')->with('success', 'お知らせメールを作成しました。');
+      return redirect()->route('admin.email-notification')->with('success', 'お知らせメールが正常に送信されました。');
     } catch (\Exception $e) {
-      return back()->with('error', 'メールの送信中にエラーが発生しました。');
+      return redirect()->route('admin.email-notification')->with('error', 'メールの送信中にエラーが発生しました。');
     }
   }
 }
 
-// メール送信クラスの定義（例）
-// class SendEmailNotification extends Mailable
-// {
-//   use Queueable, SerializesModels;
+// メール送信クラスの定義
+class SendEmailNotification extends Mailable
+{
+  public $subject;
+  public $content;
 
-//   public $subject;
-//   public $content;
+  public function __construct($subject, $content)
+  {
+    $this->subject = $subject;
+    $this->content = $content;
+  }
 
-//   public function __construct($subject, $content)
-//   {
-//     $this->subject = $subject;
-//     $this->content = $content;
-//   }
-
-//   public function build()
-//   {
-//     return $this->view('emails.notification')
-//       ->subject($this->subject);
-//   }
-// }
+  public function build()
+  {
+    return $this->view('emails.notification')
+      ->subject($this->subject);
+  }
+}
