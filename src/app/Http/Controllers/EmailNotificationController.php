@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Auth; 
 
 class EmailNotificationController extends Controller
 {
   public function index()
   {
+    if (!Auth::guard('admin')->check()) {
+      return redirect()->route('admin.login');
+    }
     return view('admin.email-notifications.index');
   }
 

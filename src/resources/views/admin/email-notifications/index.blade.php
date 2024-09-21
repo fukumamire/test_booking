@@ -7,6 +7,9 @@
 @section('content')
 
 <body>
+  @php
+    $isAdminLoggedIn = Auth::guard('admin')->check();
+  @endphp
   <!-- セッションメッセージ（成功・エラー） -->
   <div class="container">
     @if (session('success'))
