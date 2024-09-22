@@ -13,18 +13,18 @@
 
   <!-- セッションメッセージ（成功・エラー） -->
   @if (session('success') || session('error'))
-  <div class="alert-container">
-    @if (session('success'))
-    <div class="alert alert-success">
-      {{ session('success') }}
+    <div class="alert-container">
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
     </div>
-    @endif
-    @if (session('error'))
-    <div class="alert alert-danger">
-      {{ session('error') }}
-    </div>
-    @endif
-  </div>
   @endif
   <!-- バリデーションエラー -->
   @if ($errors->any())
@@ -61,7 +61,13 @@
 
       <div class="form-group">
         <label for="recipients" class="form-label">宛先:</label>
-        <input type="text" class="form-control" id="recipients" name="recipients[]" value="{{ old('recipients') }}" placeholder="example@example.com" required>
+        <input type="text" class="form-control" id="recipients" name="recipients[]" value="{{ old('recipients') ? implode(', ', old('recipients')) : '' }}" placeholder="example@example.com" required>
+
+        @error('recipients')
+          <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+          </span>
+        @enderror
       </div>
       <div class="submit-button-wrapper">
         <button type="submit" class="btn submit-button">送信</button>

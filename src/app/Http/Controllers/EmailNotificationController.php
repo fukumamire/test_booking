@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class EmailNotificationController extends Controller
 {
@@ -22,7 +22,7 @@ class EmailNotificationController extends Controller
     $validatedData = $request->validate([
       'subject' => 'required|string|max:255',
       'content' => 'required|string',
-      
+      'recipients' => 'required|array|min:1',
       'recipients.*' => 'email', // 各配列要素がメールアドレスであることを確認
     ]);
 
@@ -32,9 +32,11 @@ class EmailNotificationController extends Controller
         $validatedData['content']
       ));
 
-      return redirect()->route('admin.email-notification')->with('success', 'お知らせメールが正常に送信されました。');
+      session()->flash('success', 'お知らせメールが正常に送信されました。');
+      return redirect()->route('admin.email-notification');
     } catch (\Exception $e) {
-      return redirect()->route('admin.email-notification')->with('error', 'メールの送信中にエラーが発生しました。');
+      session()->flash('error', 'メールの送信中にエラーが発生しました。');
+      return redirect()->route('admin.email-notification');
     }
   }
 }
