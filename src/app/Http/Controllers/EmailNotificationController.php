@@ -22,6 +22,7 @@ class EmailNotificationController extends Controller
     $validatedData = $request->validate([
       'subject' => 'required|string|max:255',
       'content' => 'required|string',
+      
       'recipients.*' => 'email', // 各配列要素がメールアドレスであることを確認
     ]);
 

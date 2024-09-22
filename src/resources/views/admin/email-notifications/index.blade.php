@@ -8,22 +8,27 @@
 
 <body>
   @php
-    $isAdminLoggedIn = Auth::guard('admin')->check();
+  $isAdminLoggedIn = Auth::guard('admin')->check();
   @endphp
+
   <!-- セッションメッセージ（成功・エラー） -->
-  <div class="container">
+  @if (session('success') || session('error'))
+  <div class="alert-container">
     @if (session('success'))
-      <div class="alert alert-success">
-        {{ session('success') }}
-      </div>
+    <div class="alert alert-success">
+      {{ session('success') }}
+    </div>
     @endif
     @if (session('error'))
-      <div class="alert alert-danger">
-        {{ session('error') }}
-      </div>
+    <div class="alert alert-danger">
+      {{ session('error') }}
+    </div>
     @endif
-    <!-- バリデーションエラー -->
-    @if ($errors->any())
+  </div>
+  @endif
+  <!-- バリデーションエラー -->
+  @if ($errors->any())
+  <div class="error-alert-container">
     <div class="alert error-alert">
       <ul>
         @foreach ($errors->all() as $error)
@@ -31,7 +36,13 @@
         @endforeach
       </ul>
     </div>
-    @endif
+  </div>
+  @endif
+
+  <div class="container">
+    <div class="back-button">
+      <a href="/admin/index" class="btn btn-secondary">管理者専用ページへ戻る</a>
+    </div>
 
     <h2 class="page-title">お知らせメール作成</h2>
 
@@ -40,7 +51,7 @@
 
       <div class="form-group">
         <label for="subject" class="form-label">件名:</label>
-        <input type="text" class="form-control" id="subject" name="subject"  value="{{ old('subject') }}" required>
+        <input type="text" class="form-control" id="subject" name="subject" value="{{ old('subject') }}" required>
       </div>
 
       <div class="form-group">
