@@ -20,9 +20,6 @@
         <li class="admin-nav__list">
           <a href="{{ route('users.create-shop-manager') }}" class="admin-nav__link">店舗代表者作成</a>
         </li>
-        <li class="admin-nav__list">
-          <a href="" class="admin-nav__link">新規店舗追加</a>
-        </li>
       </ul>
     </nav>
   </div>
