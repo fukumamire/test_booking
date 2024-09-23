@@ -167,3 +167,13 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 // お知らせメール作成・送信
 Route::get('/admin/email-notification', [EmailNotificationController::class, 'index'])->name('admin.email-notification');
 Route::post('/admin/email-notification', [EmailNotificationController::class, 'store'])->name('admin.email-notification.store');
+
+// 店舗代表者関係
+Route::group(['prefix' => 'shop-manager'], function () {
+  Route::get('/dashboard', [ShopManagerController::class, 'dashboard'])->name('shop-manager.dashboard');
+  Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
+  Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
+  Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
+  Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
+  Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
+});
