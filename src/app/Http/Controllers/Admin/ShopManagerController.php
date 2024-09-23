@@ -18,7 +18,12 @@ class ShopManagerController extends Controller
   {
     return view('admin.shop-manager.dashboard');
   }
-
+  // 店舗一覧
+  public function index()
+  {
+    $shops = Shop::where('user_id', auth()->id())->get();
+    return view('admin.shop-manager.shops.index', compact('shops'));
+  }
   public function createShop()
   {
     $areas = Area::all();
@@ -105,7 +110,7 @@ class ShopManagerController extends Controller
 
     return redirect()->route('shop-manager.dashboard')->with('success', '店舗情報を更新しました。');
   }
-  
+
   public function reservations()
   {
     $bookings = Booking::where('shop_id', auth()->user()->shop_id)->latest()->paginate();

@@ -13,6 +13,7 @@ use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\ShopManagerController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
@@ -176,4 +177,6 @@ Route::group(['prefix' => 'shop-manager'], function () {
   Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
   Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
   Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
+  // 店舗一覧
+  Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
 });
