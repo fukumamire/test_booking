@@ -19,6 +19,13 @@ class ShopImage extends Model
   // shop_image_url プロパティを追加（getter）
   public function getShopImageUrlAttribute($value)
   {
-    return asset('storage/' . $value);
+    // 旧パスと新パスをチェックし、適切なURLを返す
+    if (strpos($value, 'storage/') === 0) {
+      return asset($value);
+    } elseif (strpos($value, 'http://') === 0 || strpos($value, 'https://') === 0) {
+      return $value;
+    } else {
+      return asset('storage/' . $value);
+    }
   }
 }

@@ -57,12 +57,15 @@ class ShopController extends Controller
 
   public function index()
   {
-    $shops = Shop::with(['areas', 'genres'])->paginate(20); // ページネーションを使用してデータを取得
+    $shops = Shop::with(['areas', 'genres', 'images'])->paginate(20);
+    // エリアデータの取得
     $areas = Area::all();
-    $genres = Genre::select('name')->distinct()->get(); // ジャンルの名前を選択し、重複を除去して取得
-    $message = null; // デフォルトで null を設定
-    return view('index', compact('shops', 'areas', 'genres', 'message')); // 'index'ビューに渡すデータを準備
+    // ジャンルの名前を選択し、重複を除去して取得
+    $genres = Genre::select('name')->distinct()->get();
+
+    return view('index', compact('shops', 'areas', 'genres'));
   }
+
 
   // お気に入りをトグルするメソッド
   public function toggleFavorite(Shop $shop)
@@ -101,7 +104,7 @@ class ShopController extends Controller
   }
 
 
-//特定の店舗のレビューを取得してビューに渡すメソッド
+  //特定の店舗のレビューを取得してビューに渡すメソッド
   public function showReviews(Shop $shop)
   {
     $reviews = Review::where('shop_id', $shop->id)->get();

@@ -21,6 +21,7 @@
         @endforeach
       </select>
     </div>
+
     <div class="form-group">
       <label for="genres" class="form-label">ジャンル</label>
       <select id="genres" name="genre_ids[]" class="form-select" multiple required>
@@ -29,6 +30,7 @@
         @endforeach
       </select>
     </div>
+    
     <div class="form-group">
       <label for="outline" class="form-label">概要</label>
       <textarea id="outline" name="outline" class="form-textarea" required></textarea>

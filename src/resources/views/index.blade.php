@@ -7,9 +7,10 @@
 @section('header')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="login-status" content="{{ Auth::check() ? 'true' : 'false' }}">
-@if($message)
+
+@if(isset($message))
 <div class="alert alert-warning">
-  {{ $message }}
+  <p>{{ $message }}</p>
 </div>
 @endif
 
