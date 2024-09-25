@@ -38,7 +38,7 @@ class ShopManagerController extends Controller
       'area_ids' => 'required|array',
       'genre_ids' => 'required|array',
       'outline' => 'required|string',
-      'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+      'images.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
     ]);
 
     $shop = Shop::create($validatedData);
@@ -60,7 +60,7 @@ class ShopManagerController extends Controller
         $imagePath = Storage::putFileAs('public/shop_images', $image, $imageName);
 
         ShopImage::create([
-          'shop_image_url' => Storage::url($imagePath),
+          'shop_image_url' => 'shop_images/' . $imageName,
           'shop_id' => $shop->id,
         ]);
       }

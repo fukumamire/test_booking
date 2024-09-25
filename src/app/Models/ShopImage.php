@@ -15,4 +15,10 @@ class ShopImage extends Model
   {
     return $this->belongsTo(Shop::class);
   }
+
+  // shop_image_url プロパティを追加（getter）
+  public function getShopImageUrlAttribute($value)
+  {
+    return asset('storage/' . $value);
+  }
 }
