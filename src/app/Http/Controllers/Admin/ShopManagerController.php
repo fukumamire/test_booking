@@ -27,7 +27,7 @@ class ShopManagerController extends Controller
   public function createShop()
   {
     $areas = Area::all();
-    $genres = Genre::select('id', 'name')->distinct()->get(); // 重複を排除
+    $genres = Genre::distinct('name')->pluck('id', 'name')->toArray();
     return view('admin.shop-manager.create-shop', compact('areas', 'genres'));
   }
 
