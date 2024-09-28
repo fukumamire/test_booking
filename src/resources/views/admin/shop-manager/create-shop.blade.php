@@ -7,7 +7,25 @@
 @section('content')
 <div class="create-shop-container">
   <h1 class="create-shop-title">新規店舗作成</h1>
-  <form action="{{ route('shop-manager.shops.store') }}" method="POST" class="create-shop-form">
+  <!-- バリデーションエラー表示 -->
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+  <!-- 作成成功メッセージ表示 -->
+  @if(session('success'))
+    <div class="alert alert-success">
+      {{ session('success') }}
+    </div>
+  @endif
+    
+  <form action="{{ route('shop-manager.shops.store') }}" method="POST" class="create-shop-form" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
       <label for="name" class="form-label">店舗名</label>

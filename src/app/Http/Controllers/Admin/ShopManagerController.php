@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\Shop;
 use App\Models\Area;
@@ -31,29 +32,35 @@ class ShopManagerController extends Controller
     return view('admin.shop-manager.create-shop', compact('areas', 'genres'));
   }
 
+
   public function storeShop(Request $request)
   {
-    $validatedData = $request->validate([
+    $validator = Validator::make($request->all(), [
       'name' => 'required|string|max:255',
       'area_ids' => 'required|array',
       'genre_ids' => 'required|array',
       'outline' => 'required|string',
-      'images.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+      'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
-    $shop = Shop::create($validatedData);
+    if ($validator->fails()) {
+      return redirect()->back()
+        ->withErrors($validator)
+        ->withInput();
+    }
+
+    $shop = Shop::create($validator->validated());
     $shop->areas()->attach($request->input('area_ids'));
 
-    // Genreの処理
+    // 既存のジャンルを使用し、新しいジャンルは追加しない
     foreach ($request->input('genre_ids') as $genreId) {
-      $genre = Genre::find($genreId);
-      if ($genre) {
-        $genre->shop_id = $shop->id;
-        $genre->save();
+      $existingGenre = Genre::find($genreId);
+      if ($existingGenre) {
+        $existingGenre->update(['shop_id' => $shop->id]);
       }
     }
 
-    // 画像の処理
+    // 画像アップロード処理
     if ($request->hasFile('images')) {
       foreach ($request->file('images') as $image) {
         $imageName = time() . '_' . $image->getClientOriginalName();
@@ -66,7 +73,8 @@ class ShopManagerController extends Controller
       }
     }
 
-    return redirect()->route('shop-manager.dashboard')->with('success', '新規店舗を追加しました。');
+    return redirect()->route('shop-manager.dashboard')
+      ->with('success', '新規店舗を追加しました。');
   }
 
   public function editShop(Shop $shop)
@@ -75,6 +83,7 @@ class ShopManagerController extends Controller
     $genres = Genre::select('id', 'name')->distinct()->get(); // 重複を排除
     return view('admin.shop-manager.edit-shop', compact('shop', 'areas', 'genres'));
   }
+
 
   public function updateShop(Request $request, Shop $shop)
   {
@@ -89,20 +98,22 @@ class ShopManagerController extends Controller
     $shop->update($validatedData);
     $shop->areas()->sync($request->input('area_ids'));
 
-    // Genreの処理
-    $shop->genres()->each(function ($genre) use ($shop) {
-      $genre->shop_id = $shop->id;
-      $genre->save();
-    });
+    // 既存のジャンルの shop_id を更新し、新しいジャンルは追加しない
+    foreach ($request->input('genre_ids') as $genreId) {
+      $existingGenre = Genre::find($genreId);
+      if ($existingGenre) {
+        $existingGenre->update(['shop_id' => $shop->id]);
+      }
+    }
 
-    // 画像の処理
+    // 画像アップロード処理
     if ($request->hasFile('images')) {
       foreach ($request->file('images') as $image) {
         $imageName = time() . '_' . $image->getClientOriginalName();
         $imagePath = Storage::putFileAs('public/shop_images', $image, $imageName);
 
         ShopImage::create([
-          'shop_image_url' => Storage::url($imagePath),
+          'shop_image_url' => 'shop_images/' . $imageName,
           'shop_id' => $shop->id,
         ]);
       }
