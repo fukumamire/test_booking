@@ -15,6 +15,9 @@ RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer self-update
 
+# PHPの設定を追加
+RUN echo "upload_max_filesize = 64M\npost_max_size = 64M\nmax_execution_time = 300\n" >> /usr/local/etc/php/conf.d/uploads.ini
+
 WORKDIR /var/www
 
 EXPOSE 9000

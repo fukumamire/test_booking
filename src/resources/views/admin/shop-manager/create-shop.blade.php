@@ -56,7 +56,7 @@
 
     <div class="form-group">
       <label for="images">店舗画像</label>
-      <input type="file" class="form-control-file" id="image1" name="images[]" accept=".jpg,.jpeg,.png,.gif,.svg">
+      <input type="file" class="form-control-file" id="image1" name="images[]" a   client_max_body_size 64m;=".jpg,.jpeg,.png,.gif,.svg">
       <input type="file" class="form-control-file" id="image2" name="images[]" accept=".jpg,.jpeg,.png,.gif,.svg">
       <input type="file" class="form-control-file" id="image3" name="images[]" accept=".jpg,.jpeg,.png,.gif,.svg">
       <small id="imagesHelp" class="form-text text-muted">複数選択可（jpg, jpeg, png, gif, svg形式）</small>
