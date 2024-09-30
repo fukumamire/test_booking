@@ -137,6 +137,10 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/register', [AdminRegisterController::class, 'showRegistrationForm'])->middleware(['guest'])->name('admin.register');
   Route::post('/register', [AdminRegisterController::class, 'store'])->middleware(['guest'])->name('admin.register.submit');
 
+  // 管理者ログアウト
+  Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+
   // 認証済み管理者のみアクセス可能なルート
   Route::group(['middleware' => ['auth:admin']], function () {
     // 管理者ホームページ
@@ -160,10 +164,10 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-//ログアウト　一般ユーザー用と管理者ユーザー用の両方に対応
+//ログアウト　一般ユーザーの両方
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
   ->name('logout')
-  ->middleware('auth');
+  ->middleware('web');
 
 // お知らせメール作成・送信
 Route::get('/admin/email-notification', [EmailNotificationController::class, 'index'])->name('admin.email-notification');

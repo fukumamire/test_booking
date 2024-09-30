@@ -44,12 +44,18 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
+  public function isAdmin()
+  {
+    return $this->hasRole('super-admin');
+  }
+
+
   // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
     return $this->hasMany(Favorite::class, 'user_id');
   }
-
+  
   // お気に入り登録
   public function favorite(Shop $shop)
   {
