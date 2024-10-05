@@ -6,15 +6,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use App\Models\User;
 use App\Models\Shop;
 use App\Models\Area;
 use App\Models\Genre;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ShopImage;
+use Spatie\Permission\Models\Role;
+
 
 class ShopManagerController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware(function ($request, $next) {
+      if (!auth()->check()) {
+        return redirect()->route('shop-manager.login');
+      }
+
+      $user = auth()->user();
+      if (!$user instanceof User || !$user->hasRole('shop-manager')) {
+        return redirect()->route('shop-manager.login')->with('error', 'Invalid shop manager');
+      }
+
+      return $next($request);
+    });
+  }
+
   public function dashboard()
   {
     return view('admin.shop-manager.dashboard');
@@ -72,10 +91,23 @@ class ShopManagerController extends Controller
         ]);
       }
     }
+    // ログイン中のユーザーと新規店舗を結びつける
+    if (!auth()->check()) {
+      return redirect()->route('login')->with('error', 'ログインしてください。');
+    }
 
-    return redirect()->route('shop-manager.dashboard')
-      ->with('success', '新規店舗を追加しました。');
+    $user = auth()->user();
+    if ($user instanceof User && $user->hasRole('shop-manager')) {
+      $user->update(['shop_id' => $shop->id]);
+    } else {
+      return redirect()->back()->with('error', '店舗管理者としてログインしてください。');
+    }
+
+    $user->update(['shop_id' => $shop->id]);
+
+    return redirect()->route('shop-manager.dashboard')->with('success', '新規店舗を追加しました。');
   }
+
 
   public function editShop(Shop $shop)
   {
@@ -95,13 +127,10 @@ class ShopManagerController extends Controller
       'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
-    $shop->update($validatedData);
-    $shop->areas()->sync($request->input('area_ids'));
-
     // 既存のジャンルの shop_id を更新し、新しいジャンルは追加しない
     foreach ($request->input('genre_ids') as $genreId) {
       $existingGenre = Genre::find($genreId);
-      if ($existingGenre) {
+      if ($existingGenre && $shop->genres()->where('id', $genreId)->exists()) {
         $existingGenre->update(['shop_id' => $shop->id]);
       }
     }
@@ -119,12 +148,84 @@ class ShopManagerController extends Controller
       }
     }
 
+    // 店舗の情報を更新
+    $shop->update([
+      'name' => $validatedData['name'],
+      'outline' => $validatedData['outline'],
+      'area_ids' => $validatedData['area_ids']
+    ]);
+
+    // エリア関連付けの更新
+    $shop->areas()->sync($validatedData['area_ids']);
+
     return redirect()->route('shop-manager.dashboard')->with('success', '店舗情報を更新しました。');
+  }
+  //店舗削除
+  public function destroy(Shop $shop)
+  {
+    if (!auth()->check()) {
+      return redirect()->route('shop-manager.login');
+    }
+
+    $user = auth()->user();
+
+    if (!$user instanceof User || !$user->hasRole('shop-manager')) {
+      abort(403, 'Invalid shop manager');
+    }
+
+    if ($shop->user_id !== $user->id) {
+      abort(403, 'You do not have permission to delete this shop');
+    }
+
+    // 関連データの論理削除
+    $shop->areas()->detach();
+    $shop->genres()->delete();
+    $shop->images()->delete();
+    $shop->bookings()->delete();
+
+    // 店舗の論理削除
+    $shop->delete();
+
+    return redirect()->route('shop-manager.shops.index')->with('success', 'Shop deleted successfully');
+  }
+
+  //店舗復元 
+  public function restore($id)
+  {
+    $shop = Shop::withTrashed()->findOrFail($id);
+
+    if (!auth()->check()) {
+      return redirect()->route('shop-manager.login');
+    }
+
+    $user = auth()->user();
+
+    if (!$user instanceof User || !$user->hasRole('shop-manager')) {
+      abort(403, 'Invalid shop manager');
+    }
+
+    if ($shop->user_id !== $user->id) {
+      abort(403, 'You do not have permission to restore this shop');
+    }
+
+    $shop->restore();
+
+    return redirect()->route('shop-manager.shops.index')->with('success', 'Shop restored successfully');
   }
 
   public function reservations()
   {
-    $bookings = Booking::where('shop_id', auth()->user()->shop_id)->latest()->paginate();
+    $user = auth()->user();
+
+    if (!$user instanceof User || !$user->hasRole('shop-manager')) {
+      abort(403, 'Invalid shop manager');
+    }
+
+    if (!$user->shop_id) {
+      abort(404, 'Associated shop not found');
+    }
+
+    $bookings = Booking::where('shop_id', $user->shop_id)->latest()->paginate();
     return view('admin.shop-manager.reservations', compact('bookings'));
   }
 }

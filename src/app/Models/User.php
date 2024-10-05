@@ -23,6 +23,7 @@ class User extends Authenticatable
     'name',
     'email',
     'password',
+    'shop_id',
   ];
 
   /**
@@ -49,13 +50,23 @@ class User extends Authenticatable
     return $this->hasRole('super-admin');
   }
 
+  public function isManager()
+  {
+    return $this->hasRole('shop-manager');
+  }
+  
+
+  public function shop()
+  {
+    return $this->belongsTo(Shop::class);
+  }
 
   // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
     return $this->hasMany(Favorite::class, 'user_id');
   }
-  
+
   // お気に入り登録
   public function favorite(Shop $shop)
   {

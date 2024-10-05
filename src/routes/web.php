@@ -183,4 +183,8 @@ Route::group(['prefix' => 'shop-manager'], function () {
   Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
   // 店舗一覧
   Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
+  //店舗削除
+  Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
+  //削除した店舗の復元
+  Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
 });
