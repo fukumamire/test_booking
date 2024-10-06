@@ -52,6 +52,11 @@ return [
       'provider' => 'users',
     ],
 
+    'shop_manager' => [
+      'driver' => 'session',
+      'provider' => 'users',
+    ],
+
   ],
 
   /*

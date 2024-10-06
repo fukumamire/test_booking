@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AdminRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ShopManagerAuthController;
 use App\Actions\Fortify\LogoutAction;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\EmailNotificationController;
@@ -152,7 +153,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('users', UsersController::class)->except(['show']);
 
     // 店舗代表者作成画面
-    Route::get('/admin/shop-manager/register', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
+    Route::get('/admin/shop-manager/register', [UsersController::class, 'createShopManager'])->name('admin.users.create-shop-manager');
     Route::get('/create-shop-manager', [UsersController::class, 'createShopManager'])->name('users.create-shop-manager');
     Route::post('/store-shop-manager', [UsersController::class, 'storeShopManager'])->name('users.store-shop-manager');
 
@@ -175,16 +176,24 @@ Route::post('/admin/email-notification', [EmailNotificationController::class, 's
 
 // 店舗代表者関係
 Route::group(['prefix' => 'shop-manager'], function () {
-  Route::get('/dashboard', [ShopManagerController::class, 'dashboard'])->name('shop-manager.dashboard');
-  Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
-  Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
-  Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
-  Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
-  Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
-  // 店舗一覧
-  Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
-  //店舗削除
-  Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
-  //削除した店舗の復元
-  Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
+  // ログイン関連のルート
+  Route::get('/login', [ShopManagerAuthController::class, 'showLoginForm'])->name('shop-manager.login');
+  Route::post('/login', [ShopManagerAuthController::class, 'login'])->name('shop-manager.login.submit');
+  Route::post('/logout', [ShopManagerAuthController::class, 'logout'])->name('shop-manager.logout');
+
+  // 認証済みのルート
+  Route::group(['middleware' => ['auth']], function () {
+    Route::get('/dashboard', [ShopManagerController::class, 'dashboard'])->name('shop-manager.dashboard');
+    Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
+    Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
+    Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
+    Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
+    Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
+    // 店舗一覧
+    Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
+    //店舗削除
+    Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
+    //削除した店舗の復元
+    Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
+  });
 });
