@@ -34,17 +34,16 @@ class ShopManagerAuthController extends Controller
         ]);
     }
 
+
     // ログイン成功後、shop-managerロールを持っているか確認
     $user = User::where('email', $request->input('email'))->first();
 
-    if (
-      !$user || !$user->hasRole('shop-manager')
-    ) {
+    if (!$user || !$user->isManager()) {
       Auth::logout();
       return redirect()->back()->withInput($request->only('email'))
-        ->withErrors([
-          'email' => '店舗代表者権限がありません。',
-        ]);
+      ->withErrors([
+        'email' => '店舗代表者権限がありません。',
+      ]);
     }
 
     // ログイン成功後に店舗代表者専用画面にリダイレクト
