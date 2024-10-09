@@ -9,6 +9,11 @@ use App\Models\User;
 
 class ShopManagerAuthController extends Controller
 {
+  public function __construct()
+  {
+    $this->middleware('guest:shop_manager')->except('logout');
+  }
+
   public function showLoginForm()
   {
     return view('auth.shop-manager-login');
@@ -16,48 +21,44 @@ class ShopManagerAuthController extends Controller
 
   public function login(Request $request)
   {
-    // バリデーション
     $request->validate([
-      'email' => 'required|email',
-      'password' => 'required|min:8',
+      'email' => ['required', 'email'],
+      'password' => ['required', 'min:8'],
     ]);
 
-    $credentials = $request->only(['email', 'password']);
+    $guard = 'shop_manager';
 
-    if (Auth::guard('shop_manager')->attempt($credentials)) {
-      // セッションIDを再生成
-      $request->session()->regenerate();
-
-      return redirect()->back()->withInput($request->only('email'))
-        ->withErrors([
-          'email' => '入力されたログイン情報が正しくありません。',
-        ]);
-    }
-
-
-    // ログイン成功後、shop-managerロールを持っているか確認
-    $user = User::where('email', $request->input('email'))->first();
-
-    if (!$user || !$user->isManager()) {
-      Auth::logout();
-      return redirect()->back()->withInput($request->only('email'))
-      ->withErrors([
-        'email' => '店舗代表者権限がありません。',
+    if (!Auth::guard($guard)->attempt($request->only('email', 'password'))) {
+      return back()->withErrors([
+        'email' => '入力されたログイン情報が正しくありません。',
       ]);
     }
 
-    // ログイン成功後に店舗代表者専用画面にリダイレクト
+    $request->session()->regenerate();
+
+    return $this->handlePostLogin($request);
+  }
+
+  private function handlePostLogin(Request $request)
+  {
+    $user = User::where('email', $request->input('email'))->first();
+
+    if (!$user || !$user->isManager()) {
+      Auth::guard('shop_manager')->logout();
+      return redirect()->back()->withInput($request->only('email'))
+        ->withErrors([
+          'email' => '店舗代表者権限がありません。',
+        ]);
+    }
+
     return redirect()->intended('/shop-manager/dashboard');
   }
 
   public function logout(Request $request)
   {
-    Auth::logout();
-
+    Auth::guard('shop_manager')->logout($request);
     $request->session()->invalidate();
-
     $request->session()->regenerateToken();
-
-    return redirect()->route('shop-manager.login');
+    return redirect('/');
   }
 }

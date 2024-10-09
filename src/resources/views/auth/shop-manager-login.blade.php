@@ -12,7 +12,7 @@
     </div>
     <form action="{{ route('shop-manager.login.submit') }}" method="post" class="login-form">
       @csrf
-      <input type="hidden" name="guard" value="web">
+      <input type="hidden" name="guard" value="shop_manager">
       
       <div class="form-group">
         <img src="auth-img/mail.png" alt="mailアイコン"  width="30">
