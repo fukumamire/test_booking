@@ -35,5 +35,9 @@
       </div>
     </form>
   </div>
+  <div class="admin-login-wrapper">
+    <p class="admin-login-link">一般ユーザーとしてログインする場合は<a href="{{ route('login') }}">こちら</a></p>
+    <p class="admin-login-link"><a href="{{ route('shop-manager.login') }}">店舗代表者としてログインする場合はこちら</a></p>
+  </div>
 </body>
 @endsection

@@ -44,7 +44,7 @@ return [
     'api' => [
       'driver' => 'sanctum',
       'provider' => 'users',
-      'hash' => false,
+      // 'hash' => false,
     ],
 
     'admin' => [
@@ -54,7 +54,8 @@ return [
 
     'shop_manager' => [
       'driver' => 'session',
-      'provider' => 'users',
+      'provider' =>
+      'shop_managers',
     ],
 
   ],
@@ -80,6 +81,19 @@ return [
     'users' => [
       'driver' => 'eloquent',
       'model' => App\Models\User::class,
+    ],
+
+    'shop_managers' => [
+      'driver' => 'eloquent',
+      'model' =>
+      App\Models\User::class,
+    ],
+
+
+    'admin' => [
+      'driver' => 'eloquent',
+      'model' =>
+      App\Models\User::class,
     ],
   ],
 

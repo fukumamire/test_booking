@@ -182,47 +182,20 @@ Route::group(['prefix' => 'shop-manager'], function () {
   Route::post('/logout', [ShopManagerAuthController::class, 'logout'])->name('shop-manager.logout');
 
   // 認証済みのユーザー用のルート
-  Route::middleware('auth:shop-manager')->group(function () {
+  Route::middleware('auth:shop_manager')->group(function () {
     // shop_managerロールを持つユーザーのみがアクセスできるようにする
-    Route::middleware('role:shop-manager')->group(function () {
-      Route::get('/dashboard', [ShopManagerController::class, 'index'])->name('shop-manager.dashboard');
-      Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
-      Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
-      Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
-      Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
-      Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
-      // 店舗一覧
-      Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
-      //店舗削除
-      Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
-      //削除した店舗の復元
-      Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
-    });
+
+    Route::get('/dashboard', [ShopManagerController::class, 'dashboard'])->name('shop-manager.dashboard');
+    Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
+    Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
+    Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
+    Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
+    Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
+    // 店舗一覧
+    Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
+    //店舗削除
+    Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
+    //削除した店舗の復元
+    Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
   });
 });
-// // 店舗代表者関係
-// Route::group(['prefix' => 'shop-manager'], function () {
-//   // ログイン関連のルート
-//   Route::get('/login', [ShopManagerAuthController::class, 'showLoginForm'])->name('shop-manager.login');
-//   Route::post('/login', [ShopManagerAuthController::class, 'login'])->name('shop-manager.login.submit');
-//   Route::post('/logout', [ShopManagerAuthController::class, 'logout'])->name('shop-manager.logout');
-
-//   // 認証済みのルート
-//   Route::group(['middleware' => ['auth']], function () {
-//     // shop_managerロールを持つユーザーのみがアクセスできるようにする
-//     Route::group(['middleware' => ['role:shop-manager']], function () {
-//       Route::get('/dashboard', [ShopManagerController::class, 'dashboard'])->name('shop-manager.dashboard');
-//       Route::get('/shops/create', [ShopManagerController::class, 'createShop'])->name('shop-manager.shops.create');
-//       Route::post('/shops/store', [ShopManagerController::class, 'storeShop'])->name('shop-manager.shops.store');
-//       Route::get('/shops/{shop}/edit', [ShopManagerController::class, 'editShop'])->name('shop-manager.shops.edit');
-//       Route::patch('/shops/{shop}/update', [ShopManagerController::class, 'updateShop'])->name('shop-manager.shops.update');
-//       Route::get('/reservations', [ShopManagerController::class, 'reservations'])->name('shop-manager.reservations');
-//       // 店舗一覧
-//       Route::get('/shops', [ShopManagerController::class, 'index'])->name('shop-manager.shops.index');
-//       //店舗削除
-//       Route::delete('/shops/{shop}', [ShopManagerController::class, 'destroy'])->name('shop-manager.shops.destroy');
-//       //削除した店舗の復元
-//       Route::post('/shops/{shop}/restore', [ShopManagerController::class, 'restore'])->name('shop-manager.shops.restore');
-//     });
-//   });
-// });

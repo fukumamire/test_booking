@@ -63,5 +63,6 @@
     </div>
     <button type="submit" class="submit-button">作成</button>
   </form>
+  <a href="{{ route('shop-manager.dashboard') }}" >店舗代表者専用ページに戻る</a>
 </div>
 @endsection

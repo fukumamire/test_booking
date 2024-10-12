@@ -24,7 +24,6 @@ class AuthServiceProvider extends ServiceProvider
   public function boot()
   {
     $this->registerPolicies();
-    $this->registerPolicies();
 
     // shop_manager guardを追加
     Gate::define('shop-manager', function ($user) {

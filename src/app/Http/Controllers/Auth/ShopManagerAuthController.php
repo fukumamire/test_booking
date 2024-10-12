@@ -19,6 +19,7 @@ class ShopManagerAuthController extends Controller
     return view('auth.shop-manager-login');
   }
 
+
   public function login(Request $request)
   {
     $request->validate([
@@ -51,8 +52,9 @@ class ShopManagerAuthController extends Controller
         ]);
     }
 
-    return redirect()->intended('/shop-manager/dashboard');
+    return redirect()->route('shop-manager.dashboard');
   }
+
 
   public function logout(Request $request)
   {

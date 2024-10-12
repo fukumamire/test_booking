@@ -15,6 +15,24 @@ class User extends Authenticatable
 {
   use HasApiTokens, HasFactory, Notifiable, HasRoles;
   /**
+   * Guard name for Spatie roles.
+   *
+   * @var string
+   */
+
+  public function getGuardName()
+  {
+    // 条件によってガード名を動的に返す
+    if ($this->hasRole('shop-manager')) {
+      return 'shop-manager';
+    } elseif ($this->hasRole('admin')) {
+      return 'admin';
+    }
+
+    return 'web'; // デフォルトは web ガード
+  }
+
+  /**
    * The attributes that are mass assignable.
    *
    * @var array<int, string>
@@ -54,7 +72,7 @@ class User extends Authenticatable
   {
     return $this->hasRole('shop-manager');
   }
-  
+
 
   public function shop()
   {
