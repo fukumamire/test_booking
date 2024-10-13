@@ -42,12 +42,25 @@
           </li>
         @endauth
 
+        @auth('shop_manager')
+          <!-- 店舗管理者ログイン時のメニュー -->
+          <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
+          <li><a href="{{ route('shop-manager.dashboard') }}" class="nav-link">Dashboard</a></li>
+          <li>
+            <form method="POST" action="{{ route('shop-manager.logout') }}">
+              @csrf
+              <button type="submit" class="logout-link">Logout</button>
+            </form>
+          </li>
+        @endauth
+
         @guest
           <!-- ゲスト（ログインしていない）時のメニュー -->
           <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
           <li><a href="{{ route('register') }}" class="nav-link">Registration</a></li>
           <li><a href="{{ route('login') }}" class="nav-link">Login</a></li>
           <li><a href="{{ route('admin.login') }}" class="nav-link">Admin Login</a></li>
+          <li><a href="{{ route('shop-manager.login') }}" class="nav-link">Shop Manager Login</a></li>
         @endguest
       </ul>
     </div>
