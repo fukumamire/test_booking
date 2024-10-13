@@ -45,7 +45,7 @@
         @auth('shop_manager')
           <!-- 店舗管理者ログイン時のメニュー -->
           <li><a href="{{ route('shops.index') }}" class="nav-link">Home</a></li>
-          <li><a href="{{ route('shop-manager.dashboard') }}" class="nav-link">Dashboard</a></li>
+          <li><a href="{{ route('shop-manager.dashboard') }}" class="nav-link">Dashboard～店舗管理者専用～</a></li>
           <li>
             <form method="POST" action="{{ route('shop-manager.logout') }}">
               @csrf
