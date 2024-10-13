@@ -67,6 +67,5 @@
     @endforeach
   </tbody>
 </table>
-{{ $shops->links() }}
 </div>
 @endsection

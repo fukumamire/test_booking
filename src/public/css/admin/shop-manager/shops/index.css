@@ -1,0 +1,74 @@
+/* 全体のスタイル */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+/* ヘッダー */
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* テーブルスタイル */
+.shops-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.shops-table thead {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.shops-table th,
+.shops-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.shops-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ボタンスタイル */
+.btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.btn-danger {
+  background-color: #dc3545; /* 赤 */
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* 濃い赤 */
+}
+
+.btn-success {
+  background-color: #28a745; /* 緑 */
+}
+
+.btn-success:hover {
+  background-color: #218838; /* 濃い緑 */
+}
+
+/* スマートフォン対応 */
+@media (max-width: 768px) {
+  .shops-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

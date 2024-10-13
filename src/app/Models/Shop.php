@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shop extends Model
 {
-  use HasFactory,SoftDeletes;
+  use HasFactory, SoftDeletes;
 
-  protected $fillable = ['name', 'outline'];
+  protected $fillable = ['name', 'user_id', 'outline'];
 
   public function user()
   {
