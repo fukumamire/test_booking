@@ -17,12 +17,12 @@ body {
   text-align: center;
   font-size: 30px;
   font-weight: bold;
-  color: #333;
+  color: #4e0808c6;
   margin-bottom: 30px;
 }
 
 .shop-manager__nav {
-  background-color: #333;
+  background-color: #7e0707;
   padding: 15px;
   border-radius: 5px;
 
@@ -50,7 +50,7 @@ body {
 }
 
 .shop-manager__nav a:hover {
-  background-color: #444;
+  background-color: #d31414;
 }
 
 

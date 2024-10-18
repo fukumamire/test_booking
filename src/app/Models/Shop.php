@@ -24,6 +24,8 @@ class Shop extends Model
     return $this->belongsToMany(Area::class, 'shop_areas')->withTimestamps();
   }
 
+
+
   public function genres()
   {
     return $this->hasMany(Genre::class);

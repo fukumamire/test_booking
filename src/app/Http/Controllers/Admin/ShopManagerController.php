@@ -38,26 +38,35 @@ class ShopManagerController extends Controller
   {
     return view('admin.shop-manager.dashboard');
   }
-  // 店舗一覧
+
   public function index()
   {
-    $shops = Shop::where('user_id', auth()->id())->get();
+    // 現在のユーザーを取得
+    $user = auth()->user();
+
+    // ユーザーに関連する店舗を取得（エリアとジャンルも一緒に取得）
+    $shops = Shop::with(['areas', 'genres'])
+      ->where('user_id', $user->id)
+      ->get();
+
+    // ビューに渡す
     return view('admin.shop-manager.shops.index', compact('shops'));
   }
+
   public function createShop()
   {
+    // エリアとジャンルを取得
     $areas = Area::all();
     $genres = Genre::distinct('name')->pluck('id', 'name')->toArray();
     return view('admin.shop-manager.create-shop', compact('areas', 'genres'));
   }
-
 
   public function storeShop(Request $request)
   {
     $validator = Validator::make($request->all(), [
       'name' => 'required|string|max:255',
       'area_ids' => 'required|array',
-      'genre_ids' => 'required|array',
+      'genres' => 'required|string', // ジャンルを文字列として必須項目に設定
       'outline' => 'required|string',
       'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
@@ -69,44 +78,59 @@ class ShopManagerController extends Controller
     }
 
     $shop = Shop::create($validator->validated());
+
+    // エリアの登録
     $shop->areas()->attach($request->input('area_ids'));
 
-    // 既存のジャンルを使用し、新しいジャンルは追加しない
-    foreach ($request->input('genre_ids') as $genreId) {
-      $existingGenre = Genre::find($genreId);
-      if ($existingGenre) {
-        $existingGenre->update(['shop_id' => $shop->id]);
+    // ジャンルの処理
+    $genreNames = explode(',', $request->input('genres')); // カンマ区切りで分割
+    foreach ($genreNames as $genreName) {
+      $genreName = trim($genreName); // 前後の空白を削除
+      if (!empty($genreName)) {
+        Genre::firstOrCreate(['name' => $genreName, 'shop_id' => $shop->id]);
       }
     }
 
     // 画像アップロード処理
     if ($request->hasFile('images')) {
       foreach ($request->file('images') as $image) {
-        $imageName = time() . '_' . $image->getClientOriginalName();
+        $originalName = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $image->getClientOriginalExtension();
+
+        // ファイル名をURLエンコーディング
+        $encodedName = urlencode($originalName);
+
+        // 拡張子を除いたファイル名にタイムスタンプを追加
+        $imageName = time() . '_' . $encodedName . '.' . $extension;
+
+        // 画像の保存先ディレクトリを作成（存在しない場合）
+        Storage::makeDirectory('public/shop_images');
+
+        // 画像を保存
         $imagePath = Storage::putFileAs('public/shop_images', $image, $imageName);
 
+        // ShopImageモデルを作成
         ShopImage::create([
-          'shop_image_url' => 'shop_images/' . $imageName,
+          'shop_image_url' => 'storage/shop_images/' . $imageName,
           'shop_id' => $shop->id,
         ]);
       }
     }
     // ログイン中のユーザーと新規店舗を結びつける
-    if (!auth()->check()) {
-      return redirect()->route('login')->with('error', 'ログインしてください。');
-    }
-
     $user = auth()->user();
     if ($user instanceof User && $user->hasRole('shop-manager')) {
+      // 新規店舗のuser_idを更新
+      $shop->update(['user_id' => $user->id]);
+
+      // ユーザーのshop_idも更新
       $user->update(['shop_id' => $shop->id]);
     } else {
       return redirect()->back()->with('error', '店舗管理者としてログインしてください。');
     }
 
-    $user->update(['shop_id' => $shop->id]);
-
-    return redirect()->route('shop-manager.dashboard')->with('success', '新規店舗を追加しました。');
+    return redirect()->route('shop-manager.shops.index')->with('success', '新規店舗を追加しました。');
   }
+
 
 
   public function editShop(Shop $shop)
@@ -142,7 +166,7 @@ class ShopManagerController extends Controller
         $imagePath = Storage::putFileAs('public/shop_images', $image, $imageName);
 
         ShopImage::create([
-          'shop_image_url' => 'shop_images/' . $imageName,
+          'shop_image_url' => $imageName,
           'shop_id' => $shop->id,
         ]);
       }
@@ -186,10 +210,9 @@ class ShopManagerController extends Controller
     // 店舗の論理削除
     $shop->delete();
 
-    return redirect()->route('shop-manager.shops.index')->with('success', 'Shop deleted successfully');
+    return redirect()->route('shop-manager.shops.index')->with('success', '店舗削除をしました。～Shop deleted successfully～');
   }
 
-  //店舗復元 
   public function restore($id)
   {
     $shop = Shop::withTrashed()->findOrFail($id);
@@ -208,10 +231,23 @@ class ShopManagerController extends Controller
       abort(403, 'You do not have permission to restore this shop');
     }
 
+    // ショップの復元
     $shop->restore();
+
+    // 関連データの復元
+    $shop->genres()->restore();
+    $shop->images()->restore();
+    $shop->bookings()->restore();
+
+    // エリアの関連付けを復元
+    $shop->areas()->sync($shop->areas()->pluck('id')->toArray());
+
+    // ユーザーとショップの関連付けを復元
+    $user->update(['shop_id' => $shop->id]);
 
     return redirect()->route('shop-manager.shops.index')->with('success', 'Shop restored successfully');
   }
+
 
   public function reservations()
   {

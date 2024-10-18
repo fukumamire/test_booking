@@ -52,7 +52,7 @@
   @foreach ($shops as $shop)
   <div class="shop__content">
     @foreach($shop->images as $image)
-    <img src="{{ $image->shop_image_url }}" alt="{{ $shop->name }}" class="shop__image">
+    <img src="{{ $image->shop_image_url}}" alt="{{ $shop->name }}" class="shop__image">
     @endforeach
     <div class="shop__item">
       <h2 class="shop__title">{{ $shop->name }}</h2>
