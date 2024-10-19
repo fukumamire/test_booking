@@ -32,7 +32,6 @@ use App\Http\Controllers\EmailNotificationController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 // 一般ユーザー会員登録ページ
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest');
