@@ -9,10 +9,28 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Shop;
 use App\Models\Favorite;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable;
+  use HasApiTokens, HasFactory, Notifiable, HasRoles;
+  /**
+   * Guard name for Spatie roles.
+   *
+   * @var string
+   */
+
+  public function getGuardName()
+  {
+    // 条件によってガード名を動的に返す
+    if ($this->hasRole('shop-manager')) {
+      return 'shop-manager';
+    } elseif ($this->hasRole('admin')) {
+      return 'admin';
+    }
+
+    return 'web'; // デフォルトは web ガード
+  }
 
   /**
    * The attributes that are mass assignable.
@@ -23,6 +41,7 @@ class User extends Authenticatable
     'name',
     'email',
     'password',
+    'shop_id',
   ];
 
   /**
@@ -44,7 +63,23 @@ class User extends Authenticatable
     'email_verified_at' => 'datetime',
   ];
 
-   // Favorite モデルを通じて Shop モデルとの関連付け
+  public function isAdmin()
+  {
+    return $this->hasRole('super-admin');
+  }
+
+  public function isManager()
+  {
+    return $this->hasRole('shop-manager');
+  }
+
+
+  public function shop()
+  {
+    return $this->belongsTo(Shop::class);
+  }
+
+  // Favorite モデルを通じて Shop モデルとの関連付け
   public function favorites()
   {
     return $this->hasMany(Favorite::class, 'user_id');
@@ -72,8 +107,8 @@ class User extends Authenticatable
       $this->favorites()->create(['shop_id' => $shop->id]);
     }
   }
-  
- // お気に入り登録しているかどうかを確認
+
+  // お気に入り登録しているかどうかを確認
   public function hasFavorited(Shop $shop)
   {
     return $this->favorites()->where('shop_id', $shop->id)->exists();

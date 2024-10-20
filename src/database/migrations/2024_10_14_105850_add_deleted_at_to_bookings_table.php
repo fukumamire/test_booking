@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddQrCodeTokenToBookings extends Migration
+class AddDeletedAtToBookingsTable extends Migration
 {
   /**
    * Run the migrations.
@@ -14,7 +14,7 @@ class AddQrCodeTokenToBookings extends Migration
   public function up()
   {
     Schema::table('bookings', function (Blueprint $table) {
-      $table->string('qr_code_token')->unique()->nullable()->after('status'); // status列の後にqr_code_token列を追加
+      $table->softDeletes();
     });
   }
 
@@ -26,7 +26,9 @@ class AddQrCodeTokenToBookings extends Migration
   public function down()
   {
     Schema::table('bookings', function (Blueprint $table) {
-      $table->dropColumn('qr_code_token');
+      if (Schema::hasColumn('bookings', 'deleted_at')) {
+        $table->dropSoftDeletes();
+      }
     });
   }
 }

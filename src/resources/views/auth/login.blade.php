@@ -12,6 +12,8 @@
     </div>
     <form action="{{ route('login') }}" method="post" class="login-form">
       @csrf
+      <input type="hidden" name="guard" value="web">
+      
       <div class="form-group">
         <img src="auth-img/mail.png" alt="mailアイコン"  width="30">
         <input type="email" id="email" name="email" placeholder="email" value="{{ old('email') }}">
@@ -30,6 +32,15 @@
         <button type="submit" class="submit-button">ログイン</button>
       </div>
     </form>
+    @if ($errors->any())
+      <div class="alert alert-danger">
+        {{ $errors->first() }}
+      </div>
+    @endif
+  </div>
+  <div class="admin-login-wrapper">
+    <p class="admin-login-link"><a href="{{ route('admin.login') }}">管理者としてログインする場合はこちら</a></p>
+    <p class="admin-login-link"><a href="{{ route('shop-manager.login') }}">店舗代表者としてログインする場合はこちら</a></p>
   </div>
 </body>
 @endsection

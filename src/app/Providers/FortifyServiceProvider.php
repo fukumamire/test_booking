@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -17,61 +16,68 @@ use App\Models\User;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Http\Responses\CustomRegisterResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
-    {
-        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
-        {
-            public function toResponse($request)
-            {
-                return redirect('/login');
-            }
-        });
-    }
+  /**
+   * Register any application services.
+   *
+   * @return void
+   */
+  public function register() {}
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        // 新規ユーザーの登録処理
-        Fortify::createUsersUsing(CreateNewUser::class);
+  /**
+   * Bootstrap any application services.
+   *
+   * @return void
+   */
+  // bootメソッドは、サービスプロバイダが全てのサービスを登録した後に実行
+  public function boot()
+  {
+    // 新規ユーザーの設定　新規ユーザー作成時にCreateNewUserクラスを使用
+    Fortify::createUsersUsing(CreateNewUser::class);
 
-        // Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
-        // Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
-        // Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+    // authenticateUsingメソッドは、カスタム認証ロジックを定義
 
-        // ユーザー登録画面を表示するためのビュー。
-        Fortify::registerView(function () {
-            return view('auth.register');
-        });
+    // 店舗代表者の認証ロジック
+    Fortify::authenticateUsing(function (Request $request) {
+      $guard = Auth::guard('shop_manager'); // shop_managerガードを使用
+
+      // 認証情報を使用してログインを試みる
+      if ($guard->attempt($request->only(Fortify::username(), 'password'))) {
+        return $guard->user(); // 認証成功時にユーザーを返す
+      }
+
+      return null; // 認証失敗
+    });
+
+    // 管理者の認証ロジック
+    Fortify::authenticateUsing(function (Request $request) {
+      if ($request->input('guard') === 'admin') {
+        $guard = Auth::guard('admin'); // 管理者用のガードを指定
+
+        if ($guard->attempt($request->only(Fortify::username(), 'password'))) {
+          return $guard->user(); // 認証成功時にユーザーを返す
+        }
+
+        return null; // 認証失敗
+      }
+
+      return null; // それ以外はnullを返す
+    });
 
 
-        // ユーザーログイン画面を表示するためのビューを指定します。
-        // 'auth.login'は、resources/views/auth/login.blade.phpに対応します。
-        Fortify::loginView(function () {
-            return view('auth.login');
-        });
+    // loginViewメソッドは、ログインビューをカスタマイズ
+    Fortify::loginView(function (Request $request) {
+      if ($request->is('admin/*')) {
+        return view('admin.auth.login');
+      }
+      return view('auth.shop-manager-login');
+    });
 
-        $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
-
-        RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())) . '|' . $request->ip());
-
-            return Limit::perMinute(1000)->by($throttleKey);
-        });
-
-        // 二要素認証のチャレンジビューをカスタマイズ
-        Fortify::twoFactorChallengeView(function () {
-            return view('auth.two-factor-challenge');
-        });
-        // RateLimiter::for('two-factor', function (Request $request) {
-        //     return Limit::perMinute(5)->by($request->session()->get('login.id'));
-        // });
-    }
+    // ユーザー登録後に特定のリダイレクト処理（/thanks ページなどリダイレクト）を行うために使用
+    $this->app->singleton(RegisterResponse::class, CustomRegisterResponse::class);
+  }
 }

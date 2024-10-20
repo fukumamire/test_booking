@@ -33,10 +33,22 @@
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
+      <div class="form-group">
+        <img src="{{ asset('auth-img/key.png') }}" alt="keyアイコン" width="30">
+        <input type="password" id="confirm_password" name="password_confirmation" placeholder="確認用パスワード">
+        @error('password_confirmation')
+          <div class="error-message">{{ $message }}</div>
+        @enderror
+      </div>
+      
       <div class="form-submit">
         <button type="submit" class="submit-button">登録</button>
       </div>
     </form>
+
+    <div class="admin-register-wrapper">
+    <p class="admin-register-link">管理者として登録する場合は<a href="{{ route('admin.register') }}">こちら</a></p>
+  </div>
   </div>
 </body>
 @endsection

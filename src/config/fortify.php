@@ -157,4 +157,18 @@ return [
         ]),
     ],
 
+    'logout_method' => 'POST',
+    'logout_route' => 'logout',
+    'logout_redirect' => '/',
+    'logout_action' => \App\Actions\Fortify\LogoutAction::class,
+
+
+    /*
+     * Fortifyの設定を追加
+     */
+    'guard' => 'shop_manager',
+    /*
+     * Admin用のFortify設定を追加
+     */
+    'admin_guard' => 'admin',
 ];
