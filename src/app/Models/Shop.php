@@ -25,7 +25,6 @@ class Shop extends Model
   }
 
 
-
   public function genres()
   {
     return $this->hasMany(Genre::class);
@@ -35,6 +34,13 @@ class Shop extends Model
   {
     return $this->hasMany(ShopImage::class);
   }
+
+  // 予約が関連する店舗
+  public function bookings()
+  {
+    return $this->hasMany(Booking::class);
+  }
+
 
   // Favorite モデルを通じて User モデルとの関連付けを定義
   public function favorites()
