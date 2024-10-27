@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,7 +13,7 @@ use App\Models\Shop;
 use App\Models\Favorite;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
   use HasApiTokens, HasFactory, Notifiable, HasRoles;
   /**
@@ -118,5 +120,15 @@ class User extends Authenticatable
   public function bookingChanges()
   {
     return $this->hasMany(BookingChange::class);
+  }
+
+  /**
+   * Get the email address that should be used for verification.
+   *
+   * @return string
+   */
+  public function getEmailForVerification()
+  {
+    return $this->email;
   }
 }
