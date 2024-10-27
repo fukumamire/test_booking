@@ -40,6 +40,8 @@
           <div class="error-message">{{ $message }}</div>
         @enderror
       </div>
+      <!-- メール認証に関するメッセージを追加 -->	
+      <p>登録後、自動的に送信されるメールから本人確認が必要です。</p>
       <div class="form-submit">
         <button type="submit" class="submit-button">登録</button>
       </div>

@@ -41,13 +41,16 @@
         @enderror
       </div>
       
+      <!-- メール認証に関するメッセージを追加 -->
+      <p>登録後、自動的に送信されるメールから本人確認が必要です。</p>
+      
       <div class="form-submit">
         <button type="submit" class="submit-button">登録</button>
       </div>
     </form>
 
     <div class="admin-register-wrapper">
-    <p class="admin-register-link">管理者として登録する場合は<a href="{{ route('admin.register') }}">こちら</a></p>
+    <p class="admin-register-link"><a href="{{ route('admin.register') }}">管理者として登録する場合はこちら</a></p>
   </div>
   </div>
 </body>

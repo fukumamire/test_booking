@@ -1,91 +1,91 @@
 main {
-    margin-top: 100px;
+  margin-top: 100px;
 }
 
 .register-page {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #eee;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #eee;
 }
 
 
 .registration-container {
-    width: 90%;
-    max-width: 400px;
-    margin: 100px auto;
-    background-color: #fff;
-    border-radius: 20px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  width: 100%;
+  max-width: 550px;
+  margin: 100px auto;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 
 .registration-header {
-    /* margin-bottom: 10px; */
-    background-color: blue;
-    color: #fff;
+  background-color: blue;
+  color: #fff;
+  
 }
 
 
 .form-group label {
-    display: block;
-    margin-bottom: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
 
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"] {
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: none; /*テキストの他の側面の枠線を非表示 */
-    border-bottom: 1px solid #ccc; /* 下線*/
-    border-radius: 5px;
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 20px;
+  order: none; /*テキストの他の側面の枠線を非表示 */
+  border-bottom: 1px solid #ccc; /* 下線*/
+  border-radius: 5px;
 }
 
 
 .error-message {
-    color: red;
-    margin-bottom: 10px;
+  color: red;
+  margin-bottom: 10px;
 }
 
 .form-submit {
-    display: flex;
-    justify-content: flex-end; /* ボタンを右寄せにする */
+  display: flex;
+  justify-content: flex-end; /* ボタンを右寄せにする */
 }
 
 .submit-button {
-    display: inline-block;
-    background-color: rgb(63, 90, 242);
-    color: #fff;
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 1rem;
-    letter-spacing: 0.05em;
+  display: inline-block;
+  background-color: rgb(63, 90, 242);
+  color: #fff;
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
 }
 
 .submit-button:hover {
-    background-color: darkblue;
+  background-color: darkblue;
 }
 
 .admin-register-wrapper {
-    margin-top: 10px;
-    text-align: center;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .admin-register-link {
-    font-size: 20px;
-    color: #337ab7;
-    text-decoration: underline;
+  font-size: 20px;
+  color: #337ab7;
+  text-decoration: underline;
 }
 
 
 .admin-register-link:hover {
-    color: #23527c;
+color: #23527c;
 }
 
 /* 店舗代表者作成　admin/users/create-shop-manager.blade.php　管理者専用ぺージに戻るボタン */
@@ -108,4 +108,11 @@ main {
 
 .btn-secondary:hover {
   background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .registration-container {
+    max-width: 90%; /* スマートフォンなど小さい画面では90%の幅にする */
+    margin: 50px auto; /* マージンも小さくする */
+  }
 }
