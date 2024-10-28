@@ -39,6 +39,11 @@ class FortifyServiceProvider extends ServiceProvider
     // 新規ユーザーの設定　新規ユーザー作成時にCreateNewUserクラスを使用
     Fortify::createUsersUsing(CreateNewUser::class);
 
+    // メール認証の設定を追加
+    Fortify::verifyEmailView(function () {
+      return view('auth.verify-email');
+    });
+
     // authenticateUsingメソッドは、カスタム認証ロジックを定義
 
     // 店舗代表者の認証ロジック
