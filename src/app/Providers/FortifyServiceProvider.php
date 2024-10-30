@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
@@ -16,7 +17,7 @@ use App\Models\User;
 use Laravel\Fortify\Contracts\RegisterResponse;
 use App\Http\Responses\CustomRegisterResponse;
 use Laravel\Fortify\Contracts\LogoutResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -45,34 +46,27 @@ class FortifyServiceProvider extends ServiceProvider
     });
 
     // authenticateUsingメソッドは、カスタム認証ロジックを定義
-
-    // 店舗代表者の認証ロジック
     Fortify::authenticateUsing(function (Request $request) {
-      $guard = Auth::guard('shop_manager'); // shop_managerガードを使用
+      // 管理者用の認証
+      if (
+        $request->input('guard') === 'admin'
+      ) {
+        $user = User::where(Fortify::username(), $request->input(Fortify::username()))->first();
 
-      // 認証情報を使用してログインを試みる
-      if ($guard->attempt($request->only(Fortify::username(), 'password'))) {
-        return $guard->user(); // 認証成功時にユーザーを返す
-      }
-
-      return null; // 認証失敗
-    });
-
-    // 管理者の認証ロジック
-    Fortify::authenticateUsing(function (Request $request) {
-      if ($request->input('guard') === 'admin') {
-        $guard = Auth::guard('admin'); // 管理者用のガードを指定
+        if ($user && $user->isAdmin() && Hash::check($request->input('password'), $user->password)) {
+          return $user; // 認証成功時にユーザーを返す
+        }
+      } else {
+        // 店舗代表者の認証
+        $guard = Auth::guard('shop_manager');
 
         if ($guard->attempt($request->only(Fortify::username(), 'password'))) {
           return $guard->user(); // 認証成功時にユーザーを返す
         }
-
-        return null; // 認証失敗
       }
 
-      return null; // それ以外はnullを返す
+      return null; // 認証失敗
     });
-
 
     // loginViewメソッドは、ログインビューをカスタマイズ
     Fortify::loginView(function (Request $request) {

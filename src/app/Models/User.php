@@ -122,13 +122,25 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasMany(BookingChange::class);
   }
 
-  /**
-   * Get the email address that should be used for verification.
-   *
-   * @return string
-   */
-  public function getEmailForVerification()
+  // メール認証を有効にするためのメソッドを追加
+  public function markEmailAsVerified()
   {
-    return $this->email;
+    $this->email_verified_at = now();
+    $this->save();
   }
+
+  public function isVerified()
+  {
+    return !is_null($this->email_verified_at);
+  }
+
+  // /**
+  //  * Get the email address that should be used for verification.
+  //  *
+  //  * @return string
+  //  */
+  // public function getEmailForVerification()
+  // {
+  //   return $this->email;
+  // }
 }

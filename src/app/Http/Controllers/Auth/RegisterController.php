@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Actions\Fortify\CreateNewUser;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Notifications\VerifyEmail;
 
 class RegisterController extends Controller
 {
@@ -27,10 +29,12 @@ class RegisterController extends Controller
       'password' => ['required', 'string', 'min:8', 'confirmed'],
     ]);
 
-    $user = app(\App\Actions\Fortify\CreateNewUser::class)->create($validatedData);
-
-    //  ログイン処理は行わず、thanks画面にリダイレクト→このコードは不要Auth::guard('web')->login($user);
-
+    
+    $user = $request->user();
+    // $createNewUser = new CreateNewUser();
+    // $user = $createNewUser->create($validatedData);
+    // メール確認の通知を送信
+    $user->sendEmailVerificationNotification();
     return redirect()->route('thanks');
   }
 }

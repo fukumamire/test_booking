@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\ShopManagerAuthController;
 use App\Actions\Fortify\LogoutAction;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\EmailNotificationController;
+use Illuminate\Auth\Notifications\VerifyEmail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,7 +37,6 @@ use App\Http\Controllers\EmailNotificationController;
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->middleware('guest');
 
-
 // 一般ユーザー　ログインページ
 Route::get('/login', [LoginController::class, 'showLoginForm'])
   ->middleware('guest')
@@ -46,9 +46,35 @@ Route::post('/login', [LoginController::class, 'login'])
   ->middleware('guest')
   ->name('login.submit');
 
-//　コントローラ等使用せず　会員登録、ログインを促すページ
-Route::view('/request_login', 'auth.request_login')->name('request_login');
+// 一般ユーザー用のメール認証ページ
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+  $user = User::findOrFail($id);
 
+  if ($user->markEmailAsVerified()) {
+    // ユーザーの状態を直接更新
+    $user->save();
+
+    // 通知メッセージを表示
+    return redirect()->route('verification.notice')->with('success', 'メールアドレスの確認が完了しました。');
+  }
+
+  return back()->withErrors(['認証エラー']);
+})->middleware(['auth', 'signed'])->name('verification.verify');
+
+// 一般ユーザー用のメール認証通知ページ
+Route::get('/email/verify', function () {
+  return view('auth.verify-email');
+})->middleware(['auth'])->name('verification.notice');
+
+// 一般ユーザー用のメール認証リマインダー送信ページ　ユーザーがメール認証を完了していない場合に、再度メール認証リンクを含むメールを送信するプロセス　今回は作成しないのでコメントアウト
+// Route::post('/email/verification-notification', function (Request $request) {
+//   $user = Auth::user();
+//   $user->notify(new VerifyEmail);
+//   return back()->with('message', 'メール認証リマインダーを送信しました。');
+// })->middleware(['auth'])->name('verification.send');
+
+// コントローラ等使用せず　会員登録、ログインを促すページ
+Route::view('/request_login', 'auth.request_login')->name('request_login');
 
 // 会員登録後　リダイレクト先を指定　CustomRegisterResponseがあるため
 Route::get('/thanks', function () {
@@ -58,39 +84,31 @@ Route::get('/thanks', function () {
 // 予約完了後　コントローラーやアクションを経由せずに、すぐにビューを表示　予約完了の画面へ
 Route::view('/done', 'done')->name('done');
 
-
-//店舗一覧
+// 店舗一覧
 Route::get('/', function () {
   return view('index');
 })->name('home');
-
 
 Route::get('/', [ShopController::class, 'index'])->name('shops.index');
 
 // 検索機能
 Route::get('/shops/search', [ShopController::class, 'search'])->name('shops.search');
 
-
-
 // マイページ関係
-
 Route::get('/mypage', function () {
   return view('mypage.my_page');
 })->name('mypage');
 
 // ログインしているユーザーのみがマイページにアクセスできるようにする
-Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')->middleware('auth');
-
+Route::get('/mypage', [BookingController::class, 'showMyPage'])->name('mypage')->middleware(['auth', 'verified']);
 
 Route::get('/bookings/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
 // 予約変更
 Route::put('/bookings/{booking}/update', [BookingController::class, 'update'])->name('bookings.update');
 
-
 // 予約をキャンセルするルートの定義
 Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'destroy'])->name('bookings.cancel');
-
 
 //2024/6/17店舗詳細＆予約画面
 Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.detail');
@@ -105,7 +123,6 @@ Route::post('/review/store', [ReviewController::class, 'store'])->name('review.s
 
 //店舗のレビューページ
 Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name('shop.reviews');
-
 
 //2要素認証　
 Route::get('/two-factor-challenge', function () {
@@ -140,7 +157,6 @@ Route::group(['prefix' => 'admin'], function () {
   // 管理者ログアウト
   Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-
   // 認証済み管理者のみアクセス可能なルート
   Route::group(['middleware' => ['auth:admin']], function () {
     // 管理者ホームページ
@@ -161,8 +177,33 @@ Route::group(['prefix' => 'admin'], function () {
     // 管理者　ユーザー一覧を取得するため
     Route::get('/user/index', [UsersController::class, 'index'])->name('admin.user.index');
   });
-});
 
+  // 管理者用のメール認証ページ
+  Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    $user = User::findOrFail($id);
+
+    if ($user->markEmailAsVerified()) {
+      // ユーザーの状態を直接更新
+      $user->save();
+
+      // 通知メッセージを表示
+      return redirect()->route('admin.verification.notice')->with('success', 'メールアドレスの確認が完了しました。');
+    }
+    return back()->withErrors(['認証エラー']);
+  })->middleware(['auth:admin', 'signed'])->name('admin.verification.verify');
+
+  // 管理者用のメール認証通知ページ
+  Route::get('/email/verify', function () {
+    return view('admin.auth.verify-email');
+  })->middleware(['auth:admin'])->name('admin.verification.notice');
+
+  // 管理者用のメール認証リマインダー送信ページ 今回は使用しない
+  // Route::post('/email/verification-notification', function (Request $request) {
+  //   $user = Auth::guard('admin')->user();
+  //   $user->notify(new VerifyEmail);
+  //   return back()->with('message', 'メール認証リマインダーを送信しました。');
+  // })->middleware(['auth:admin'])->name('admin.verification.send');
+});
 
 //ログアウト　一般ユーザーの両方
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
