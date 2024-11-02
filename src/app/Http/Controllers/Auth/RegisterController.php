@@ -9,6 +9,7 @@ use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 
 class RegisterController extends Controller
@@ -42,8 +43,9 @@ class RegisterController extends Controller
           'password.required' => 'パスワードは必須項目です。',
           'password.string' => 'パスワードは文字列で入力してください。',
           'password.min' => 'パスワードは最低8文字以上で入力してください。',
-          'password.confirmed' => '確認用パスワードと一致しません。',]
-        
+          'password.confirmed' => '確認用パスワードと一致しません。',
+        ]
+
       ]);
 
       $createNewUser = new CreateNewUser();
@@ -54,6 +56,7 @@ class RegisterController extends Controller
         throw new \Exception('Failed to create user');
       }
 
+      // メール認証通知を送信（Laravelの標準機能を使用）
       $user->sendEmailVerificationNotification();
 
       return redirect()->route('thanks')->withSuccess('ユーザーの登録とメール認証の通知が送信されました。');
@@ -66,5 +69,4 @@ class RegisterController extends Controller
       return redirect()->back()->withInput()->withErrors(['エラーが発生しました。再度お試しください。']);
     }
   }
-  
 }

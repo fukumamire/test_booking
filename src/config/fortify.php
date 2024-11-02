@@ -171,4 +171,6 @@ return [
      * Admin用のFortify設定を追加
      */
     'admin_guard' => 'admin',
+
+    'verification_email_view' => 'emails.verify-email',
 ];

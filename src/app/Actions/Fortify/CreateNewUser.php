@@ -25,7 +25,7 @@ class CreateNewUser implements CreatesNewUsers
     $user = User::create([
       'name' => $input['name'],
       'email' => $input['email'],
-      'password' => Hash::needsRehash($input['password']) ? bcrypt($input['password']) : $input['password'],
+      'password' => bcrypt($input['password']),
     ]);
 
     // ロールの割り当て
