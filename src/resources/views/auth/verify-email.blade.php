@@ -12,11 +12,15 @@
 </head>
 
 <body>
-  <div class="container">
-    <h1>メールアドレスの確認</h1>
-    <p>登録したメールアドレスに確認メールを送信しました。メールに記載されたリンクをクリックして、メールアドレスを確認してください。</p>
-    {{-- <p>もしメールが届いていない場合は、<a href="{{ route('verification.resend') }}">再送信</a>を試みてください。</p> --}}
-  </div>
+    <div class="container">
+        <h1>メールアドレスの確認</h1>
+        <p>{{ $user['name'] }}様</p>
+        <p>ご登録いただき、誠にありがとうございます。</p>
+        <p>以下のボタンをクリックして、メールアドレスの確認をお願いします。</p>
+        <p><a href="{{ route('verification.verify', ['id' => $user['id'], 'hash' => $token]) }}" class="button">メールアドレスの確認</a></p>
+        <p>このメールに心あたりがない場合は、このメールは無視してください。</p>
+        <p>{{ config('app.name') }}</p>
+    </div>
 </body>
 
 </html>
