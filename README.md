@@ -198,10 +198,13 @@ DB_PASSWORD=laravel_pass
 ## アカウントの種類（テストユーザー）
 ・テスト　太郎
 test@example.com
+
 ・テスト　次郎
 jiro@example.com
+
 ・テスト　三郎
 saburo@example.com
+
 ・テスト　花子
 hanako@example.com
 
