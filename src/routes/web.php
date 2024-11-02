@@ -51,6 +51,10 @@ Route::post('/login', [LoginController::class, 'login'])
 
 // 一般ユーザー用のメール認証通知ページ
 
+// Route::get('/email/verify', function () {
+//   Log::info("Accessing email verification page");
+//   return view('auth.verify-email');
+// })->middleware(['auth'])->name('verification.notice');
 Route::get('/email/verify', function () {
   Log::info("Accessing email verification page");
   return view('auth.verify-email');
@@ -62,30 +66,56 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
 
   $user = User::findOrFail($id);
 
-  Log::debug("Found user: ", ['user' => $user]);
-
   if ($user->hasVerifiedEmail()) {
     Log::info("User email already verified");
     return redirect()->route('verification.notice')->with('success', 'メールアドレスは既に確認済みです。');
   }
-
-  Log::debug("User email not verified");
 
   if (!Hash::check($hash, $user->email_verification_hash)) {
     Log::warning("Invalid email verification hash for user {$id}");
     return redirect()->back()->withErrors(['認証トークンが無効です。']);
   }
 
-  Log::debug("Validating email verification hash");
-
-  if ($user->markEmailAsVerified()) {
+  try {
+    $user->markEmailAsVerified();
+    $user->save();
     Log::info("Email successfully verified for user {$id}");
     return redirect()->route('verification.notice')->with('success', 'メールアドレスの確認が完了しました。');
+  } catch (\Exception $e) {
+    Log::error("Failed to verify email for user {$id}: " . $e->getMessage());
+    return redirect()->back()->withErrors(['認証エラー']);
   }
-
-  Log::warning("Failed to verify email for user {$id}");
-  return redirect()->back()->withErrors(['認証エラー']);
 })->middleware(['auth', 'signed'])->name('verification.verify');
+
+// Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+//   Log::info("Email verification attempt for user {$id} with hash {$hash}");
+
+//   $user = User::findOrFail($id);
+
+//   Log::debug("Found user: ", ['user' => $user]);
+
+//   if ($user->hasVerifiedEmail()) {
+//     Log::info("User email already verified");
+//     return redirect()->route('verification.notice')->with('success', 'メールアドレスは既に確認済みです。');
+//   }
+
+//   Log::debug("User email not verified");
+
+//   if (!Hash::check($hash, $user->email_verification_hash)) {
+//     Log::warning("Invalid email verification hash for user {$id}");
+//     return redirect()->back()->withErrors(['認証トークンが無効です。']);
+//   }
+
+//   Log::debug("Validating email verification hash");
+
+//   if ($user->markEmailAsVerified()) {
+//     Log::info("Email successfully verified for user {$id}");
+//     return redirect()->route('verification.notice')->with('success', 'メールアドレスの確認が完了しました。');
+//   }
+
+//   Log::warning("Failed to verify email for user {$id}");
+//   return redirect()->back()->withErrors(['認証エラー']);
+// })->middleware(['auth', 'signed'])->name('verification.verify');
 
 
 

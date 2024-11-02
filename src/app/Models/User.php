@@ -48,8 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail
     'shop_id',
   ];
 
-  protected $guarded = [];
-
   /**
    * The attributes that should be hidden for serialization.
    *
@@ -126,22 +124,20 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasMany(BookingChange::class);
   }
 
+  public function sendEmailVerificationNotification()
+  {
+    $this->notify(new VerifyEmail);
+  }
+
   // メール認証を有効にするためのメソッドを追加
   public function markEmailAsVerified()
   {
-    $this->forceFill([
-      'email_verified_at' => now(),
-    ])->save();
+    return $this->update(['email_verified_at' => now()]);
   }
 
 
   public function isVerified()
   {
     return !is_null($this->email_verified_at);
-  }
-
-  public function sendEmailVerificationNotification()
-  {
-    $this->notify(new VerifyEmail);
   }
 }
