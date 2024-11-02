@@ -133,18 +133,6 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->save();
   }
 
-  // public function markEmailAsVerified()
-  // {
-  //   return $this->forceFill([
-  //     'email_verified_at' => now(),
-  //   ])->save();
-  // }
-
-  // public function markEmailAsVerified()
-  // {
-  //   $this->email_verified_at = now();
-  //   $this->save();
-  // }
 
   public function isVerified()
   {

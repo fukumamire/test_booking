@@ -21,24 +21,11 @@ class CreateNewUser implements CreatesNewUsers
    */
   public function create(array $input): User
   {
-    // バリデーション
-    Validator::make($input, [
-      'name' => ['required', 'string', 'max:191'],
-      'email' => [
-        'required',
-        'string',
-        'email',
-        'max:191',
-        Rule::unique(User::class),
-      ],
-      'password' => $this->passwordRules(),
-    ])->validate();
-
     // ユーザー作成
     $user = User::create([
       'name' => $input['name'],
       'email' => $input['email'],
-      'password' => Hash::make($input['password']),
+      'password' => Hash::needsRehash($input['password']) ? bcrypt($input['password']) : $input['password'],
     ]);
 
     // ロールの割り当て
