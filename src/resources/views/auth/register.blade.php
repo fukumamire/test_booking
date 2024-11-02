@@ -10,7 +10,7 @@
     <div class="registration-header">
       <h2>Registration</h2>
     </div>
-    <form action="/register" method="post" class="registration-form">
+    <form action="{{ route('register') }}" method="post" class="registration-form">
       @csrf
       <div class="form-group">
         <img src="auth-img/male.png" alt="userアイコン" width="30">

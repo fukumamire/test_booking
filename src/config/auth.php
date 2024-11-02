@@ -134,4 +134,18 @@ return [
 
   'password_timeout' => 10800,
 
+  'verification' => [
+    'providers' => [
+      'users' => 'users',
+    ],
+
+    'table' => null,
+
+    'expire' => 60,
+
+    'throttle' => 60,
+
+    'notification' => 'Illuminate\Auth\Notifications\VerifyEmail',
+  ],
+
 ];

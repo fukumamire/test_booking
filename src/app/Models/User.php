@@ -13,6 +13,8 @@ use App\Models\Shop;
 use App\Models\Favorite;
 use Spatie\Permission\Traits\HasRoles;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
   use HasApiTokens, HasFactory, Notifiable, HasRoles;
@@ -45,6 +47,8 @@ class User extends Authenticatable implements MustVerifyEmail
     'password',
     'shop_id',
   ];
+
+  protected $guarded = [];
 
   /**
    * The attributes that should be hidden for serialization.
@@ -126,21 +130,29 @@ class User extends Authenticatable implements MustVerifyEmail
   public function markEmailAsVerified()
   {
     $this->email_verified_at = now();
-    $this->save();
+    return $this->save();
   }
+
+  // public function markEmailAsVerified()
+  // {
+  //   return $this->forceFill([
+  //     'email_verified_at' => now(),
+  //   ])->save();
+  // }
+
+  // public function markEmailAsVerified()
+  // {
+  //   $this->email_verified_at = now();
+  //   $this->save();
+  // }
 
   public function isVerified()
   {
     return !is_null($this->email_verified_at);
   }
 
-  // /**
-  //  * Get the email address that should be used for verification.
-  //  *
-  //  * @return string
-  //  */
-  // public function getEmailForVerification()
-  // {
-  //   return $this->email;
-  // }
+  public function sendEmailVerificationNotification()
+  {
+    $this->notify(new VerifyEmail);
+  }
 }

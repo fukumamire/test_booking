@@ -23,6 +23,9 @@ use App\Actions\Fortify\LogoutAction;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\EmailNotificationController;
 use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,25 +49,45 @@ Route::post('/login', [LoginController::class, 'login'])
   ->middleware('guest')
   ->name('login.submit');
 
-// 一般ユーザー用のメール認証ページ
+// 一般ユーザー用のメール認証通知ページ
+
+Route::get('/email/verify', function () {
+  Log::info("Accessing email verification page");
+  return view('auth.verify-email');
+})->middleware(['auth'])->name('verification.notice');
+
+//  認証リンククリック時の処理
 Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+  Log::info("Email verification attempt for user {$id} with hash {$hash}");
+
   $user = User::findOrFail($id);
 
-  if ($user->markEmailAsVerified()) {
-    // ユーザーの状態を直接更新
-    $user->save();
+  Log::debug("Found user: ", ['user' => $user]);
 
-    // 通知メッセージを表示
+  if ($user->hasVerifiedEmail()) {
+    Log::info("User email already verified");
+    return redirect()->route('verification.notice')->with('success', 'メールアドレスは既に確認済みです。');
+  }
+
+  Log::debug("User email not verified");
+
+  if (!Hash::check($hash, $user->email_verification_hash)) {
+    Log::warning("Invalid email verification hash for user {$id}");
+    return redirect()->back()->withErrors(['認証トークンが無効です。']);
+  }
+
+  Log::debug("Validating email verification hash");
+
+  if ($user->markEmailAsVerified()) {
+    Log::info("Email successfully verified for user {$id}");
     return redirect()->route('verification.notice')->with('success', 'メールアドレスの確認が完了しました。');
   }
 
-  return back()->withErrors(['認証エラー']);
+  Log::warning("Failed to verify email for user {$id}");
+  return redirect()->back()->withErrors(['認証エラー']);
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
-// 一般ユーザー用のメール認証通知ページ
-Route::get('/email/verify', function () {
-  return view('auth.verify-email');
-})->middleware(['auth'])->name('verification.notice');
+
 
 // 一般ユーザー用のメール認証リマインダー送信ページ　ユーザーがメール認証を完了していない場合に、再度メール認証リンクを含むメールを送信するプロセス　今回は作成しないのでコメントアウト
 // Route::post('/email/verification-notification', function (Request $request) {
