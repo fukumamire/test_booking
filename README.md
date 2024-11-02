@@ -197,11 +197,34 @@ DB_PASSWORD=laravel_pass
 
 ## アカウントの種類（テストユーザー）
 ・テスト　太郎
-
+test@example.com
 ・テスト　次郎
-
+jiro@example.com
 ・テスト　三郎
-
+saburo@example.com
 ・テスト　花子
+hanako@example.com
+
+・test 管理者　（管理者ユーザー）
+kanrisya@example.com
+
+・光　（店舗ユーザー（店舗代表者）
+shop-hikari@example.com
 
 パスワードは「１」を８つ入力してください
+
+
+## CSV インポート形式
+
+以下の形式で CSV ファイルを作成してください。
+
+| 店舗名 | 地域 | ジャンル | 店舗概要 | 画像URL |
+|--------|------|----------|----------|---------|
+| 例: 魚屋 | 東京都 | 寿司 | 新鮮な魚を提供します。 | http://example.com/image.jpg |
+
+- 店舗名: 50文字以内
+- 地域: 「東京都」「大阪府」「福岡県」のいずれか
+- ジャンル: 「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のいずれか
+- 店舗概要: 400文字以内
+- 画像URL: jpeg、png形式の画像URL
+
