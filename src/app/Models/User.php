@@ -129,8 +129,9 @@ class User extends Authenticatable implements MustVerifyEmail
   // メール認証を有効にするためのメソッドを追加
   public function markEmailAsVerified()
   {
-    $this->email_verified_at = now();
-    return $this->save();
+    $this->forceFill([
+      'email_verified_at' => now(),
+    ])->save();
   }
 
 
