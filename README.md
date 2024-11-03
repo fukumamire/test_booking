@@ -42,6 +42,7 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 | カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
 |------------|------------------|-------------|------------|----------|-------------|
 | id         | unsigned bigint  | 〇          | 〇         | 〇       |             |
+| user_id    | unsigned bigint  |             |            |         |             |
 | name       | VARCHAR          |             |            | 〇       |             |
 | outline    | TEXT             |             |            |          |             |
 | created_at | timestamp        |             |            |          |             |
@@ -195,7 +196,7 @@ DB_PASSWORD=laravel_pass
 ``` php artisan db:seed ```
 
 
-## アカウントの種類（テストユーザー）
+sudo chmod -R 777 *## アカウントの種類（テストユーザー）
 ・テスト　太郎
 test@example.com
 
@@ -221,9 +222,9 @@ shop-hikari@example.com
 
 以下の形式で CSV ファイルを作成してください。
 
-| 店舗名 | 地域 | ジャンル | 店舗概要 | 画像URL |
-|--------|------|----------|----------|---------|
-| 例: 魚屋 | 東京都 | 寿司 | 新鮮な魚を提供します。 | http://example.com/image.jpg |
+| 店舗名 |ユーザーID| 地域 | ジャンル | 店舗概要 | 画像URL |
+|--------|------|------|----------|----------|---------|
+| 例: 魚屋 |22| 東京都 | 寿司 | 新鮮な魚を提供します。 | http://example.com/image.jpg |
 
 - 店舗名: 50文字以内
 - 地域: 「東京都」「大阪府」「福岡県」のいずれか
