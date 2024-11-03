@@ -177,6 +177,7 @@ return [
     App\Providers\FortifyServiceProvider::class,
     SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
     Spatie\Permission\PermissionServiceProvider::class,
+    Maatwebsite\Excel\ExcelServiceProvider::class,
   ],
 
   /*
@@ -233,6 +234,7 @@ return [
     'View' => Illuminate\Support\Facades\View::class,
     'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
     'QrCodeService' => App\Services\QrCodeService::class,
+    'Excel' => Maatwebsite\Excel\Facades\Excel::class,
   ],
 
 ];
