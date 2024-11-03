@@ -51,18 +51,6 @@ Route::post('/login', [LoginController::class, 'login'])
   ->name('login.submit');
 
 // 一般ユーザー用のメール認証通知ページ
-
-// Route::get('/email/verify', function () {
-//   Log::info("Accessing email verification page");
-//   return view('auth.verify-email');
-// })->middleware(['auth'])->name('verification.notice');
-
-
-// Route::get('/email/verify', function () {
-//   Log::info("Accessing email verification page");
-//   return view('auth.verify-email');
-// })->middleware(['auth'])->name('verification.notice');
-
 // ユーザーがメールアドレスを確認していない状態で保護されたページにアクセスしようとした時のルート
 Route::get('/email/verify', function () {
   return view('auth.verify-email');
@@ -187,7 +175,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/user/index', [UsersController::class, 'index'])->name('admin.user.index');
   });
 
-  // 管理者用のメール認証ページ
+
+  // 管理者用のメール認証ページ作成できていないので便宜コメントアウト
   Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
 

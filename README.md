@@ -196,7 +196,7 @@ DB_PASSWORD=laravel_pass
 ``` php artisan db:seed ```
 
 
-sudo chmod -R 777 *## アカウントの種類（テストユーザー）
+## アカウントの種類（テストユーザー）
 ・テスト　太郎
 test@example.com
 
@@ -212,8 +212,12 @@ hanako@example.com
 ・test 管理者　（管理者ユーザー）
 kanrisya@example.com
 
-・光　（店舗ユーザー（店舗代表者）
+・光　（店舗ユーザー（店舗代表者））
 shop-hikari@example.com
+
+・店長　（店舗ユーザー（店舗代表者））
+shop-daihyousya@example.com
+
 
 パスワードは「１」を８つ入力してください
 
@@ -224,7 +228,7 @@ shop-hikari@example.com
 
 | 店舗名 |ユーザーID| 地域 | ジャンル | 店舗概要 | 画像URL |
 |--------|------|------|----------|----------|---------|
-| 例: 魚屋 |22| 東京都 | 寿司 | 新鮮な魚を提供します。 | http://example.com/image.jpg |
+| 例: 魚屋 |適宜| 東京都 | 寿司 | 新鮮な魚を提供します。 | http://example.com/image.jpg |
 
 - 店舗名: 50文字以内
 - 地域: 「東京都」「大阪府」「福岡県」のいずれか
