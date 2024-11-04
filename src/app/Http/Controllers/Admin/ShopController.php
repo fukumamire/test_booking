@@ -14,22 +14,45 @@ class ShopController extends Controller
   {
     $this->middleware('auth:admin'); // 管理者認証ミドルウェア
   }
-
-// インポート処理
   public function import(Request $request)
   {
-    $request->validate([
-      'file' => 'required|mimes:xlsx,xls,csv|max:2048'
-    ]);
+    // $request->validate([
+    //   'file' => [
+    //     'required',
+    //     'mimes:xlsx,xls,csv',
+    //     'max:2048', // ファイルサイズ制限（2MB）
+    //   ],
+    // ], [
+    //   'file.required' => 'ファイルを選択してください',
+    //   'file.mimes' => '有効なファイル形式は.xlsx、.xls、または.csvのみです',
+    //   'file.max' => 'ファイルサイズは2MB以内でなければなりません',
+    // ]);
 
-  // インポート処理
-    $import = new ShopImport();
-    Excel::import($import, $request->file('file'));
+    try {
+      $import = new ShopImport();
+      Excel::import($import, $request->file('file'));
 
-    // 処理完了後のリダイレクト
-    return redirect()->back()->with('success', 'Shops imported successfully.');
+      return redirect()->back()->with('success', 'Shops imported successfully.');
+    } catch (\Exception $e) {
+      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
   }
- // インポートフォーム表示
+  // インポート処理
+  // public function import(Request $request)
+  // {
+  //   $request->validate([
+  //     'file' => 'required|mimes:xlsx,xls,csv|max:2048'
+  //   ]);
+
+  // // インポート処理
+  //   $import = new ShopImport();
+  //   Excel::import($import, $request->file('file'));
+
+  //   // 処理完了後のリダイレクト
+  //   return redirect()->back()->with('success', 'Shops imported successfully.');
+  // }
+
+  // インポートフォーム表示
   public function importForm()
   {
     return view('admin.shops.import');
