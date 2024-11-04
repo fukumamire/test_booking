@@ -10,9 +10,13 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
-class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
+class ShopImport implements ToModel, WithBatchInserts, WithChunkReading, SkipsFailures, WithValidation
 {
+  use  SkipsFailures;
+
   public function model(array $row)
   {
     return DB::transaction(function () use ($row) {
@@ -34,29 +38,69 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       ]);
 
       // ジャンル情報のインポート
-      foreach (explode(',', $row['ジャンル']) as $genreName) {
-        $genre = Genre::firstOrCreate(['name' => trim($genreName)], ['shop_id' => $shop->id]);
+      $genres = explode(',', $row['ジャンル']);
+      foreach ($genres as $genreName) {
+        $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
+        // ジャンルと店舗の関連付け
+        $shop->genres()->attach($genre->id);
       }
 
       // 画像情報のインポート
       if (!empty($row['画像URL'])) {
-        ShopImage::create([
-          'shop_id' => $shop->id,
-          'shop_image_url' => $row['画像URL']
-        ]);
+        $imageUrl = $row['画像URL'];
+        if ($this->isValidImageUrl($imageUrl)) {
+          ShopImage::create([
+            'shop_id' => $shop->id,
+            'shop_image_url' => $imageUrl
+          ]);
+        } else {
+          // 画像URLが無効な場合、エラーをスロー
+          throw new \Exception('画像URLは有効な画像ファイルを指定してください');
+        }
       }
 
       return $shop;
     });
   }
 
+  public function rules(): array
+  {
+    return [
+      '*.店舗名' => 'required|max:50',
+      '*.地域' => 'required|in:東京都,大阪府,福岡県',
+      '*.ジャンル' => 'required',
+      '*.ジャンル.*' => 'in:寿司,焼肉,イタリアン,居酒屋,ラーメン',
+      '*.店舗概要' => 'max:400',
+      '*.画像URL' => 'nullable|url',
+    ];
+  }
+
+  public function customValidationMessages()
+  {
+    return [
+      '*.店舗名.required' => '店舗名は必須です',
+      '*.店舗名.max' => '店舗名は50文字以内で入力してください',
+      '*.地域.required' => '地域は必須です',
+      '*.地域.in' => '地域は「東京都」「大阪府」「福岡県」のいずれかを選択してください',
+      '*.ジャンル.required' => 'ジャンルは必須です',
+      '*.ジャンル.*.in' => 'ジャンルは「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のいずれかを選択してください',
+      '*.店舗概要.max' => '店舗概要は400文字以内で入力してください',
+      '*.画像URL.url' => '画像URLは有効なURLを指定してください',
+    ];
+  }
+
   public function batchSize(): int
   {
-    return 1000;
+    return 1000; // 一度にインポートするバッチサイズ
   }
 
   public function chunkSize(): int
   {
-    return 1000;
+    return 1000; // チャンクサイズ
+  }
+
+  protected function isValidImageUrl($url)
+  {
+    return filter_var($url, FILTER_VALIDATE_URL) && preg_match('/\.(jpeg|jpg|png)$/', $url);
   }
 }
