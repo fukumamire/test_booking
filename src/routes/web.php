@@ -173,10 +173,14 @@ Route::group(['prefix' => 'admin'], function () {
 
     // 管理者　ユーザー一覧を取得するため
     Route::get('/user/index', [UsersController::class, 'index'])->name('admin.user.index');
+
+    // 新しいCSVインポート機能のルートを追加
+    Route::get('/shops/import', [App\Http\Controllers\Admin\ShopController::class, 'importForm'])->name('shops.import.form');
+    Route::post('/shops/import', [App\Http\Controllers\Admin\ShopController::class, 'import'])->name('shops.import');
   });
 
 
-  // 管理者用のメール認証ページ作成できていないので便宜コメントアウト
+  // 管理者用のメール認証ページ作成中
   Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
     $user = User::findOrFail($id);
 
