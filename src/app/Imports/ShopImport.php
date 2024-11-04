@@ -34,6 +34,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
     return DB::transaction(function () use ($mappedRow) {
       // 店舗情報のインポート
+      $user_id = !empty($mappedRow['userId']) ? $mappedRow['userId'] : null;
       $shop = Shop::create([
         'name' => $mappedRow['name'],
         'outline' => $mappedRow['outline'],
