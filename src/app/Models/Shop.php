@@ -14,6 +14,17 @@ class Shop extends Model
 
   protected $fillable = ['name', 'user_id', 'outline'];
 
+  public static function boot()
+  {
+    parent::boot();
+
+    static::creating(function ($model) {
+      if (!$model->name) {
+        throw new \Exception("店舗名が設定されていません。");
+      }
+    });
+  }
+
   public function user()
   {
     return $this->hasOne(User::class);

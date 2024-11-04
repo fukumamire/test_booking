@@ -12,6 +12,7 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 
+
 class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
   public function model(array $row)
@@ -34,7 +35,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
     return DB::transaction(function () use ($mappedRow) {
       // 店舗情報のインポート
-      $shop = Shop::forceCreate([
+      $shop = Shop::create([
         'name' => $mappedRow['name'],
         'outline' => $mappedRow['outline'],
         'user_id' => !empty($mappedRow['userId']) ? $mappedRow['userId'] : null,
@@ -58,9 +59,8 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       // ジャンル情報のインポート
       $genres = explode(',', $mappedRow['genres']);
       foreach ($genres as $genreName) {
-        $genre = Genre::forceCreate([
+        $genre = Genre::firstOrCreate([
           'name' => trim($genreName),
-          'shop_id' => $shop->id,
         ]);
 
         if (!empty($shop->id)) {
