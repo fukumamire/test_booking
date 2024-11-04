@@ -19,10 +19,10 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     // 列名のマッピング
     $columnMapping = [
       'name' => '店舗名',
-      'outline' => '店舗概要',
       'userId' => 'ユーザーID',
       'area' => '地域',
       'genres' => 'ジャンル',
+      'outline' => '店舗概要',
       'imageUrl' => '画像URL',
     ];
 
@@ -34,11 +34,10 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
     return DB::transaction(function () use ($mappedRow) {
       // 店舗情報のインポート
-      $user_id = !empty($mappedRow['userId']) ? $mappedRow['userId'] : null;
       $shop = Shop::create([
         'name' => $mappedRow['name'],
         'outline' => $mappedRow['outline'],
-        'user_id' => $mappedRow['userId'] ?? null,
+        'user_id' => !empty($mappedRow['userId']) ? $mappedRow['userId'] : null,
       ]);
 
       // エリア情報のインポート（存在しない場合は作成）
