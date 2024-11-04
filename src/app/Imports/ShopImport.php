@@ -41,22 +41,15 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       ]);
 
       // エリア情報のインポート（存在しない場合は作成）
-      // $areaName = $mappedRow['area'];
-      // $area = Area::firstOrCreate(['name' => $areaName]);
-      // エリア情報のインポート（存在しない場合は作成しない）
-      $areaName = $mappedRow['area'];
-      $area = Area::where('name', $areaName)->first();
-
-      if (!$area) {
-        // エリアが見つからない場合、エラーをスロー
-        throw new \Exception("エリア '$areaName' が見つかりません。");
+      $areaName = trim($mappedRow['area']);
+      if (!empty($areaName)) {
+        $area = Area::firstOrCreate(['name' => $areaName]);
+        // shop_areas テーブルへのインポート
+        DB::table('shop_areas')->insert([
+          'shop_id' => $shop->id,
+          'area_id' => $area->id,
+        ]);
       }
-
-      // shop_areas テーブルへのインポート
-      DB::table('shop_areas')->insert([
-        'shop_id' => $shop->id,
-        'area_id' => $area->id,
-      ]);
 
       // ジャンル情報のインポート
       $genres = explode(',', $mappedRow['genres']);
