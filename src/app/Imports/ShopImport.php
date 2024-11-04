@@ -34,11 +34,15 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
     return DB::transaction(function () use ($mappedRow) {
       // 店舗情報のインポート
-      $shop = Shop::create([
+      $shop = Shop::forceCreate([
         'name' => $mappedRow['name'],
         'outline' => $mappedRow['outline'],
         'user_id' => !empty($mappedRow['userId']) ? $mappedRow['userId'] : null,
       ]);
+
+      if (!$shop->id) {
+        throw new \Exception("店舗IDが生成されませんでした。");
+      }
 
       // エリア情報のインポート（存在しない場合は作成）
       $areaName = trim($mappedRow['area']);
@@ -54,10 +58,37 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       // ジャンル情報のインポート
       $genres = explode(',', $mappedRow['genres']);
       foreach ($genres as $genreName) {
-        $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
-        // ジャンルと店舗の関連付け
-        $shop->genres()->attach($genre->id);
+        $genre = Genre::forceCreate([
+          'name' => trim($genreName),
+          'shop_id' => $shop->id,
+        ]);
+
+        if (!empty($shop->id)) {
+          // ジャンルと店舗の関連付け（直接 genres テーブルに挿入）
+          DB::table('genres')->insert([
+            'shop_id' => $shop->id,
+            'name' => $genre->name,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
+          ]);
+        } else {
+          // shop_id が空の場合はエラーをスロー
+          throw new \Exception("店舗IDが見つかりません。");
+        }
       }
+      // $genres = explode(',', $mappedRow['genres']);
+      // foreach ($genres as $genreName) {
+      //   $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
+      //   // ジャンルと店舗の関連付け（直接 genres テーブルに挿入）
+      //   DB::table('genres')->insert([
+      //     'shop_id' => $shop->id,
+      //     'name' => $genre->name,
+      //     'created_at' => now(),
+      //     'updated_at' => now(),
+      //   ]);
+      // }
+
 
       // 画像情報のインポート
       if (!empty($mappedRow['imageUrl'])) {
