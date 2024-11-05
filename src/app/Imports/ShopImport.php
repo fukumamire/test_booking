@@ -43,60 +43,60 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   {
     $cleanedRow = $this->cleanData($row);
 
-    if (empty(trim($row[0]))) {
-      return null;
+    if (empty(trim($cleanedRow[0]))) {
+      return null; // 店舗名が空の場合はnullを返す
     }
 
-    DB::transaction(function () use ($row) {
+    return DB::transaction(function () use ($cleanedRow) {
       try {
-        $userId = filter_var($row[1], FILTER_VALIDATE_INT);
+        // ユーザーIDの整形
+        $userId = filter_var($cleanedRow[1], FILTER_VALIDATE_INT);
         if ($userId === false) {
           $userId = null;
         }
 
-        $shop = Shop::firstOrCreate([
-          'name' => $row[0],
-          'outline' => $row[4],
+        // Shopの作成
+        $shop = Shop::create([
+          'name' => $cleanedRow[0],
+          'outline' => $cleanedRow[4],
           'user_id' => $userId,
         ]);
 
         // エリア情報のインポート（新規作成）
-        $areaName = trim($row[2]);
+        $areaName = trim($cleanedRow[2]);
         if (!empty($areaName)) {
-          $area = Area::create(['name' => $areaName]);
+          $area = Area::firstOrCreate(['name' => $areaName]);
           DB::table('shop_areas')->insert([
             'shop_id' => $shop->id,
             'area_id' => $area->id,
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
           ]);
         }
 
         // ジャンル情報のインポート（新規作成）
-        $genres = explode(',', $row[3]);
+        $genres = explode(',', $cleanedRow[3]);
         foreach ($genres as $genreName) {
-          Genre::create([
+          Genre::firstOrCreate([
             'shop_id' => $shop->id,
             'name' => trim($genreName),
-            'created_at' => now(),
-            'updated_at' => now()
           ]);
         }
 
         // 画像情報のインポート（新規作成）
-        if (!empty($row[5])) {
+        if (!empty($cleanedRow[5])) {
           ShopImage::create([
             'shop_id' => $shop->id,
-            'shop_image_url' => $row[5],
+            'shop_image_url' => $cleanedRow[5],
             'created_at' => now(),
-            'updated_at' => now()
+            'updated_at' => now(),
           ]);
         }
 
-        return $shop;
+        return $shop; // Shopモデルを返す
       } catch (\Exception $e) {
         Log::error("店舗のインポート中にエラーが発生しました: " . $e->getMessage());
-        return null;
+        throw $e; // エラーを再スローしてトランザクションをロールバック
       }
     });
   }
