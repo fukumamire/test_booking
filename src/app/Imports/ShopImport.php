@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
+use Illuminate\Support\Facades\Log;
 
 class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
@@ -42,61 +43,64 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   {
     $cleanedRow = $this->cleanData($row);
 
-    // 店舗名が空の場合はスキップ
     if (empty(trim($row[0]))) {
-      return null; // 空の行はスキップ
+      return null;
     }
 
-    return DB::transaction(function () use ($row) {
-      // ユーザーIDを整数に変換（不適切な値の場合、nullにする）
-      $userId = filter_var($row[1], FILTER_VALIDATE_INT); // ユーザーIDは2番目の列
-      if ($userId === false) {
-        $userId = null;
-      }
+    DB::transaction(function () use ($row) {
+      try {
+        $userId = filter_var($row[1], FILTER_VALIDATE_INT);
+        if ($userId === false) {
+          $userId = null;
+        }
 
-      // 店舗情報のインポート
-      $shop = Shop::create([
-        'name' => $row[0], // 店舗名は1番目の列
-        'outline' => $row[4], // 店舗概要は5番目の列
-        'user_id' => $userId,
-      ]);
-
-      // エリア情報のインポート（存在しない場合は作成）
-      $areaName = trim($row[2]); // 地域は3番目の列
-      if (!empty($areaName)) {
-        $area = Area::firstOrCreate(['name' => $areaName]);
-        // shop_areas テーブルへのインポート
-        DB::table('shop_areas')->insert([
-          'shop_id' => $shop->id,
-          'area_id' => $area->id,
+        $shop = Shop::firstOrCreate([
+          'name' => $row[0],
+          'outline' => $row[4],
+          'user_id' => $userId,
         ]);
+
+        // エリア情報のインポート（新規作成）
+        $areaName = trim($row[2]);
+        if (!empty($areaName)) {
+          $area = Area::create(['name' => $areaName]);
+          DB::table('shop_areas')->insert([
+            'shop_id' => $shop->id,
+            'area_id' => $area->id,
+            'created_at' => now(),
+            'updated_at' => now()
+          ]);
+        }
+
+        // ジャンル情報のインポート（新規作成）
+        $genres = explode(',', $row[3]);
+        foreach ($genres as $genreName) {
+          Genre::create([
+            'shop_id' => $shop->id,
+            'name' => trim($genreName),
+            'created_at' => now(),
+            'updated_at' => now()
+          ]);
+        }
+
+        // 画像情報のインポート（新規作成）
+        if (!empty($row[5])) {
+          ShopImage::create([
+            'shop_id' => $shop->id,
+            'shop_image_url' => $row[5],
+            'created_at' => now(),
+            'updated_at' => now()
+          ]);
+        }
+
+        return $shop;
+      } catch (\Exception $e) {
+        Log::error("店舗のインポート中にエラーが発生しました: " . $e->getMessage());
+        return null;
       }
-
-      // ジャンル情報のインポート
-      $genres = explode(',', $row[4]); // ジャンルは5番目の列
-      foreach ($genres as $genreName) {
-        $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
-
-        DB::table('genres')->insert([
-          'shop_id' => $shop->id,
-          'name' => $genre->name,
-          'created_at' => now(),
-          'updated_at' => now(),
-          'deleted_at' => null,
-        ]);
-      }
-
-      // 画像情報のインポート
-      if (!empty($row[5])) { // 画像URLは6番目の列
-        ShopImage::create([
-          'shop_id' => $shop->id,
-          'shop_image_url' => $row[5]
-        ]);
-      }
-
-      return $shop;
     });
   }
+
 
   public function batchSize(): int
   {
