@@ -8,14 +8,59 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 
+
 class ShopController extends Controller
 {
   public function __construct()
   {
     $this->middleware('auth:admin'); // 管理者認証ミドルウェア
   }
+
   public function import(Request $request)
   {
+    try {
+      $filePath = $request->file('file')->getPathName();
+      $extension = $request->file('file')->getClientOriginalExtension();
+
+      switch ($extension) {
+        case 'xlsx':
+          $readerType = \Maatwebsite\Excel\Excel::XLSX;
+          break;
+        case 'xls':
+          $readerType = \Maatwebsite\Excel\Excel::XLS;
+          break;
+        case 'csv':
+          $readerType = \Maatwebsite\Excel\Excel::CSV;
+          break;
+        default:
+          throw new \Exception("Unsupported file type: {$extension}");
+      }
+
+      $collection = Excel::toCollection(new ShopImport(), $filePath, null, $readerType);
+
+      $import = new ShopImport();
+      Excel::import($import, $request->file('file'), null, $readerType);
+
+      return redirect()->back()->with('success', 'Shops imported successfully.');
+    } catch (\Exception $e) {
+      Log::error($e->getMessage());
+      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+  }
+
+  public function importForm()
+  {
+    return view('admin.shops.import');
+  }
+}
+// class ShopController extends Controller
+// {
+//   public function __construct()
+//   {
+//     $this->middleware('auth:admin'); // 管理者認証ミドルウェア
+//   }
+//   public function import(Request $request)
+//   {
     // $request->validate([
     //   'file' => [
     //     'required',
@@ -30,20 +75,20 @@ class ShopController extends Controller
 
     // 
 
-    try {
-      $filePath = $request->file('file')->getRealPath(); // ファイル名を 'file' に変更
+  //   try {
+  //     $filePath = $request->file('file')->getRealPath(); // ファイル名を 'file' に変更
 
-      $collection = Excel::toCollection(new ShopImport, $filePath);
+  //     $collection = Excel::toCollection(new ShopImport, $filePath);
 
-      $import = new ShopImport();
-      Excel::import($import, $request->file('file'));
+  //     $import = new ShopImport();
+  //     Excel::import($import, $request->file('file'));
 
-      return redirect()->back()->with('success', 'Shops imported successfully.');
-    } catch (\Exception $e) {
+  //     return redirect()->back()->with('success', 'Shops imported successfully.');
+  //   } catch (\Exception $e) {
 
-      return redirect()->back()->withErrors(['error' => $e->getMessage()]);
-    }
-  }
+  //     return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+  //   }
+  // }
   // インポート処理
   // public function import(Request $request)
   // {
@@ -60,8 +105,8 @@ class ShopController extends Controller
   // }
 
   // インポートフォーム表示
-  public function importForm()
-  {
-    return view('admin.shops.import');
-  }
-}
+//   public function importForm()
+//   {
+//     return view('admin.shops.import');
+//   }
+// }
