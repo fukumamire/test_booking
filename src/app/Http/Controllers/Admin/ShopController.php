@@ -6,7 +6,7 @@ use App\Imports\ShopImport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\Log;
 
 class ShopController extends Controller
 {
@@ -28,12 +28,19 @@ class ShopController extends Controller
     //   'file.max' => 'ファイルサイズは2MB以内でなければなりません',
     // ]);
 
+    // 
+
     try {
+      $filePath = $request->file('file')->getRealPath(); // ファイル名を 'file' に変更
+
+      $collection = Excel::toCollection(new ShopImport, $filePath);
+
       $import = new ShopImport();
       Excel::import($import, $request->file('file'));
 
       return redirect()->back()->with('success', 'Shops imported successfully.');
     } catch (\Exception $e) {
+
       return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
   }
