@@ -36,10 +36,7 @@ class ShopController extends Controller
           throw new \Exception("Unsupported file type: {$extension}");
       }
 
-      $collection = Excel::toCollection(new ShopImport(), $filePath, null, $readerType);
-
-      $import = new ShopImport();
-      Excel::import($import, $request->file('file'), null, $readerType);
+      Excel::import(new ShopImport(), $request->file('file'), null, $readerType);
 
       return redirect()->back()->with('success', 'Shops imported successfully.');
     } catch (\Exception $e) {
