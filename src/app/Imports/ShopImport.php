@@ -38,37 +38,31 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     }, $data);
   }
 
-  public function model(array $row)
+  public function model(array $row): ?Shop
   {
     $cleanedRow = $this->cleanData($row);
-    $mappedRow = [];
-
-    // Shop モデルのカラム名を使用
-    foreach ($this->columnMappings['Shop'] as $key => $columnName) {
-      $mappedRow[$key] = $row[array_search($columnName, array_values($this->columnMappings['Shop']))] ?? '';
-    }
 
     // 店舗名が空の場合はスキップ
-    if (empty(trim($mappedRow['name']))) {
+    if (empty(trim($row[0]))) {
       return null; // 空の行はスキップ
     }
 
-    return DB::transaction(function () use ($mappedRow) {
+    return DB::transaction(function () use ($row) {
       // ユーザーIDを整数に変換（不適切な値の場合、nullにする）
-      $userId = filter_var($mappedRow['userId'], FILTER_VALIDATE_INT);
+      $userId = filter_var($row[1], FILTER_VALIDATE_INT); // ユーザーIDは2番目の列
       if ($userId === false) {
         $userId = null;
       }
 
       // 店舗情報のインポート
       $shop = Shop::create([
-        'name' => $mappedRow['name'],
-        'outline' => $mappedRow['outline'],
+        'name' => $row[0], // 店舗名は1番目の列
+        'outline' => $row[4], // 店舗概要は5番目の列
         'user_id' => $userId,
       ]);
 
       // エリア情報のインポート（存在しない場合は作成）
-      $areaName = trim($mappedRow['area']);
+      $areaName = trim($row[2]); // 地域は3番目の列
       if (!empty($areaName)) {
         $area = Area::firstOrCreate(['name' => $areaName]);
         // shop_areas テーブルへのインポート
@@ -79,7 +73,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
 
       // ジャンル情報のインポート
-      $genres = explode(',', $mappedRow['genres']);
+      $genres = explode(',', $row[4]); // ジャンルは5番目の列
       foreach ($genres as $genreName) {
         $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
 
@@ -93,10 +87,10 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
 
       // 画像情報のインポート
-      if (!empty($mappedRow['imageUrl'])) {
+      if (!empty($row[5])) { // 画像URLは6番目の列
         ShopImage::create([
           'shop_id' => $shop->id,
-          'shop_image_url' => $mappedRow['imageUrl']
+          'shop_image_url' => $row[5]
         ]);
       }
 
@@ -114,6 +108,110 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return 1000; // チャンクサイズ
   }
 }
+
+// class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
+// {
+//   protected $columnMappings = [
+//     'Shop' => [
+//       'name' => '店舗名',
+//       'user_id' => 'ユーザーＩＤ',
+//       'outline' => '店舗概要',
+//     ],
+//     'Area' => [
+//       'name' => '地域',
+//     ],
+//     'Genre' => [
+//       'name' => 'ジャンル',
+//     ],
+//     'ShopImage' => [
+//       'shop_image_url' => '画像URL',
+//     ],
+//   ];
+
+//   private function cleanData($data)
+//   {
+//     return array_map(function ($value) {
+//       return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
+//     }, $data);
+//   }
+
+//   public function model(array $row)
+//   {
+//     $cleanedRow = $this->cleanData($row);
+//     $mappedRow = [];
+
+//     // Shop モデルのカラム名を使用
+//     foreach ($this->columnMappings['Shop'] as $key => $columnName) {
+//       $mappedRow[$key] = $row[array_search($columnName, array_values($this->columnMappings['Shop']))] ?? '';
+//     }
+
+//     // 店舗名が空の場合はスキップ
+//     if (empty(trim($mappedRow['name']))) {
+//       return null; // 空の行はスキップ
+//     }
+
+//     return DB::transaction(function () use ($mappedRow) {
+//       // ユーザーIDを整数に変換（不適切な値の場合、nullにする）
+//       $userId = filter_var($mappedRow['userId'], FILTER_VALIDATE_INT);
+//       if ($userId === false) {
+//         $userId = null;
+//       }
+
+//       // 店舗情報のインポート
+//       $shop = Shop::create([
+//         'name' => $mappedRow['name'],
+//         'outline' => $mappedRow['outline'],
+//         'user_id' => $userId,
+//       ]);
+
+//       // エリア情報のインポート（存在しない場合は作成）
+//       $areaName = trim($mappedRow['area']);
+//       if (!empty($areaName)) {
+//         $area = Area::firstOrCreate(['name' => $areaName]);
+//         // shop_areas テーブルへのインポート
+//         DB::table('shop_areas')->insert([
+//           'shop_id' => $shop->id,
+//           'area_id' => $area->id,
+//         ]);
+//       }
+
+//       // ジャンル情報のインポート
+//       $genres = explode(',', $mappedRow['genres']);
+//       foreach ($genres as $genreName) {
+//         $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
+
+//         DB::table('genres')->insert([
+//           'shop_id' => $shop->id,
+//           'name' => $genre->name,
+//           'created_at' => now(),
+//           'updated_at' => now(),
+//           'deleted_at' => null,
+//         ]);
+//       }
+
+//       // 画像情報のインポート
+//       if (!empty($mappedRow['imageUrl'])) {
+//         ShopImage::create([
+//           'shop_id' => $shop->id,
+//           'shop_image_url' => $mappedRow['imageUrl']
+//         ]);
+//       }
+
+//       return $shop;
+//     });
+//   }
+
+//   public function batchSize(): int
+//   {
+//     return 1000; // 一度にインポートするバッチサイズ
+//   }
+
+//   public function chunkSize(): int
+//   {
+//     return 1000; // チャンクサイズ
+//   }
+// }
+
 // class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 // {
 //   public function model(array $row)
