@@ -14,29 +14,57 @@ use Maatwebsite\Excel\Concerns\SkipsErrors;
 
 class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
+  protected $columnMappings = [
+    'Shop' => [
+      'name' => '店舗名',
+      'user_id' => 'ユーザーＩＤ',
+      'outline' => '店舗概要',
+    ],
+    'Area' => [
+      'name' => '地域',
+    ],
+    'Genre' => [
+      'name' => 'ジャンル',
+    ],
+    'ShopImage' => [
+      'shop_image_url' => '画像URL',
+    ],
+  ];
+
+  private function cleanData($data)
+  {
+    return array_map(function ($value) {
+      return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
+    }, $data);
+  }
+
   public function model(array $row)
   {
-    // カラム番号を使用してデータを取得
-    $mappedRow = [
-      'name' => $row[0] ?? '',
-      'userId' => $row[1] ?? '',
-      'area' => $row[2] ?? '',
-      'genres' => $row[3] ?? '',
-      'outline' => $row[4] ?? '',
-      'imageUrl' => $row[5] ?? '',
-    ];
+    $cleanedRow = $this->cleanData($row);
+    $mappedRow = [];
 
-    // 店舗名が空の場合はエラーを投げる
+    // Shop モデルのカラム名を使用
+    foreach ($this->columnMappings['Shop'] as $key => $columnName) {
+      $mappedRow[$key] = $row[array_search($columnName, array_values($this->columnMappings['Shop']))] ?? '';
+    }
+
+    // 店舗名が空の場合はスキップ
     if (empty(trim($mappedRow['name']))) {
-      throw new \Exception("店舗名が設定されていません。");
+      return null; // 空の行はスキップ
     }
 
     return DB::transaction(function () use ($mappedRow) {
+      // ユーザーIDを整数に変換（不適切な値の場合、nullにする）
+      $userId = filter_var($mappedRow['userId'], FILTER_VALIDATE_INT);
+      if ($userId === false) {
+        $userId = null;
+      }
+
       // 店舗情報のインポート
       $shop = Shop::create([
         'name' => $mappedRow['name'],
         'outline' => $mappedRow['outline'],
-        'user_id' => !empty($mappedRow['userId']) ? $mappedRow['userId'] : null,
+        'user_id' => $userId,
       ]);
 
       // エリア情報のインポート（存在しない場合は作成）
@@ -86,6 +114,80 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return 1000; // チャンクサイズ
   }
 }
+// class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
+// {
+//   public function model(array $row)
+//   {
+//     // カラム番号を使用してデータを取得
+//     $mappedRow = [
+//       'name' => $row[0] ?? '',
+//       'userId' => $row[1] ?? '',
+//       'area' => $row[2] ?? '',
+//       'genres' => $row[3] ?? '',
+//       'outline' => $row[4] ?? '',
+//       'imageUrl' => $row[5] ?? '',
+//     ];
+
+//     // 店舗名が空の場合はエラーを投げる
+//     if (empty(trim($mappedRow['name']))) {
+//       throw new \Exception("店舗名が設定されていません。");
+//     }
+
+//     return DB::transaction(function () use ($mappedRow) {
+//       // 店舗情報のインポート
+//       $shop = Shop::create([
+//         'name' => $mappedRow['name'],
+//         'outline' => $mappedRow['outline'],
+//         'user_id' => !empty($mappedRow['userId']) ? $mappedRow['userId'] : null,
+//       ]);
+
+//       // エリア情報のインポート（存在しない場合は作成）
+//       $areaName = trim($mappedRow['area']);
+//       if (!empty($areaName)) {
+//         $area = Area::firstOrCreate(['name' => $areaName]);
+//         // shop_areas テーブルへのインポート
+//         DB::table('shop_areas')->insert([
+//           'shop_id' => $shop->id,
+//           'area_id' => $area->id,
+//         ]);
+//       }
+
+//       // ジャンル情報のインポート
+//       $genres = explode(',', $mappedRow['genres']);
+//       foreach ($genres as $genreName) {
+//         $genre = Genre::firstOrCreate(['name' => trim($genreName)]);
+
+//         DB::table('genres')->insert([
+//           'shop_id' => $shop->id,
+//           'name' => $genre->name,
+//           'created_at' => now(),
+//           'updated_at' => now(),
+//           'deleted_at' => null,
+//         ]);
+//       }
+
+//       // 画像情報のインポート
+//       if (!empty($mappedRow['imageUrl'])) {
+//         ShopImage::create([
+//           'shop_id' => $shop->id,
+//           'shop_image_url' => $mappedRow['imageUrl']
+//         ]);
+//       }
+
+//       return $shop;
+//     });
+//   }
+
+//   public function batchSize(): int
+//   {
+//     return 1000; // 一度にインポートするバッチサイズ
+//   }
+
+//   public function chunkSize(): int
+//   {
+//     return 1000; // チャンクサイズ
+//   }
+// }
 
 // class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 // {
