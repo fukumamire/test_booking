@@ -59,10 +59,10 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           'user_id' => $userId, // ここでユーザーIDをNULLまたは整数に設定
         ]);
 
-        // エリア情報のインポート（新規作成）
+        // エリア情報のインポート（既存データのみ）
         $areaName = trim($cleanedRow[2]);
-        if (!empty($areaName)) {
-          $area = Area::firstOrCreate(['name' => $areaName]);
+        $area = Area::where('name', $areaName)->first();
+        if ($area) {
           DB::table('shop_areas')->insert([
             'shop_id' => $shop->id,
             'area_id' => $area->id,
@@ -71,13 +71,18 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           ]);
         }
 
-        // ジャンル情報のインポート（新規作成）
+        // ジャンル情報のインポート（既存データのみ）
         $genres = explode(',', $cleanedRow[3]);
         foreach ($genres as $genreName) {
-          Genre::firstOrCreate([
-            'shop_id' => $shop->id,
-            'name' => trim($genreName),
-          ]);
+          $genre = Genre::where('name', trim($genreName))->first();
+          if ($genre) {
+            DB::table('shop_genres')->insert([
+              'shop_id' => $shop->id,
+              'genre_id' => $genre->id,
+              'created_at' => now(),
+              'updated_at' => now(),
+            ]);
+          }
         }
 
         // 画像情報のインポート（新規作成）
