@@ -104,14 +104,32 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         $genres = explode(',', $cleanedRow[3]);
 
         foreach ($genres as $genreName) {
-          $standardizedGenreName = trim(self::DEFINED_GENRES[$genreName] ?? $genreName);
+          $standardizedGenreName = trim($genreName);
 
-          $genre = Genre::where('name', $standardizedGenreName)->first();
-
-          if (!$genre) {
+          // ジャンルのバリデーション
+          if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
             throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
           }
 
+          // ジャンルが存在するか確認
+          $genre = Genre::where('name', $standardizedGenreName)->first();
+
+          if (!$genre) {
+            // ジャンルが存在しない場合は新規作成
+            $genre = Genre::create([
+              'name' => $standardizedGenreName,
+              'shop_id' => $shop->id,  // shop_id を関連付け
+              'created_at' => now(),
+              'updated_at' => now(),
+            ]);
+          } else {
+            // ジャンルが存在する場合、shop_idが有効か確認
+            if ($genre->shop_id !== $shop->id) {
+              throw new \Exception("指定されたジャンルは他の店舗に関連付けられています。");
+            }
+          }
+
+          // genres テーブルに関連付けを追加
           DB::table('genres')->updateOrInsert(
             ['shop_id' => $shop->id, 'genre_id' => $genre->id],
             ['updated_at' => now()]
