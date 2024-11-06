@@ -86,22 +86,52 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
         // エリア情報のインポート
         $areaName = trim($cleanedRow[2]);
-        $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? $areaName;
+
+        // DEFINED_AREAS 配列を逆順にして、短縮形から完全名へのマッピングを作成
+        $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
+
+        // 入力されたエリア名が短縮形か完全名かのいずれかで標準化
+        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? $areaName;
 
         if (!in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
-          throw new \Exception("地域が不正です。許可された値は「東京都」「大阪府」「福岡県」のみです。");
+          throw new \Exception("地域が不正です。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
 
         $area = Area::where('name', $standardizedAreaName)->first();
 
         if (!$area) {
-          throw new \Exception("地域が見つかりません。許可された値は「東京都」「大阪府」「福岡県」のみです。");
+          throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
 
         DB::table('shop_areas')->updateOrInsert(
           ['shop_id' => $shop->id, 'area_id' => $area->id],
           ['updated_at' => now()]
         );
+
+        // エリア情報のインポート
+        $areaName = trim($cleanedRow[2]);
+
+        // DEFINED_AREAS 配列を逆順にして、短縮形から完全名へのマッピングを作成
+        $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
+
+        // 入力されたエリア名が短縮形か完全名かのいずれかで標準化
+        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? $areaName;
+
+        if (!in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
+          throw new \Exception("地域が不正です。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+        }
+
+        $area = Area::where('name', $standardizedAreaName)->first();
+
+        if (!$area) {
+          throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+        }
+
+        DB::table('shop_areas')->updateOrInsert(
+          ['shop_id' => $shop->id, 'area_id' => $area->id],
+          ['updated_at' => now()]
+        );
+
 
         // 画像情報のインポート
         if (!empty($cleanedRow[5])) {
