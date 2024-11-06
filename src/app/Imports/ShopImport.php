@@ -50,16 +50,13 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return DB::transaction(function () use ($cleanedRow) {
       try {
         // ユーザーIDの整形
-        $userId = filter_var($cleanedRow[1], FILTER_VALIDATE_INT);
-        if ($userId === false) {
-          $userId = null;
-        }
+        $userId = !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null;
 
         // Shopの作成
         $shop = Shop::create([
           'name' => $cleanedRow[0],
           'outline' => $cleanedRow[4],
-          'user_id' => $userId,
+          'user_id' => $userId, // ここでユーザーIDをNULLまたは整数に設定
         ]);
 
         // エリア情報のインポート（新規作成）
@@ -100,7 +97,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
     });
   }
-
 
   public function batchSize(): int
   {
