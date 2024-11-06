@@ -103,28 +103,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           ['updated_at' => now()]
         );
 
-        // ジャンル情報のインポート
-        $genres = explode(',', $cleanedRow[3]);
-
-        foreach ($genres as $genreName) {
-          $standardizedGenreName = trim(self::DEFINED_GENRES[$genreName] ?? $genreName);
-
-          if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
-            throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
-          }
-
-          $genre = Genre::where('name', $standardizedGenreName)->first();
-
-          if (!$genre) {
-            throw new \Exception("ジャンルが見つかりません。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
-          }
-
-          DB::table('genres')->updateOrInsert(
-            ['shop_id' => $shop->id, 'genre_id' => $genre->id],
-            ['updated_at' => now()]
-          );
-        }
-
         // 画像情報のインポート
         if (!empty($cleanedRow[5])) {
           ShopImage::create([
