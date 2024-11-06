@@ -88,13 +88,16 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         $areaName = trim($cleanedRow[2]);
         $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? $areaName;
 
-        $area = Area::where('name', $standardizedAreaName)->first();
-
-        if (!$area) {
+        if (!in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
           throw new \Exception("地域が不正です。許可された値は「東京都」「大阪府」「福岡県」のみです。");
         }
 
-        // shop_areas テーブルに新しいデータを挿入
+        $area = Area::where('name', $standardizedAreaName)->first();
+
+        if (!$area) {
+          throw new \Exception("地域が見つかりません。許可された値は「東京都」「大阪府」「福岡県」のみです。");
+        }
+
         DB::table('shop_areas')->updateOrInsert(
           ['shop_id' => $shop->id, 'area_id' => $area->id],
           ['updated_at' => now()]
@@ -104,32 +107,18 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         $genres = explode(',', $cleanedRow[3]);
 
         foreach ($genres as $genreName) {
-          $standardizedGenreName = trim($genreName);
+          $standardizedGenreName = trim(self::DEFINED_GENRES[$genreName] ?? $genreName);
 
-          // ジャンルのバリデーション
           if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
             throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
           }
 
-          // ジャンルが存在するか確認
           $genre = Genre::where('name', $standardizedGenreName)->first();
 
           if (!$genre) {
-            // ジャンルが存在しない場合は新規作成
-            $genre = Genre::create([
-              'name' => $standardizedGenreName,
-              'shop_id' => $shop->id,  // shop_id を関連付け
-              'created_at' => now(),
-              'updated_at' => now(),
-            ]);
-          } else {
-            // ジャンルが存在する場合、shop_idが有効か確認
-            if ($genre->shop_id !== $shop->id) {
-              throw new \Exception("指定されたジャンルは他の店舗に関連付けられています。");
-            }
+            throw new \Exception("ジャンルが見つかりません。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
           }
 
-          // genres テーブルに関連付けを追加
           DB::table('genres')->updateOrInsert(
             ['shop_id' => $shop->id, 'genre_id' => $genre->id],
             ['updated_at' => now()]
