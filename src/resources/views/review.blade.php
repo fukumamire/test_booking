@@ -22,15 +22,19 @@
         </div>
         <h3 class="shop-name">{{ $shop->name }}</h3>
         <p class="shop-details">
-          エリア: 
           @foreach ($shop->areas as $area)
-            {{ $area->name }}{{ $loop->last ? '' : ', ' }}
-          @endforeach
-          <br>ジャンル: 
+            #{{ $area->name }}{{ $loop->last ? '' : ', ' }}
+          @endforeach 
           @foreach ($shop->genres as $genre)
-            {{ $genre->name }}{{ $loop->last ? '' : ', ' }}
+          # {{ $genre->name }}{{ $loop->last ? '' : ', ' }}
           @endforeach
         </p>
+        <!-- 「詳しく見る」ボタンとお気に入りボタンを追加 -->
+        <div class="shop-buttons">
+          <a href="{{ route('shop.detail', ['shop' => $shop->id]) }}" class="shop-button-detail">詳しくみる</a>
+          <button class="heart {{ $shop->is_favorite ? 'heart-active' : 'heart' }}" data-shop-id="{{ $shop->id }}" aria-label="お気に入り" type="button" onclick="toggleFavorite(this, {{ $shop->id }})">
+          </button>
+        </div>
       </div>
 
       <!-- 右列 (口コミフォーム) -->
@@ -51,7 +55,7 @@
         <div class="review-body">
           <label for="comment" class="comment-label">口コミを投稿</label>
           <textarea id="comment" name="comment" placeholder="カジュアルな夜のお出かけにおすすめのスポット" maxlength="400" required>{{ old('comment') }}</textarea>
-          <span class="char-count">0/400</span>
+          <span class="char-count">0/400(最高文字数)</span>
           @error('comment')
           <span class="error">{{ $message }}</span>
           @enderror
@@ -80,6 +84,9 @@
 </div>
 
 @section('scripts')
+{{-- お気に入りボタン --}}
+<script src="{{ asset('js/toggleFavorite.js') }}"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
