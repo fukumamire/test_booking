@@ -50,6 +50,8 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   private function cleanData($data)
   {
     return array_map(function ($value) {
+      // 不正な文字を除去
+      $value = preg_replace('/[^\x{3000}-\x{303F}\x{4E00}-\x{9FAF}]/u', '', $value); // ひらがな・カタカナ・漢字以外を削除
       return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
     }, $data);
   }
@@ -88,7 +90,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
         // エリア情報のインポート
         $areaName = trim($cleanedRow[2]);
-        Log::debug("エリア名: " . $areaName); // 入力されたエリア名をログに出力
+        Log::debug("エリア名 (未処理): " . $areaName); // 未処理のエリア名をログに出力
 
         // DEFINED_AREAS 配列を逆順にして、短縮形から完全名へのマッピングを作成
         $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
@@ -160,6 +162,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
     });
   }
+
 
   public function batchSize(): int
   {
