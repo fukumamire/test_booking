@@ -58,7 +58,10 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function model(array $row): ?Shop
   {
-    $cleanedRow = $this->cleanData($row);
+    // $cleanedRow = $this->cleanData($row);
+
+    Log::info('Received row data:', $row);
+    Log::info('Using row data:', $cleanedRow);
 
     if (empty(trim($cleanedRow[0]))) {
       return null; // 店舗名が空の場合はnullを返す
