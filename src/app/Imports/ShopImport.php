@@ -51,17 +51,18 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   {
     return array_map(function ($value) {
       // 不正な文字を除去
-      $value = preg_replace('/[^\x{3000}-\x{303F}\x{4E00}-\x{9FAF}]/u', '', $value); // ひらがな・カタカナ・漢字以外を削除
+      $value = mb_convert_encoding($value, 'UTF-8', 'auto'); // 自動的にエンコーディングを認識してUTF-8に変換
+      $value = preg_replace('/[^\x{3000}-\x{303F}\x{4E00}-\x{9FAF}\x{FF01}-\x{FF5E}\x{FFE0}-\x{FFE6}]/u', '', $value); // 日本語文字と数字、英数字、記号を除外
       return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
     }, $data);
   }
 
   public function model(array $row): ?Shop
   {
-    // $cleanedRow = $this->cleanData($row);
+    $cleanedRow = $this->cleanData($row);
 
     Log::info('Received row data:', $row);
-    Log::info('Using row data:', $cleanedRow);
+    Log::info('Cleaned row data:', $cleanedRow);
 
     if (empty(trim($cleanedRow[0]))) {
       return null; // 店舗名が空の場合はnullを返す
@@ -93,17 +94,17 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
         // エリア情報のインポート
         $areaName = trim($cleanedRow[2]);
-        Log::debug("エリア名 (未処理): " . $areaName); // 未処理のエリア名をログに出力
+        Log::debug("エリア名 (未処理): " . $areaName);
 
         // DEFINED_AREAS 配列を逆順にして、短縮形から完全名へのマッピングを作成
         $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
 
         // 入力されたエリア名が短縮形か完全名かのいずれかで標準化
-        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? null;
-        Log::debug("標準化されたエリア名: " . $standardizedAreaName); // 標準化されたエリア名をログに出力
+        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? $areaName;
+        Log::debug("標準化されたエリア名: " . $standardizedAreaName);
 
         // 標準化されたエリア名が有効か確認
-        if (!$standardizedAreaName || !in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
+        if (!in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
           throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
 
@@ -165,7 +166,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
     });
   }
-
 
   public function batchSize(): int
   {
