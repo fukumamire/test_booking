@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Illuminate\Support\Facades\Log;
 
+
 class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
   const DEFINED_AREAS = [
