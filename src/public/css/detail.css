@@ -74,6 +74,11 @@
   font-weight: bold;
 }
 
+
+.review-write-link {
+  font-size: 1.8em;
+}
+
 .reservation-form {
   background-color: rgb(63, 90, 242);
   padding: 20px;
