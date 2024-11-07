@@ -1,5 +1,5 @@
 .review-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -7,50 +7,61 @@
 
 .review-header {
   text-align: center;
+  font-size: 24px;
   color: #333;
+  margin-bottom: 20px;
 }
 
-.review-note {
-  font-size: 20px;
-  background-color: #f8f67c; 
-  color: #0f0f0e;
-  margin-bottom: 20px;
+.review-content {
+  display: flex;
+  gap: 20px;
 }
 
 .shop-info {
-  background-color: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  width: 40%;
 }
 
-.shop-name {
-  font-weight: bold;
-  font-size: 30px;
-}
-
-.shop-details {
-  font-size: 18px;
+.shop-image-container {
+  text-align: center;
 }
 
 .shop-image {
-  width: 100%; /* 親要素の幅に合わせる */
-  height: auto; /* 高さを自動的に調整 */
-  max-width: 300px; /* 最大幅を設定 */
-  margin-bottom: 10px; /* 画像とテキスト間の余白 */
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.shop-name {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.shop-details {
+  font-size: 16px;
+  text-align: center;
+  color: #666;
+}
+
+.review-fields {
+  width: 60%;
 }
 
 .review-rating {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+}
+
+.rating-label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .stars {
   display: flex;
-  justify-content: space-between;
-  width: 200px;
-  margin-left: 10px;
+  gap: 5px;
 }
 
 .stars input[type="radio"] {
@@ -58,73 +69,71 @@
 }
 
 .stars label {
-  cursor: pointer;
   font-size: 24px;
   color: #ddd;
+  cursor: pointer;
 }
 
-.stars label:hover,
-.stars label:hover ~ label {
-  color: orange;
+.stars input:checked ~ label {
+  color:#007bff;
 }
 
-
-.stars input:checked + label,
-.stars input:checked + label ~ label {
-  color: orange;
-}
-
-.review-title,
 .review-body {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-#title {
-  width: 100%;
-  padding: 10px;
-  box-sizing: border-box;
+.comment-label {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 #comment {
   width: 100%;
-  height: 150px;
+  height: 80px;
   padding: 10px;
-  box-sizing: border-box;
   resize: vertical;
-}
-/* タイトルの(任意） */
-.optional-label {
-  color: rgb(103, 103, 103);
-  font-weight: bold;
-  float: right;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
-/* 本文の（必須） */
-.required-text {
-  color: red; /* テキスト色を赤にする */
-  font-weight: bold; /* 太字にする */
-  float: right;
-
-}
-/* 本文関係 */
-.min-length-text {
-  color: rgb(130, 18, 121); /* テキスト色を赤にする */
-  font-weight: bold; /* 太字にする */
+.char-count {
+  font-size: 12px;
+  color: #666;
+  text-align: right;
 }
 
+.image-upload {
+  margin-bottom: 15px;
+}
 
+.image-upload label {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
 
-button {
+.image-note {
+  font-size: 12px;
+  color: #666;
+}
+
+.submit-button {
   background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 20px;
+  font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 14px;
+  width: 100%;
+  text-align: center;
 }
 
 .alert {
   color: red;
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
