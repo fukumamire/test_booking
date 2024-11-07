@@ -13,13 +13,11 @@
     <input type="hidden" name="shop_id" value="{{ $shop->id }}">
 
     <div class="review-content">
-      <!-- Left Column (Restaurant Info) -->
+      <!-- 左列 (店舗情報) -->
       <div class="shop-info">
         <div class="shop-image-container">
           @if($shop->images->isNotEmpty())
-            @foreach ($shop->images as $image)
-              <img src="{{ $image->shop_image_url }}" alt="{{ $shop->name }}" class="shop-image">
-            @endforeach
+            <img src="{{ $shop->images[0]->shop_image_url }}" alt="{{ $shop->name }}" class="shop-image">
           @endif
         </div>
         <h3 class="shop-name">{{ $shop->name }}</h3>
@@ -35,7 +33,7 @@
         </p>
       </div>
 
-      <!-- Right Column (Review Form) -->
+      <!-- 右列 (口コミフォーム) -->
       <div class="review-fields">
         <div class="review-rating">
           <p class="rating-label">体験を評価してください</p>
@@ -61,7 +59,7 @@
 
         <div class="image-upload">
           <label for="image">画像の追加</label>
-          <input type="file" id="image" name="image">
+          <input type="file" id="image" name="image" accept=".jpeg,.png">
           <p class="image-note">クリックして写真を追加またはドラッグアンドドロップ</p>
         </div>
 
@@ -69,18 +67,17 @@
       </div>
     </div>
   </form>
-</div>
 
-@if ($errors->any())
-<div class="alert alert-danger">
-  <ul>
-    @foreach ($errors->all() as $error)
-    <li>{{ $error }}</li>
-    @endforeach
-  </ul>
+  @if ($errors->any())
+  <div class="alert alert-danger">
+    <ul>
+      @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+  @endif
 </div>
-@endif
-@endsection
 
 @section('scripts')
 <script>
@@ -102,24 +99,6 @@ document.addEventListener("DOMContentLoaded", function() {
   commentInput.addEventListener('input', () => {
     charCount.textContent = `${commentInput.value.length}/400`;
   });
-});
-</script>
-@endsection
-
-@section('scripts')
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const stars = document.querySelectorAll('.stars input[type="radio"]');
-    stars.forEach(star => {
-        star.addEventListener('change', () => {
-            stars.forEach(s => s.nextElementSibling.classList.remove('active'));
-            let currentStar = star;
-            while(currentStar) {
-                currentStar.nextElementSibling.classList.add('active');
-                currentStar = currentStar.previousElementSibling ? currentStar.previousElementSibling.querySelector('input') : null;
-            }
-        });
-    });
 });
 </script>
 @endsection

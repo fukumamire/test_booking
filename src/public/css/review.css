@@ -12,9 +12,22 @@
   margin-bottom: 20px;
 }
 
+
+/* 左右の列間に縦線の追加 */
 .review-content {
   display: flex;
   gap: 20px;
+  position: relative;
+}
+
+.review-content::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 40%;
+  width: 1px;
+  background-color: #ccc;
 }
 
 .shop-info {
@@ -75,7 +88,7 @@
 }
 
 .stars input:checked ~ label {
-  color:#007bff;
+  color: #007bff;
 }
 
 .review-body {
@@ -136,4 +149,16 @@
 .alert {
   color: red;
   margin-top: 20px;
+}
+
+/* レスポンシブデザイン */
+@media screen and (max-width: 768px) {
+  .review-content {
+    flex-direction: column;
+  }
+
+  .shop-info,
+  .review-fields {
+    width: 100%;
+  }
 }

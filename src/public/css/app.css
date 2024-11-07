@@ -12,7 +12,7 @@ body {
 header.header-left {
     display: flex;
     align-items: center; /* アイテムを垂直方向に中央揃え */
-    justify-content: flex-start; /* アイテムを左端に配置 */
+    justify-content: flex-start;  /* アイテムを左端に配置 */
     height: 60px; 
     margin-left: -60px;
 }
@@ -167,11 +167,28 @@ header .overlay-menu ul li button.logout-link:hover {
     color: #000!important; /* マウスオーバー時にテキストカラーを黒に変更 */
 }
 
+
 header .header__logo {
     font-size: 2.8rem;
     color: blue;
     padding-left: 0;
     margin-top: 80px;
     font-weight: bold;
-    white-space: nowrap; /* テキストを一行に強制 */
+    white-space: nowrap;
+     /* テキストを一行に強制 */
+}
+
+@media screen and (max-width: 768px) {
+    header.header-left {
+        flex-direction: row; /* 横並びにする */
+        justify-content: space-between; /* 左右に配置 */
+    }
+
+    header .header__logo {
+        font-size: 2rem; /* サイズを調整 */
+    }
+
+    header #overlay-button.overlay-button {
+        padding: 10px; /* サイズを調整 */
+    }
 }
