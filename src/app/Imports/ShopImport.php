@@ -50,9 +50,12 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   private function cleanData($data)
   {
     return array_map(function ($value) {
-      // 不正な文字を除去
-      $value = mb_convert_encoding($value, 'UTF-8', 'auto'); // 自動的にエンコーディングを認識してUTF-8に変換
-      $value = preg_replace('/[^\x{3000}-\x{303F}\x{4E00}-\x{9FAF}\x{FF01}-\x{FF5E}\x{FFE0}-\x{FFE6}]/u', '', $value); // 日本語文字と数字、英数字、記号を除外
+      // ANSI形式の文字列をUTF-8に変換
+      $value = iconv('Shift_JIS', 'UTF-8//IGNORE', $value);
+
+      // 不正な文字を除去（空白を保持）
+      $value = preg_replace('/[^\p{Han}\p{Hiragana}\p{Katakana}\d\s]+/u', '', $value); // 漢字・ひらがな・カタカナ・数字・空白以外を削除
+
       return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
     }, $data);
   }
@@ -100,11 +103,11 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
 
         // 入力されたエリア名が短縮形か完全名かのいずれかで標準化
-        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? $areaName;
+        $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? null;
         Log::debug("標準化されたエリア名: " . $standardizedAreaName);
 
         // 標準化されたエリア名が有効か確認
-        if (!in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
+        if (!$standardizedAreaName || !in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
           throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
 
