@@ -89,12 +89,30 @@ document.addEventListener("DOMContentLoaded", function() {
   stars.forEach((star, index) => {
     star.addEventListener('change', () => {
       stars.forEach((s, i) => {
-        // 選択した星から右側（高い方）の星を青くする
-        if (i >= index) {
+        if (i <= index) {
           s.nextElementSibling.style.color = '#007bff'; // 青に設定
         } else {
           s.nextElementSibling.style.color = '#ddd'; // グレーに設定
         }
+      });
+    });
+  });
+  
+  stars.forEach(star => {
+    star.addEventListener('mouseover', () => {
+      let currentIndex = Array.prototype.indexOf.call(stars, star);
+      stars.forEach((s, i) => {
+        if (i <= currentIndex) {
+          s.nextElementSibling.style.color = '#007bff';
+        } else {
+          s.nextElementSibling.style.color = '#ddd';
+        }
+      });
+    });
+
+    star.addEventListener('mouseout', () => {
+      stars.forEach(s => {
+        s.nextElementSibling.style.color = '#ddd';
       });
     });
   });
