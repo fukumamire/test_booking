@@ -11,7 +11,7 @@ class Review extends Model
   protected $fillable = [
     'rating',
     'comment',
-    'shop_image_url'
+    'image_url'
   ];
 
   public function shop()
