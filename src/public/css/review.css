@@ -128,7 +128,7 @@
 }
 
 .rating-label {
-  font-size: 16px;
+  font-size: 20px;
   color: #333;
   margin-bottom: 5px;
 }
@@ -136,7 +136,7 @@
 .stars {
   display: flex;
   gap: 5px;
-  /* flex-direction:row; */
+  flex-direction:row;
 }
 
 .stars input[type="radio"] {
@@ -180,7 +180,7 @@
 
 .comment-label {
   display: block;
-  font-size: 16px;
+  font-size: 20px;
   color: #333;
   margin-bottom: 5px;
 }
