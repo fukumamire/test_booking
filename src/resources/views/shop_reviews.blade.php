@@ -28,6 +28,7 @@
       </div>
     </div>
 
+    @if(is_array($shopReviews) || $shopReviews instanceof \Illuminate\Support\Collection)
     @if($shopReviews->count() > 0)
     @foreach ($shopReviews as $shopReview)
     <div class="review__container">
@@ -68,7 +69,10 @@
     @else
     <p>レビューはまだありません。</p>
     @endif
+    @else
+    <p>レビューのデータが正しくありません。</p>
+    @endif
   </div>
 </div>
-<script src="{{ asset('js/detail.js') }}"></script>
+{{-- <script src="{{ asset('js/detail.js') }}"></script> --}}
 @endsection

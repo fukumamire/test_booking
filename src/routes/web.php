@@ -113,13 +113,24 @@ Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.deta
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
 
 // レビューフォーム（入力）を表示するルート
-Route::get('/review/{shop}/create', [ReviewController::class, 'create'])->name('review.create');
+// Route::get('/review/{id}/create', [ReviewController::class, 'create'])->name('review.create');
+
+Route::get('/review/{shop}/review/create', [ReviewController::class, 'create'])->name('review.create');
+
+
+Route::get('/shop/{shop}/review/create', [ReviewController::class, 'create'])->name('shop.review.create');
 
 // 評価　レビューを保存
-Route::post('/review/store', [ReviewController::class, 'store'])->name('review.store');
+// Route::post('/shop/{shop}/review', [ReviewController::class, 'store'])->name('shop.review.store');
+Route::post('/shop/{id}/review', [ReviewController::class, 'store'])->name('shop.review.store');
 
-//店舗のレビューページ
+
+
+// 店舗レビュー画面
 Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name('shop.reviews');
+// Route::get('/shop/{shop}/reviews', [ReviewController::class, 'showReviews'])->name('shop.reviews');
+
+
 
 //2要素認証　
 Route::get('/two-factor-challenge', function () {

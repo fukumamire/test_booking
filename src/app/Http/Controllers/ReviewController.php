@@ -5,18 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Shop;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
 
-  public function create($shopId)
+  public function showReviews($shopId)
   {
     $shop = Shop::findOrFail($shopId);
     $avgRating = $shop->reviews()->avg('rating');
-    return view('shop_reviews', ['shop' => $shop, 'avgRating' => $avgRating]);
+    $shopReviews = $shop->reviews()->latest()->get();
+
+    return view('shop_reviews', [
+      'shop' => $shop,
+      'avgRating' => $avgRating,
+      'shopReviews' => $shopReviews
+    ]);
   }
 
+  public function create($shopId)
+  {
+    $shop = Shop::findOrFail($shopId);
+
+    return view('review', ['shop' => $shop]);
+  }
 
   public function store(Request $request)
   {
@@ -39,10 +51,11 @@ class ReviewController extends Controller
     $review = new Review;
     $review->shop_id = $shop->id;
     $review->user_id = Auth::id();
-    $review->rating = $request->rating;
-    $review->comment = $request->comment;
+    $review->rating = $request->input('rating');
+    $review->comment = $request->input('comment');
     $review->save();
 
-    return redirect()->route('shop.detail', $shop->id)->with('success', 'レビューが正常に提出されました。');
+    return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
+
 }

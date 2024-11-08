@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="review-container">
-  <form action="{{ route('review.store', $shop->id) }}" method="post" class="review-form" enctype="multipart/form-data">
+  <form action="{{ route('shop.review.store', $shop->id) }}" method="post" class="review-form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="shop_id" value="{{ $shop->id }}">
 

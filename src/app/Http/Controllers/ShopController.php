@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
-class ShopController extends Controller
+class ShopController extends \App\Http\Controllers\Controller
 {
   public function search(Request $request)
   {
@@ -98,24 +98,21 @@ class ShopController extends Controller
   public function detail($shopId)
   {
     $backRoute = url('/');
-    $shop = Shop::find($shopId); // Eloquentを使用して店舗情報を取得
+    $shop = Shop::findOrFail($shopId); // Eloquentを使用して店舗情報を取得
     return view('detail', compact('shop', 'backRoute'));
   }
 
 
-  //特定の店舗のレビューを取得してビューに渡すメソッド
+
   public function showReviews(Shop $shop)
   {
+    $reviews = Review::where('shop_id', $shop->id)->get();
     $avgRating = $shop->reviews()->avg('rating');
-    $shopReviews = $shop->reviews()->latest()->get();
 
-    return view(
-      'shop_reviews',
-      [
-        'shop' => $shop,
-        'avgRating' => $avgRating,
-        'shopReviews' => $shopReviews
-      ]
-    );
+    return view('shop_reviews', [
+      'shop' => $shop,
+      'shopReviews' => $reviews,
+      'avgRating' => $avgRating
+    ]);
   }
 }
