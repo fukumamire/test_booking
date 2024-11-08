@@ -39,16 +39,17 @@
       <!-- 右列 (口コミフォーム) -->
       <div class="review-fields">
         <div class="review-rating">
-          <p class="rating-label">体験を評価してください</p>
-          <div class="stars">
-            @for ($i = 1; $i <= 5; $i++) <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
-              <label for="star{{ $i }}">★</label>
-              @endfor
-          </div>
-          @error('rating')
-          <span class="error">{{ $message }}</span>
-          @enderror
-        </div>
+  <p class="rating-label">体験を評価してください</p>
+  <div class="stars">
+    @for ($i = 5; $i >= 1; $i--)
+      <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
+      <label for="star{{ $i }}">★</label>
+    @endfor
+  </div>
+  @error('rating')
+  <span class="error">{{ $message }}</span>
+  @enderror
+</div>
 
         <div class="review-body">
           <label for="comment" class="comment-label">口コミを投稿</label>
@@ -59,11 +60,11 @@
           <span class="char-count">0/400(最高文字数)</span>
         </div>
 
-        {{-- <div class="image-upload">
+        <div class="image-upload">
           <label for="image">画像の追加</label>
           <input type="file" id="image" name="image" accept=".jpeg,.png">
           <p class="image-note">クリックして写真を追加またはドラッグアンドドロップ</p>
-        </div> --}}
+        </div>
       </div>  
     </div>
   </form>
@@ -85,23 +86,26 @@
 <script src="{{ asset('js/toggleFavorite.js') }}"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const stars = document.querySelectorAll('.stars input[type="radio"]');
-    stars.forEach(star => {
-      star.addEventListener('change', () => {
-        stars.forEach(s => s.nextElementSibling.classList.remove('active'));
-        let currentStar = star;
-        while (currentStar) {
-          currentStar.nextElementSibling.classList.add('active');
-          currentStar = currentStar.previousElementSibling ? currentStar.previousElementSibling.querySelector('input') : null;
+document.addEventListener("DOMContentLoaded", function() {
+  const stars = document.querySelectorAll('.stars input[type="radio"]');
+  stars.forEach((star, index) => {
+    star.addEventListener('change', () => {
+      stars.forEach((s, i) => {
+        // 選択した星から右側（高い方）の星を青くする
+        if (i >= index) {
+          s.nextElementSibling.style.color = '#007bff'; // 青に設定
+        } else {
+          s.nextElementSibling.style.color = '#ddd'; // グレーに設定
         }
       });
     });
-    const commentInput = document.getElementById('comment');
-    const charCount = document.querySelector('.char-count');
-    commentInput.addEventListener('input', () => {
-      charCount.textContent = `${commentInput.value.length}/400`;
-    });
   });
+
+  const commentInput = document.getElementById('comment');
+  const charCount = document.querySelector('.char-count');
+  commentInput.addEventListener('input', () => {
+    charCount.textContent = `${commentInput.value.length}/400`;
+  });
+});
 </script>
 @endsection
