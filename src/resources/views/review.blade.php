@@ -81,45 +81,83 @@
 
 @section('scripts')
 {{-- お気に入りボタン --}}
-<script src="{{ asset('js/toggleFavorite.js') }}"></script>
+{{-- <script src="{{ asset('js/toggleFavorite.js') }}"></script> --}}
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
+  const labels = document.querySelectorAll('.stars label');
+
+  // ラジオボタンの変更イベントハンドラー
   stars.forEach((star, index) => {
     star.addEventListener('change', () => {
-      stars.forEach((s, i) => {
-        if (i <= index) {
-          s.nextElementSibling.style.color = '#007bff'; // 青に設定
-        } else {
-          s.nextElementSibling.style.color = '#ddd'; // グレーに設定
-        }
-      });
-    });
-  });
-  
-  stars.forEach(star => {
-    star.addEventListener('mouseover', () => {
-      let currentIndex = Array.prototype.indexOf.call(stars, star);
-      stars.forEach((s, i) => {
-        if (i <= currentIndex) {
-          s.nextElementSibling.style.color = '#007bff';
-        } else {
-          s.nextElementSibling.style.color = '#ddd';
-        }
-      });
-    });
-
-    star.addEventListener('mouseout', () => {
-      stars.forEach(s => {
-        s.nextElementSibling.style.color = '#ddd';
-      });
+      console.log(`Radio button changed at index: ${index}`);
+      changeStarColor(index);
     });
   });
 
+  // マウスオーバーとアウトのイベントハンドラー
+  labels.forEach((label, index) => {
+    label.addEventListener('mouseover', () => {
+      console.log(`Mouse over at index: ${index}`);
+      hoverStar(index);
+    });
+    label.addEventListener('mouseout', () => {
+      console.log('Mouse out');
+      resetStars();
+    });
+  });
+
+  // 星の色を変更する関数
+  function changeStarColor(selectedIndex) {
+    console.log(`Changing star color for index: ${selectedIndex}`);
+    labels.forEach((label, index) => {
+      if (index <= selectedIndex) {
+        label.style.color = '#007bff'; // 青に設定
+      } else {
+        label.style.color = '#ddd'; // グレーに設定
+      }
+    });
+  }
+
+  // ホバーアクション時の星の色を変更する関数
+  function hoverStar(hoverIndex) {
+    console.log(`Hovering star at index: ${hoverIndex}`);
+    labels.forEach((label, index) => {
+      if (index <= hoverIndex) {
+        label.style.color = '#007bff';
+      } else {
+        label.style.color = '#ddd';
+      }
+    });
+  }
+
+  // 星の色をリセットする関数
+  function resetStars() {
+    console.log('Resetting star colors');
+    const checkedStar = document.querySelector('.stars input:checked');
+    if (checkedStar) {
+      changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
+    } else {
+      labels.forEach(label => {
+        label.style.color = '#ddd';
+      });
+    }
+  }
+
+  // 初期化時に既存の評価を反映させる
+  const checkedStar = document.querySelector('.stars input:checked');
+  if (checkedStar) {
+    console.log('Setting initial star color');
+    changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
+  }
+
+  // コメント入力の文字数カウント
   const commentInput = document.getElementById('comment');
   const charCount = document.querySelector('.char-count');
   commentInput.addEventListener('input', () => {
+    console.log(`Comment input changed: ${commentInput.value.length} characters`);
     charCount.textContent = `${commentInput.value.length}/400`;
   });
 });
