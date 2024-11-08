@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // ラジオボタンの変更イベントハンドラー
   stars.forEach((star, index) => {
     star.addEventListener('change', () => {
-      console.log(`Radio button changed at index: ${index}`);
+      console.log(Radio button changed at index: ${index});
       changeStarColor(index);
     });
   });
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // マウスオーバーとアウトのイベントハンドラー
   labels.forEach((label, index) => {
     label.addEventListener('mouseover', () => {
-      console.log(`Mouse over at index: ${index}`);
+      console.log(Mouse over at index: ${index});
       hoverStar(index);
     });
     label.addEventListener('mouseout', () => {
@@ -109,21 +109,21 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // 星の色を変更する関数
-  function changeStarColor(selectedIndex) {
-    console.log(`Changing star color for index: ${selectedIndex}`);
-    labels.forEach((label, index) => {
-      if (index <= selectedIndex) {
-        label.style.color = '#007bff'; // 青に設定
-      } else {
-        label.style.color = '#ddd'; // グレーに設定
-      }
-    });
-  }
+ // 星の色を変更する関数
+function changeStarColor(selectedIndex) {
+  labels.forEach((label, index) => {
+    // selectedIndexより左側も含めて青にする
+    if (index <= selectedIndex) {
+      label.style.color = '#007bff'; // 青に設定
+    } else {
+      label.style.color = '#ddd'; // グレーに設定
+    }
+  });
+}
 
   // ホバーアクション時の星の色を変更する関数
   function hoverStar(hoverIndex) {
-    console.log(`Hovering star at index: ${hoverIndex}`);
+    console.log(Hovering star at index: ${hoverIndex});
     labels.forEach((label, index) => {
       if (index <= hoverIndex) {
         label.style.color = '#007bff';
@@ -157,8 +157,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const commentInput = document.getElementById('comment');
   const charCount = document.querySelector('.char-count');
   commentInput.addEventListener('input', () => {
-    console.log(`Comment input changed: ${commentInput.value.length} characters`);
-    charCount.textContent = `${commentInput.value.length}/400`;
+    console.log(Comment input changed: ${commentInput.value.length} characters);
+    charCount.textContent = ${commentInput.value.length}/400;
   });
 });
 </script>
