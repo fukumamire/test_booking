@@ -152,6 +152,21 @@
 /* .stars input:checked ~ label {
   color: #007bff;
 } */
+.stars label:hover,
+.stars label:hover ~ label {
+  color: #007bff;
+}
+
+
+.stars input:checked + label,
+.stars input:checked + label ~ label {
+  color: #007bff;
+}
+
+/* .stars input:checked + label {
+  color: #007bff;  */
+  /* 選ばれた星を青に */
+/* } */
 
 .stars input[type="radio"]:checked + label  {
   color: #007bff; /* 選ばれた星を青に */

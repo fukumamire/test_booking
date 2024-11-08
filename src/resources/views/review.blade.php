@@ -84,7 +84,6 @@
 {{-- <script src="{{ asset('js/toggleFavorite.js') }}"></script> --}}
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
   const labels = document.querySelectorAll('.stars label');
@@ -92,56 +91,51 @@ document.addEventListener("DOMContentLoaded", function() {
   // ラジオボタンの変更イベントハンドラー
   stars.forEach((star, index) => {
     star.addEventListener('change', () => {
-      console.log(Radio button changed at index: ${index});
       changeStarColor(index);
     });
   });
 
-  // マウスオーバーとアウトのイベントハンドラー
+  // 星の色を変更する関数
+  function changeStarColor(selectedIndex) {
+    labels.forEach((label, index) => {
+      // selectedIndexより左側も含めて青にする
+      if (index <= selectedIndex) {
+        label.style.color = '#007bff'; // 青に設定
+      } else {
+        label.style.color = '#ddd'; // グレーに設定
+      }
+    });
+  }
+
+  // ホバーアクション時の星の色を変更する関数
   labels.forEach((label, index) => {
     label.addEventListener('mouseover', () => {
-      console.log(Mouse over at index: ${index});
       hoverStar(index);
     });
     label.addEventListener('mouseout', () => {
-      console.log('Mouse out');
       resetStars();
     });
   });
 
- // 星の色を変更する関数
-function changeStarColor(selectedIndex) {
-  labels.forEach((label, index) => {
-    // selectedIndexより左側も含めて青にする
-    if (index <= selectedIndex) {
-      label.style.color = '#007bff'; // 青に設定
-    } else {
-      label.style.color = '#ddd'; // グレーに設定
-    }
-  });
-}
-
-  // ホバーアクション時の星の色を変更する関数
+  // ホバー時の色変更
   function hoverStar(hoverIndex) {
-    console.log(Hovering star at index: ${hoverIndex});
     labels.forEach((label, index) => {
       if (index <= hoverIndex) {
-        label.style.color = '#007bff';
+        label.style.color = '#007bff'; // 青に設定
       } else {
-        label.style.color = '#ddd';
+        label.style.color = '#ddd'; // グレーに設定
       }
     });
   }
 
   // 星の色をリセットする関数
   function resetStars() {
-    console.log('Resetting star colors');
     const checkedStar = document.querySelector('.stars input:checked');
     if (checkedStar) {
       changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
     } else {
       labels.forEach(label => {
-        label.style.color = '#ddd';
+        label.style.color = '#ddd'; // グレーにリセット
       });
     }
   }
@@ -149,7 +143,6 @@ function changeStarColor(selectedIndex) {
   // 初期化時に既存の評価を反映させる
   const checkedStar = document.querySelector('.stars input:checked');
   if (checkedStar) {
-    console.log('Setting initial star color');
     changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
   }
 
@@ -157,9 +150,9 @@ function changeStarColor(selectedIndex) {
   const commentInput = document.getElementById('comment');
   const charCount = document.querySelector('.char-count');
   commentInput.addEventListener('input', () => {
-    console.log(Comment input changed: ${commentInput.value.length} characters);
-    charCount.textContent = ${commentInput.value.length}/400;
+    charCount.textContent = `${commentInput.value.length}/400`;
   });
 });
 </script>
+
 @endsection
