@@ -105,9 +105,17 @@ class ShopController extends Controller
 
 
   //特定の店舗のレビューを取得してビューに渡すメソッド
+
+
   public function showReviews(Shop $shop)
   {
-    $reviews = Review::where('shop_id', $shop->id)->get();
-    return view('shop_reviews', ['shop' => $shop, 'reviews' => $reviews]);
+    $avgRating = $shop->reviews()->avg('rating');
+    $shopReviews = $shop->reviews()->latest()->get();
+
+    return view('shop_reviews', [
+      'shop' => $shop,
+      'avgRating' => $avgRating,
+      'shopReviews' => $shopReviews
+    ]);
   }
 }
