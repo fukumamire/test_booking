@@ -82,7 +82,6 @@
 @section('scripts')
 {{-- お気に入りボタン --}}
 {{-- <script src="{{ asset('js/toggleFavorite.js') }}"></script> --}}
-
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
@@ -98,8 +97,8 @@ document.addEventListener("DOMContentLoaded", function() {
   // 星の色を変更する関数
   function changeStarColor(selectedIndex) {
     labels.forEach((label, index) => {
-      // selectedIndexより左側も含めて青にする
-      if (index <= selectedIndex) {
+      // selectedIndexより右側も含めて青にする
+      if (index >= selectedIndex) {
         label.style.color = '#007bff'; // 青に設定
       } else {
         label.style.color = '#ddd'; // グレーに設定
@@ -120,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // ホバー時の色変更
   function hoverStar(hoverIndex) {
     labels.forEach((label, index) => {
-      if (index <= hoverIndex) {
+      if (index >= hoverIndex) {
         label.style.color = '#007bff'; // 青に設定
       } else {
         label.style.color = '#ddd'; // グレーに設定
@@ -154,5 +153,4 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 </script>
-
 @endsection
