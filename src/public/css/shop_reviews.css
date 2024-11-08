@@ -1,4 +1,6 @@
-/* shop_reviews.css */
+main {
+  margin-top: 100px;
+}
 
 .review__wrap {
   font-size: 1.6rem;

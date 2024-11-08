@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Shop;
-use Illuminate\Support\Facades\Auth; // Authファサードをインポート
+use Illuminate\Support\Facades\Auth; 
 
 class ReviewController extends Controller
 {
 
   public function create($shopId)
   {
-    $shop = Shop::findOrFail($shopId); // IDを使って店舗を取得
-    return view('review', ['shop' => $shop]);
+    $shop = Shop::findOrFail($shopId);
+    $avgRating = $shop->reviews()->avg('rating');
+    return view('shop_reviews', ['shop' => $shop, 'avgRating' => $avgRating]);
   }
+
 
   public function store(Request $request)
   {

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 class Shop extends Model
 {
   use HasFactory, SoftDeletes;
@@ -83,5 +82,11 @@ class Shop extends Model
     } else {
       $this->favorites()->create(['user_id' => $user->id]); // お気に入り登録
     }
+  }
+
+  // Reviewモデルとの関係を定義
+  public function reviews()
+  {
+    return $this->hasMany(Review::class);
   }
 }

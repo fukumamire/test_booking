@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use App\Models\Shop;
@@ -105,17 +104,18 @@ class ShopController extends Controller
 
 
   //特定の店舗のレビューを取得してビューに渡すメソッド
-
-
   public function showReviews(Shop $shop)
   {
     $avgRating = $shop->reviews()->avg('rating');
     $shopReviews = $shop->reviews()->latest()->get();
 
-    return view('shop_reviews', [
-      'shop' => $shop,
-      'avgRating' => $avgRating,
-      'shopReviews' => $shopReviews
-    ]);
+    return view(
+      'shop_reviews',
+      [
+        'shop' => $shop,
+        'avgRating' => $avgRating,
+        'shopReviews' => $shopReviews
+      ]
+    );
   }
 }
