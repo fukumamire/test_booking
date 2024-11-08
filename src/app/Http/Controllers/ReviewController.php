@@ -20,7 +20,6 @@ class ReviewController extends Controller
   {
     $request->validate([
       'rating' => 'required|integer|min:1|max:5',
-      'title' => 'nullable|string|max:20',
       'comment' => 'required|string|min:20|max:400',
       'shop_id' => 'required|exists:shops,id',
     ], [
@@ -39,7 +38,6 @@ class ReviewController extends Controller
     $review->shop_id = $shop->id;
     $review->user_id = Auth::id();
     $review->rating = $request->rating;
-    $review->title = $request->title;
     $review->comment = $request->comment;
     $review->save();
 
