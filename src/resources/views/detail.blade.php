@@ -10,7 +10,6 @@
     <div class="header-container">
       <a href="{{ $backRoute }}" class="header__back">&lt;</a>
     <h1 class="shop-name">{{ $shop->name }}</h1>
-      <a href="{{ route('shop.reviews', $shop->id) }}">この店舗のレビューを見る</a>
     </div>
 
     <div class="shop-images">
@@ -34,6 +33,7 @@
           @endforeach
     </p>
     <p class="shop-description">{{ $shop->outline }}</p>
+    <a href="{{ route('shop.reviews', $shop->id) }}" class="review-view-link">全ての口コミ情報</a>
     <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a>
   </div>
 
