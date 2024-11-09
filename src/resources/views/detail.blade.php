@@ -52,14 +52,8 @@
           </div>
           <div class="rating">
             @for($i = 1; $i <= 5; $i++)
-              <span class="fa-stack">
-                <i class="fas fa-star fa-stack-1x"></i>
-                @if($i <= $userReview->rating)
-                  <i class="fas fa-star fa-stack-1x blue"></i>
-                @endif
-              </span>
+              <span class="rating__star" data-rate="{{ number_format($userReview->rating,1) }}"></span>
             @endfor
-            <span class="rating-number">{{ number_format($userReview->rating, 1) }}/5</span>
           </div>
           <p class="review-comment">{{ $userReview->comment }}</p>
           
