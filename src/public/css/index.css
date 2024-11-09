@@ -30,7 +30,8 @@
   margin-left: 40px;
 }
 
-.header__search {
+.header__search ,
+.header__sort{
   display: flex;
   border-radius: 5px;
   box-shadow: 2px 2px 5px gray;
@@ -39,12 +40,37 @@
   width: 65%;
 }
 
+.header__sort {
+  width: 30%;
+  margin-right:3%;
+}
+
+.sort__label {
+  width: 100%;
+  margin: 0;
+}
+
+.sort__item {
+  margin: 0;
+}
+
+
+.select-box__item:focus {
+  outline: none;
+}
+
 .select-box__label {
   display: inline-flex;
   align-items: center;
   position: relative;
   width: 25%;
 }
+
+.sort__label {
+  width: 95%;
+  padding-left: 5px;
+}
+
 
 .select-box__label::after {
   position: absolute;
