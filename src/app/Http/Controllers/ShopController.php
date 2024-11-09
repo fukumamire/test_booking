@@ -8,7 +8,7 @@ use App\Models\Shop;
 use App\Models\Area;
 use App\Models\Genre;
 use App\Models\Favorite;
-use App\Models\Review; // Reviewクラスのインポートを追加
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,6 +40,24 @@ class ShopController extends \App\Http\Controllers\Controller
         $q->where('genres.name', $request->genre);
       });
     }
+
+    // ソート処理を追加
+    $sort = $request->input('sort', 'random');
+    switch ($sort) {
+      case 'high_rating':
+        $query->orderBy('avg_rating', 'desc');
+        break;
+      case 'low_rating':
+        $query->orderBy('avg_rating', 'asc');
+        break;
+      case 'random':
+      default:
+        $query = $query->inRandomOrder();
+        break;
+    }
+    // avg_rating = 0 の店舗を一番下に配置
+    $query->orderByRaw('avg_rating = 0');
+
 
     // areas と genres のリレーションをロードして shops を取得
     $shops = $query->with(['areas', 'genres'])->paginate(10);
@@ -103,7 +121,7 @@ class ShopController extends \App\Http\Controllers\Controller
   }
 
 
-
+  // 店舗詳細でユーザーが口コミを投稿した内容
   public function showReviews(Shop $shop)
   {
     $reviews = Review::where('shop_id', $shop->id)->get();
