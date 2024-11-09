@@ -90,6 +90,9 @@
 @section('scripts')
 {{-- お気に入りボタン --}}
 {{-- <script src="{{ asset('js/toggleFavorite.js') }}"></script> --}}
+@endsection
+
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
@@ -153,12 +156,20 @@ document.addEventListener("DOMContentLoaded", function() {
     changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
   }
 
-  // コメント入力の文字数カウント
+   // コメント入力の文字数カウント
   const commentInput = document.getElementById('comment');
   const charCount = document.querySelector('.char-count');
-  commentInput.addEventListener('input', () => {
-    charCount.textContent = `${commentInput.value.length}/400`;
+  commentInput.addEventListener('input', function() {
+    const length = this.value.length;
+    charCount.textContent = `${length}/400`;
+    if (length < 20) {
+      charCount.style.color = 'red';
+    } else {
+      charCount.style.color = 'black';
+    }
   });
+
+  // 初期値の設定
+  commentInput.dispatchEvent(new Event('input'));
 });
 </script>
-@endsection
