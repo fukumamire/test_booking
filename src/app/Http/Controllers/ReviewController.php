@@ -29,8 +29,12 @@ class ReviewController extends Controller
     // 現在のユーザーがこの店舗に対して既にレビューを投稿しているかどうかを確認
     $userHasReview = Auth::check() && $shop->reviews()->where('user_id', Auth::id())->exists();
 
-    // return view('review', ['shop' => $shop]);
-    return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview]);
+    if ($userHasReview) {
+      $review = $shop->reviews()->where('user_id', Auth::id())->first();
+      return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview, 'review' => $review]);
+    } else {
+      return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview]);
+    }
   }
 
   public function store(Request $request)
@@ -49,14 +53,24 @@ class ReviewController extends Controller
     }
 
     $shopId = $request->input('shop_id'); // リクエストから shop_id を取得
-    $shop = Shop::findOrFail($shopId); // shop_id で店舗を見つけます。
+    $shop = Shop::findOrFail($shopId); // shop_id で店舗を見つける
 
-    $review = new Review;
-    $review->shop_id = $shop->id;
-    $review->user_id = Auth::id();
-    $review->rating = $request->input('rating');
-    $review->comment = $request->input('comment');
-    $review->save();
+    $review = $shop->reviews()->where('user_id', Auth::id())->first();
+
+    if ($review) {
+      // 既存のレビューを更新
+      $review->rating = $request->input('rating');
+      $review->comment = $request->input('comment');
+      $review->save();
+    } else {
+      // 新しいレビューを作成
+      $review = new Review;
+      $review->shop_id = $shop->id;
+      $review->user_id = Auth::id();
+      $review->rating = $request->input('rating');
+      $review->comment = $request->input('comment');
+      $review->save();
+    }
 
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
