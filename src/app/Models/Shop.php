@@ -45,6 +45,19 @@ class Shop extends Model
     return $this->hasMany(ShopImage::class);
   }
 
+  // avg_ratingを計算するメソッド
+  public function getAvgRatingAttribute()
+  {
+    return $this->reviews()->avg('rating') ?? 0;
+  }
+
+  // avg_ratingを更新するメソッド
+  public function updateAvgRating()
+  {
+    $avgRating = $this->reviews()->avg('rating') ?? 0;
+    $this->update(['avg_rating' => $avgRating]);
+  }
+
   // 予約が関連する店舗
   public function bookings()
   {
