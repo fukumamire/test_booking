@@ -91,4 +91,31 @@ class ReviewController extends Controller
 
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
+
+  private function authorizeReview($review)
+  {
+    $user = Auth::user();
+
+    if ($user->id === $review->user_id) {
+      return true;
+    }
+
+    // 管理者（super-admin）かどうかをチェック
+    if ($user->roles->contains('name', 'super-admin')) {
+      return true;
+    }
+
+    abort(403);
+  }
+  public function destroy($shopId, $reviewId)
+  {
+    $shop = Shop::findOrFail($shopId);
+    $review = $shop->reviews()->findOrFail($reviewId);
+
+    $this->authorizeReview($review);
+
+    $review->delete();
+
+    return redirect()->route('shop.detail', ['shop' => $shop->id])->with('success', '口コミが削除されました。');
+  }
 }

@@ -113,7 +113,6 @@ Route::get('/detail/{shop}', [ShopController::class, 'detail'])->name('shop.deta
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
 
 // レビューフォーム（入力）を表示するルート
-// Route::get('/review/{id}/create', [ReviewController::class, 'create'])->name('review.create');
 
 Route::get('/review/{shop}/review/create', [ReviewController::class, 'create'])->name('review.create');
 
@@ -121,14 +120,14 @@ Route::get('/review/{shop}/review/create', [ReviewController::class, 'create'])-
 Route::get('/shop/{shop}/review/create', [ReviewController::class, 'create'])->name('shop.review.create');
 
 // 評価　レビューを保存
-// Route::post('/shop/{shop}/review', [ReviewController::class, 'store'])->name('shop.review.store');
+
 Route::post('/shop/{id}/review', [ReviewController::class, 'store'])->name('shop.review.store');
 
-
+//レビュー（口コミ削除）
+Route::delete('/shop/{shop}/review/{review}', [ReviewController::class, 'destroy'])->name('review.destroy');
 
 // 店舗レビュー画面
 Route::get('/shop/{shop}/reviews', [ShopController::class, 'showReviews'])->name('shop.reviews');
-// Route::get('/shop/{shop}/reviews', [ReviewController::class, 'showReviews'])->name('shop.reviews');
 
 
 

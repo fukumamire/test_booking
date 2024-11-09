@@ -44,11 +44,11 @@
         <div class="user-review">
           <div class="review-actions">
             <a href="{{ route('review.create', ['shop' => $shop->id, 'review' => $userReview->id]) }}" class="review-edit-link">口コミを編集</a>
-            {{-- <form action="{{ route('review.destroy', ['shop' => $shop->id, 'review' => $userReview->id]) }}" method="post" class="review-delete-form">
+            <form action="{{ route('review.destroy', ['shop' => $shop->id, 'review' => $userReview->id]) }}" method="post" class="review-delete-form">
               @csrf
               @method('DELETE')
               <button type="submit" class="review-delete-link" onclick="return confirm('本当に口コミを削除しますか？')">口コミを削除</button>
-            </form> --}}
+            </form>
           </div>
           <div class="rating">
             @for($i = 1; $i <= 5; $i++)
@@ -68,8 +68,7 @@
         <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a>
       @endif
     @endauth
-  
-    {{-- <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a> --}}
+
   </div>
 
   <div class="reservation-form">
