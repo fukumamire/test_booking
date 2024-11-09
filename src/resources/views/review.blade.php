@@ -58,14 +58,16 @@
           <span class="char-count">0/400(最高文字数)</span>
         </div>
 
-        <div class="image-upload">
+        
+
+        {{-- <div class="image-upload">
           <label for="image">画像の追加</label>
           <input type="file" id="image" name="image" accept=".jpeg,.png">
           <p class="image-note">クリックして写真を追加またはドラッグアンドドロップ</p>
         </div>
       </div>  
     </div>
-  </form>
+  </form> --}}
 
   @if ($errors->any())
   <div class="alert alert-danger">
@@ -76,7 +78,13 @@
     </ul>
   </div>
   @endif
-  <button type="submit" class="submit-button">口コミを投稿</button>
+  <div class="button__content">
+    @if ($userHasReview)
+      <button type="submit" class="submit-button">口コミを編集</button>
+    @else
+      <button type="submit" class="submit-button">口コミを投稿</button>
+    @endif
+    </div>
 </div>
 
 @section('scripts')

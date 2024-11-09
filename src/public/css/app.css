@@ -167,7 +167,7 @@ header .overlay-menu ul li button.logout-link:hover {
     color: #000!important; /* マウスオーバー時にテキストカラーを黒に変更 */
 }
 
-
+/* ロゴ */
 header .header__logo {
     font-size: 2.8rem;
     color: blue;
@@ -176,6 +176,7 @@ header .header__logo {
     font-weight: bold;
     white-space: nowrap;
      /* テキストを一行に強制 */
+
 }
 
 @media screen and (max-width: 768px) {
@@ -184,11 +185,14 @@ header .header__logo {
         justify-content: space-between; /* 左右に配置 */
     }
 
+    
+    header #overlay-button.overlay-button {
+        padding: 10px;
+    }
+
+
     header .header__logo {
         font-size: 2rem; /* サイズを調整 */
     }
 
-    header #overlay-button.overlay-button {
-        padding: 10px; /* サイズを調整 */
-    }
 }

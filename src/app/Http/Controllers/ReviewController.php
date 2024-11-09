@@ -26,8 +26,11 @@ class ReviewController extends Controller
   public function create($shopId)
   {
     $shop = Shop::findOrFail($shopId);
+    // 現在のユーザーがこの店舗に対して既にレビューを投稿しているかどうかを確認
+    $userHasReview = Auth::check() && $shop->reviews()->where('user_id', Auth::id())->exists();
 
-    return view('review', ['shop' => $shop]);
+    // return view('review', ['shop' => $shop]);
+    return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview]);
   }
 
   public function store(Request $request)
@@ -57,5 +60,4 @@ class ReviewController extends Controller
 
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
-
 }
