@@ -89,6 +89,9 @@ class ReviewController extends Controller
       $review->save();
     }
 
+    // avg_rating を更新
+    $shop->updateAvgRating();
+
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
 
