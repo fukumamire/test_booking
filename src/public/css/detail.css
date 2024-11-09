@@ -167,6 +167,119 @@
   margin-top: 50%;
 }
 
+/* ユーザー自身が口コミした内容 */
+
+.review-view-link {
+  display: inline-block;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  text-align: center;
+}
+
+.review-view-link:hover {
+  background-color: #0056b3;
+}
+
+.user-review {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+.user-review h3 {
+  margin-bottom: 10px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating span {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.3em;
+  position: relative;
+  line-height: 1em;
+}
+
+.rating i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rating i.fa-stack-1x {
+  color: #ccc;
+}
+
+.rating i.fa-stack-1x.blue {
+  color:#007bff;
+}
+
+.rating-number {
+  margin-left: 10px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.review-comment {
+  font-size: 1.1rem;
+}
+
+.review-actions {
+  margin-top: 10px;
+}
+
+.review-edit-link,
+.review-delete-link {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.review-edit-link {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.review-delete-link {
+  background-color: #f44336;
+  color: white;
+}
+
+.review-write-link {
+  display: block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.review-write-link:hover {
+  background-color: #0056b3;
+}
+
+
 @media screen and (max-width: 768px) {
   .container {
     flex-direction: column;

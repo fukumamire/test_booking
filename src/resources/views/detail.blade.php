@@ -34,7 +34,42 @@
     </p>
     <p class="shop-description">{{ $shop->outline }}</p>
     <a href="{{ route('shop.reviews', $shop->id) }}" class="review-view-link">全ての口コミ情報</a>
-    <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a>
+
+    @auth
+      @php
+        $userReview = $shop->reviews()->where('user_id', Auth::id())->first();
+      @endphp
+
+      @if($userReview)
+        <div class="user-review">
+          <div class="review-actions">
+            <a href="{{ route('review.create', ['shop' => $shop->id, 'review' => $userReview->id]) }}" class="review-edit-link">口コミを編集</a>
+            {{-- <form action="{{ route('review.destroy', ['shop' => $shop->id, 'review' => $userReview->id]) }}" method="post" class="review-delete-form">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="review-delete-link" onclick="return confirm('本当に口コミを削除しますか？')">口コミを削除</button>
+            </form> --}}
+          </div>
+          <div class="rating">
+            @for($i = 1; $i <= 5; $i++)
+              <span class="fa-stack">
+                <i class="fas fa-star fa-stack-1x"></i>
+                @if($i <= $userReview->rating)
+                  <i class="fas fa-star fa-stack-1x blue"></i>
+                @endif
+              </span>
+            @endfor
+            <span class="rating-number">{{ number_format($userReview->rating, 1) }}/5</span>
+          </div>
+          <p class="review-comment">{{ $userReview->comment }}</p>
+          
+        </div>
+      @else
+        <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a>
+      @endif
+    @endauth
+  
+    {{-- <a href="{{ route('review.create', ['shop' => $shop->id]) }}" class="review-write-link">口コミを投稿する</a> --}}
   </div>
 
   <div class="reservation-form">
