@@ -67,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     'email_verified_at' => 'datetime',
   ];
 
+  // spatie/laravel-permission パッケージを使用しているとき　管理者
   public function isAdmin()
   {
     return $this->hasRole('super-admin');
@@ -77,6 +78,10 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasRole('shop-manager');
   }
 
+  public function isSuperAdmin()
+  {
+    return $this->hasRole('super-admin');
+  }
 
   public function shop()
   {

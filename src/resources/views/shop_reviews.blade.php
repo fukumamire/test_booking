@@ -32,12 +32,13 @@
     @if($shopReviews->count() > 0)
     @foreach ($shopReviews as $shopReview)
     <div class="review__container">
-      @hasanyrole('super-admin')
-      <form action="/review/delete/{{ $shopReview->id }}" method="post" class="delete-form">
-        @csrf
-        <button type="submit" class="delete-form__button" onclick="return confirm('本当に口コミを削除しますか？')">口コミを削除</button>
-      </form>
-      @endhasanyrole
+    @if(Auth::check() && Auth::user()->isSuperAdmin())
+        <form action="/review/delete/{{ $shopReview->id }}" method="post" class="delete-form">
+          @csrf
+          <button type="submit" class="delete-form__button" onclick="return confirm('本当に口コミを削除しますか？')">口コミを削除</button>
+        </form>
+      @endif
+  
       <div class="review__content">
         <div class="review__title review__title--vertical-center">
           評価
