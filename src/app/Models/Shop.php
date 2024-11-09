@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Shop extends Model
 {
@@ -56,6 +57,7 @@ class Shop extends Model
   {
     $avgRating = $this->reviews()->avg('rating') ?? 0;
     $this->update(['avg_rating' => $avgRating]);
+    Log::info("Updated avg_rating for shop {$this->id} to {$avgRating}");
   }
 
   // 予約が関連する店舗
