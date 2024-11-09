@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 
+
 class ReviewController extends Controller
 {
-
   public function showReviews($shopId)
   {
     $shop = Shop::findOrFail($shopId);
@@ -29,16 +29,33 @@ class ReviewController extends Controller
     // 現在のユーザーがこの店舗に対して既にレビューを投稿しているかどうかを確認
     $userHasReview = Auth::check() && $shop->reviews()->where('user_id', Auth::id())->exists();
 
+    // ユーザーのロールをチェック
+    $isShopManager = Auth::check() && Auth::user()->roles->contains('name', 'shop-manager');
+
+
     if ($userHasReview) {
       $review = $shop->reviews()->where('user_id', Auth::id())->first();
-      return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview, 'review' => $review]);
+      return view('review', [
+        'shop' => $shop,
+        'userHasReview' => $userHasReview,
+        'review' => $review,
+        'isShopManager' => $isShopManager
+      ]);
     } else {
-      return view('review', ['shop' => $shop, 'userHasReview' => $userHasReview]);
+      return view('review', [
+        'shop' => $shop,
+        'userHasReview' => $userHasReview,
+        'isShopManager' => $isShopManager
+      ]);
     }
   }
 
   public function store(Request $request)
   {
+    if (Auth::check() && Auth::user()->roles->contains('name', 'shop-manager')) {
+      return redirect()->back()->withErrors(['shop_manager_error' => '店舗代表者は口コミを投稿できません。']);
+    }
+
     $request->validate([
       'rating' => 'required|integer|min:1|max:5',
       'comment' => 'required|string|min:20|max:400',

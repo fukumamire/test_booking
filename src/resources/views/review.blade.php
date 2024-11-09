@@ -6,6 +6,9 @@
 
 @section('content')
 <div class="review-container">
+  @if ($isShopManager)
+    <p class="alert alert-warning">店舗代表者は口コミを投稿できません。</p>
+  @else
   <form action="{{ route('shop.review.store', $shop->id) }}" method="post" class="review-form" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="shop_id" value="{{ $shop->id }}">
@@ -68,7 +71,8 @@
       </div>  
     </div>
   </form> --}}
-
+  @endif
+  
   @if ($errors->any())
   <div class="alert alert-danger">
     <ul>
