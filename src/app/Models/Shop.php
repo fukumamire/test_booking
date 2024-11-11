@@ -12,7 +12,12 @@ class Shop extends Model
 {
   use HasFactory, SoftDeletes;
 
-  protected $fillable = ['name', 'user_id', 'outline'];
+  protected $fillable = [
+    'name',
+    'user_id',
+    'outline',
+    'avg_rating', // この行を追加
+  ];
 
   public static function boot()
   {

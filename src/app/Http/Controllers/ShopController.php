@@ -124,8 +124,8 @@ class ShopController extends \App\Http\Controllers\Controller
   // 店舗詳細でユーザーが口コミを投稿した内容
   public function showReviews(Shop $shop)
   {
-    $reviews = Review::where('shop_id', $shop->id)->get();
-    $avgRating = $shop->reviews()->avg('rating');
+    $reviews = $shop->reviews()->get();
+    $avgRating = $shop->avg_rating;
 
     return view('shop_reviews', [
       'shop' => $shop,
