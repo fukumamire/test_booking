@@ -51,8 +51,8 @@
           <span class="error">{{ $message }}</span>
           @enderror
         </div>
-        <div class="review-body">
 
+        <div class="review-body">
           <label for="comment" class="comment-label">口コミを投稿</label>
           <textarea id="comment" name="comment" placeholder="カジュアルな夜のお出かけにおすすめのスポット" maxlength="400" required>
             @if(isset($review))
@@ -67,14 +67,7 @@
           <span class="char-count">0/400(最高文字数)</span>
         </div>
 
-        {{-- <div class="review-body">
-          <label for="comment" class="comment-label">口コミを投稿</label>
-          <textarea id="comment" name="comment" placeholder="カジュアルな夜のお出かけにおすすめのスポット" maxlength="400" required>{{ old('comment') }}</textarea>
-          @error('comment')
-          <span class="error">{{ $message }}</span>
-          @enderror
-          <span class="char-count">0/400(最高文字数)</span>
-        </div> --}}
+        
 
         {{-- <div class="image-upload">
           <label for="image">画像の追加</label>
@@ -165,6 +158,15 @@
           if (checkedStar) {
             changeStarColor(Array.prototype.indexOf.call(stars, checkedStar));
           }
+        
+            // 初期値の設定(★評価)
+          const ratingValue = document.querySelector('input[name="rating"]:checked')?.value || 5;
+          stars.forEach((star, index) => {
+            if (index < ratingValue) {
+            star.checked = true;
+            }
+          });
+
           // コメント入力の文字数カウント
           const commentInput = document.getElementById('comment');
           const charCount = document.querySelector('.char-count');
