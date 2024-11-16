@@ -43,7 +43,7 @@
           <p class="rating-label">体験を評価してください</p>
           <div class="stars">
             @for ($i = 5; $i >= 1 ; $i--)
-            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required>
+            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" required {{ $i == ($review->rating ?? 5) ? 'checked' : '' }}>
             <label for="star{{ $i }}">★</label>
             @endfor
           </div>
