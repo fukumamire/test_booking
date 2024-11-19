@@ -54,8 +54,7 @@ return [
 
     'shop_manager' => [
       'driver' => 'session',
-      'provider' =>
-      'shop_managers',
+      'provider' => 'shop_managers',
     ],
 
   ],

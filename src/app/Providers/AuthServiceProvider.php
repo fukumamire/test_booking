@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -32,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
 
     // admin guardを追加
     Gate::define('admin', function ($user) {
-      return $user->hasRole('admin');
+      return $user->hasRole('super-admin');
     });
   }
 }

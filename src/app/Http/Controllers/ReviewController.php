@@ -8,8 +8,10 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 
 
+
 class ReviewController extends Controller
 {
+
   public function showReviews($shopId)
   {
     $shop = Shop::findOrFail($shopId);
@@ -95,30 +97,20 @@ class ReviewController extends Controller
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
 
-  private function authorizeReview($review)
-  {
-    $user = Auth::user();
-
-    if ($user->id === $review->user_id) {
-      return true;
-    }
-
-    // 管理者（super-admin）かどうかをチェック
-    if ($user->roles->contains('name', 'super-admin')) {
-      return true;
-    }
-
-    abort(403);
-  }
   public function destroy($shopId, $reviewId)
   {
-    $shop = Shop::findOrFail($shopId);
-    $review = $shop->reviews()->findOrFail($reviewId);
+    $review = Review::findOrFail($reviewId);
+    $user = Auth::guard('admin')->user() ?: Auth::user();
 
-    $this->authorizeReview($review);
+    // ログイン中のユーザーが管理者（super-admin）かどうかを確認
+    $isSuperAdmin = $user ? $user->hasRole('super-admin') : false;
 
-    $review->delete();
+    // 管理者または口コミの投稿者本人であれば削除を許可
+    if ($isSuperAdmin || $user->id === $review->user_id) {
+      $review->delete();
+      return redirect()->route('shop.detail', ['shop' => $shopId])->with('success', '口コミが削除されました。');
+    }
 
-    return redirect()->route('shop.detail', ['shop' => $shop->id])->with('success', '口コミが削除されました。');
+    return redirect()->back()->with('error', '権限がありません。');
   }
 }

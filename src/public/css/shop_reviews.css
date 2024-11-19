@@ -108,6 +108,17 @@ main {
   font-size: 1rem;
 }
 
+.review-delete-link {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  background-color: #f44336;
+  color: white;
+}
+
 .shop__data-area {
   width: 70%;
   padding-left: 15px;

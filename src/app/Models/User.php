@@ -14,6 +14,9 @@ use App\Models\Favorite;
 use Spatie\Permission\Traits\HasRoles;
 
 use Illuminate\Auth\Notifications\VerifyEmail;
+use App\Models\BookingChange;
+
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -47,6 +50,8 @@ class User extends Authenticatable implements MustVerifyEmail
     'password',
     'shop_id',
   ];
+  // role プロパティを追加
+  protected $with = ['roles'];
 
   /**
    * The attributes that should be hidden for serialization.
@@ -67,21 +72,20 @@ class User extends Authenticatable implements MustVerifyEmail
     'email_verified_at' => 'datetime',
   ];
 
+
   // spatie/laravel-permission パッケージを使用しているとき　管理者
-  public function isAdmin()
+
+  public function isAdmin(): bool
   {
     return $this->hasRole('super-admin');
   }
+
 
   public function isManager()
   {
     return $this->hasRole('shop-manager');
   }
 
-  public function isSuperAdmin()
-  {
-    return $this->hasRole('super-admin');
-  }
 
   public function shop()
   {
@@ -129,7 +133,6 @@ class User extends Authenticatable implements MustVerifyEmail
     return $this->hasMany(BookingChange::class);
   }
 
-  // 
 
   public function sendEmailVerificationNotification()
   {
