@@ -30,26 +30,16 @@ class ReviewController extends Controller
     $shop = Shop::findOrFail($shopId);
     // 現在のユーザーがこの店舗に対して既にレビューを投稿しているかどうかを確認
     $userHasReview = Auth::check() && $shop->reviews()->where('user_id', Auth::id())->exists();
-
-    // ユーザーのロールをチェック
     $isShopManager = Auth::check() && Auth::user()->roles->contains('name', 'shop-manager');
 
+    $review = $userHasReview ? $shop->reviews()->where('user_id', Auth::id())->first() : null;
 
-    if ($userHasReview) {
-      $review = $shop->reviews()->where('user_id', Auth::id())->first();
-      return view('review', [
-        'shop' => $shop,
-        'userHasReview' => $userHasReview,
-        'review' => $review,
-        'isShopManager' => $isShopManager
-      ]);
-    } else {
-      return view('review', [
-        'shop' => $shop,
-        'userHasReview' => $userHasReview,
-        'isShopManager' => $isShopManager
-      ]);
-    }
+    return view('review', [
+      'shop' => $shop,
+      'userHasReview' => $userHasReview,
+      'review' => $review,
+      'isShopManager' => $isShopManager
+    ]);
   }
 
   public function store(Request $request)
@@ -62,9 +52,13 @@ class ReviewController extends Controller
       'rating' => 'required|integer|min:1|max:5',
       'comment' => 'required|string|min:20|max:400',
       'shop_id' => 'required|exists:shops,id',
+      'image_url' => 'nullable|image|mimes:jpeg,png|max:2048',
     ], [
       'rating.required' => '評価は必須です。',
       'comment.min' => 'コメントは20文字以上でなければなりません。',
+      'image_url.image' => '画像ファイルのみアップロードできます。',
+      'image_url.mimes' => 'JPEGまたはPNG形式の画像のみアップロードできます。',
+      'image_url.max' => '画像のサイズは2MB以下にしてください。',
     ]);
 
     if (!Auth::check()) { // ユーザーがログインしていない場合
@@ -80,6 +74,9 @@ class ReviewController extends Controller
       // 既存のレビューを更新
       $review->rating = $request->input('rating');
       $review->comment = $request->input('comment');
+      if ($request->hasFile('image_url')) {
+        $review->image_url = $request->file('image_url')->store('public/reviews');
+      }
       $review->save();
     } else {
       // 新しいレビューを作成
@@ -88,6 +85,9 @@ class ReviewController extends Controller
       $review->user_id = Auth::id();
       $review->rating = $request->input('rating');
       $review->comment = $request->input('comment');
+      if ($request->hasFile('image_url')) {
+        $review->image_url = $request->file('image_url')->store('public/reviews');
+      }
       $review->save();
     }
 
