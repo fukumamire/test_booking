@@ -48,7 +48,7 @@ class ReviewController extends Controller
       return redirect()->back()->withErrors(['shop_manager_error' => '店舗代表者は口コミを投稿できません。']);
     }
 
-    $request->validate([
+    $validatedData = $request->validate([
       'rating' => 'required|integer|min:1|max:5',
       'comment' => 'required|string|min:20|max:400',
       'shop_id' => 'required|exists:shops,id',
@@ -72,8 +72,8 @@ class ReviewController extends Controller
 
     if ($review) {
       // 既存のレビューを更新
-      $review->rating = $request->input('rating');
-      $review->comment = $request->input('comment');
+      $review->rating = $validatedData['rating'];
+      $review->comment = $validatedData['comment'];
       if ($request->hasFile('image_url')) {
         $review->image_url = $request->file('image_url')->store('public/reviews');
       }
@@ -83,8 +83,8 @@ class ReviewController extends Controller
       $review = new Review;
       $review->shop_id = $shop->id;
       $review->user_id = Auth::id();
-      $review->rating = $request->input('rating');
-      $review->comment = $request->input('comment');
+      $review->rating = $validatedData['rating'];
+      $review->comment = $validatedData['comment'];
       if ($request->hasFile('image_url')) {
         $review->image_url = $request->file('image_url')->store('public/reviews');
       }
@@ -97,8 +97,10 @@ class ReviewController extends Controller
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
 
-  public function destroy($shopId, $reviewId)
-  {
+  public function destroy(
+    $shopId,
+    $reviewId
+  ) {
     $review = Review::findOrFail($reviewId);
     $user = Auth::guard('admin')->user() ?: Auth::user();
 
