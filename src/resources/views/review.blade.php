@@ -54,7 +54,13 @@
 
           <div class="review-body">
             <label for="comment" class="comment-label">口コミを投稿</label>
-            <textarea id="comment" name="comment" placeholder="カジュアルな夜のお出かけにおすすめのスポット" maxlength="400" required>@isset($review) {{ $review->comment }} @else {{ old('comment') }} @endisset</textarea>
+            <textarea id="comment" name="comment" placeholder="カジュアルな夜のお出かけにおすすめのスポット" maxlength="400" required>
+              @isset($review) 
+                {{ $review->comment }} 
+              @else 
+                {{ old('comment') }} 
+              @endisset
+            </textarea>
             @error('comment')
               <span class="alert alert-danger">{{ $message }}</span>
             @enderror
@@ -93,7 +99,7 @@
 </div>
 @endsection
 
-@section('scripts')
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const stars = document.querySelectorAll('.stars input[type="radio"]');
@@ -184,4 +190,3 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 </script>
-@endsection
