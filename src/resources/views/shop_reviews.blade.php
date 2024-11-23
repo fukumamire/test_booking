@@ -9,9 +9,7 @@
   <div class="review__header">
     口コミ
   </div>
-
-  <div class="review__content-wrap">
-    <div class="review__content shop__data">
+  <div class="review__content shop__data">
       <div class="review__title shop-image__wrap">
         @if($shop->images->isNotEmpty())
           <img class="shop__image" src="{{ $shop->images->first()->shop_image_url }}" alt="イメージ写真">
@@ -45,7 +43,6 @@
         </form>
       @endif
   
-
       <div class="review__content">
         <div class="review__title review__title--vertical-center">
           評価
@@ -66,11 +63,11 @@
       </div>
 
       @if ($shopReview->image_url)
-      <div class="review__image-area">
-        <a href="{{ $shopReview->image_url }}">
-          <img src="{{ $shopReview->image_url }}" alt="" class="review__image">
-        </a>
-      </div>
+        <div class="review__image-area">
+          <a href="{{ Storage::url('public/reviews/' . $shopReview->image_url) }}">
+            <img src="{{ Storage::url('public/reviews/' . $shopReview->image_url) }}" alt="レビュー画像" class="review__image">
+          </a>
+        </div>
       @endif
     </div>
     @endforeach

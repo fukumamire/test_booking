@@ -75,7 +75,8 @@ class ReviewController extends Controller
       $review->rating = $validatedData['rating'];
       $review->comment = $validatedData['comment'];
       if ($request->hasFile('image_url')) {
-        $review->image_url = $request->file('image_url')->store('public/reviews');
+        $path = $request->file('image_url')->store('public/reviews');
+        $review->image_url = basename($path);
       }
       $review->save();
     } else {
@@ -86,7 +87,8 @@ class ReviewController extends Controller
       $review->rating = $validatedData['rating'];
       $review->comment = $validatedData['comment'];
       if ($request->hasFile('image_url')) {
-        $review->image_url = $request->file('image_url')->store('public/reviews');
+        $path = $request->file('image_url')->store('public/reviews');
+        $review->image_url = basename($path);
       }
       $review->save();
     }
@@ -96,6 +98,7 @@ class ReviewController extends Controller
 
     return redirect()->route('shop.reviews', ['shop' => $shop->id])->with('success', 'レビューが正常に提出されました。');
   }
+
 
   public function destroy(
     $shopId,
