@@ -9,6 +9,14 @@
   <div class="review__header">
     口コミ
   </div>
+
+  <!-- 成功メッセージの表示 -->
+  @if(session('success'))
+    <div class="alert alert-success">
+      {{ session('success') }}
+    </div>
+  @endif
+
   <div class="review__content shop__data">
       <div class="review__title shop-image__wrap">
         @if($shop->images->isNotEmpty())

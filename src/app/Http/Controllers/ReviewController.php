@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 
-
+use Illuminate\Support\Facades\Storage;
 
 class ReviewController extends Controller
 {
@@ -112,6 +112,10 @@ class ReviewController extends Controller
 
     // 管理者または口コミの投稿者本人であれば削除を許可
     if ($isSuperAdmin || $user->id === $review->user_id) {
+      // 画像ファイルがある場合、削除
+      if ($review->image_url) {
+        Storage::disk('public')->delete('public/reviews/' . $review->image_url);
+      }
       $review->delete();
       return redirect()->route('shop.detail', ['shop' => $shopId])->with('success', '口コミが削除されました。');
     }
