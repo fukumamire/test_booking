@@ -267,3 +267,69 @@
   background-color: #007bff; /* 現在のページ番号に対して背景色を変更 */
   color: white; /* テキスト色を白にします */
 }
+
+/* 既存のCSSはそのまま残す */
+
+/* SPサイズ用のメディアクエリを追加 */
+@media screen and (max-width: 768px) {
+  .header__right {
+    width: 100%;
+    margin-top: 20px;
+    margin-left: 0;
+  }
+
+  .header__search,
+  .header__sort {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .header__sort {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .search__item {
+    width: 100%;
+  }
+
+  .shop__wrap {
+    flex-direction: column;
+  }
+
+  .shop__content {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .shop__image {
+    height: 200px; /* 固定の高さを設定 */
+  }
+
+  .shop__item {
+    height: auto;
+  }
+
+  .shop__title {
+    font-size: 1.4rem;
+  }
+
+  .shop__tag {
+    font-size: 1rem;
+  }
+
+  .shop__button {
+    flex-direction: column;
+  }
+
+  .shop__button-detail {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .heart, .heart-active {
+    width: 80px;
+    height: 80px;
+  }
+}
