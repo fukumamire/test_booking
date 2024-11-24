@@ -291,44 +291,72 @@
     width: 100%;
   }
 
+  /* .shop__wrap {
+    flex-direction: column;
+  } */
   .shop__wrap {
     flex-direction: column;
+    padding: 0 20px;
   }
+
 
   .shop__content {
     width: 100%;
     height: auto;
     margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
+
   .shop__image {
-    height: 200px; /* 固定の高さを設定 */
+    height: 250px; /* 固定の高さを設定 */
+    object-fit: cover;
   }
+
+  /* .shop__item {
+    height: auto;
+  } */
 
   .shop__item {
     height: auto;
+    padding: 20px;
   }
 
+  /* .shop__title {
+    font-size: 1.4rem;
+  } */
+  
   .shop__title {
     font-size: 1.4rem;
+    margin-bottom: 10px;
   }
 
   .shop__tag {
     font-size: 1rem;
+    margin-bottom: 15px;
   }
-
+  
+  
   .shop__button {
     flex-direction: column;
+    align-items: center;
   }
 
+  
   .shop__button-detail {
     margin-left: 0;
     margin-top: 10px;
+    width: 100%;
+    text-align: center;
   }
 
   .heart, .heart-active {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
   }
 
   /* 検索バーのスタイル */

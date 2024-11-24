@@ -54,6 +54,8 @@ header #overlay-button.overlay-button {
   border-radius: 5px;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3); /* 影の追加 */
   position: relative; /* z-indexを適用するためにrelativeを設定 */
+  width: 60px; /* 追加 */
+  height: 60px; /* 追加 */
 }
 
 header #overlay-button.overlay-button span {
@@ -182,14 +184,19 @@ header .header__logo {
 @media screen and (max-width: 768px) {
   header.header-left {
     flex-direction: row; /* 横並びにする */
-    justify-content: space-between; /* 左右に配置 */
+    justify-content: flex-start; /* 左右に配置 */
   }
 
   header #overlay-button.overlay-button {
-    padding: 10px;
+    /* padding: 10px; */
+    padding-right: 40px;
+    width: 50px; /* 追加 */
+    height: 50px; /* 追加 */
   }
 
   header .header__logo {
     font-size: 2rem; /* サイズを調整 */
+    margin-top: 20px; /* 追加 */
+    margin-left: 20px; /* 追加 */
   }
 }
