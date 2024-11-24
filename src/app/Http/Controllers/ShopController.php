@@ -11,7 +11,7 @@ use App\Models\Favorite;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Collection;
 
 class ShopController extends \App\Http\Controllers\Controller
 {
@@ -74,14 +74,22 @@ class ShopController extends \App\Http\Controllers\Controller
 
   public function index()
   {
-    $shops = Shop::with(['areas', 'genres', 'images'])->paginate(20);
-    // エリアデータの取得
+    $shops = Shop::with([
+      'areas',
+      'genres',
+      'images',
+      'favoritedBy' => function ($query) {
+        $query->where('user_id', Auth::id());
+      }
+    ])
+      ->paginate(20);
+
     $areas = Area::all();
-    // ジャンルの名前を選択し、重複を除去して取得
     $genres = Genre::select('name')->distinct()->get();
 
     return view('index', compact('shops', 'areas', 'genres'));
   }
+
 
 
   // お気に入りをトグルするメソッド
