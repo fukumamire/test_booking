@@ -12,7 +12,8 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Illuminate\Support\Facades\Log;
-
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
 
 class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
@@ -68,8 +69,13 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     Log::info('Cleaned row data:', $cleanedRow);
 
     if (empty(trim($cleanedRow[0]))) {
-      return null; // 店舗名が空の場合はnullを返す
+      throw new \Exception("店舗名が空です。");
     }
+
+    // if (empty(trim($cleanedRow[0]))) {
+    //   return null; 
+    // 店舗名が空の場合はnullを返す
+    // }
 
     return DB::transaction(function () use ($cleanedRow) {
       try {
@@ -168,6 +174,13 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         throw $e; // エラーを再スローしてトランザクションをロールバック
       }
     });
+  }
+
+  // エラーメッセージの収集
+  public function onFailure(\Throwable $e)
+  {
+    // エラーメッセージを保存
+    session()->push('import_errors', $e->getMessage());
   }
 
   public function batchSize(): int

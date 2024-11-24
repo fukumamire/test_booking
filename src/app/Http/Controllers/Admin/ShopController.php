@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class ShopController extends Controller
 {
@@ -40,14 +41,33 @@ class ShopController extends Controller
       $import = new ShopImport();
       Excel::import($import, $request->file('file'), null, $readerType);
 
-      Log::info('Shop imported successfully.');
+      if (session()->has('import_errors')) {
+        return redirect()->back()->withErrors(session()->get('import_errors'));
+      }
 
+      Log::info('Shop imported successfully.');
       return redirect()->back()->with('success', 'Shops imported successfully.');
+    } catch (ValidationException $e) {
+      return redirect()->back()->withErrors($e->validator);
     } catch (\Exception $e) {
       Log::error('Error importing shops: ' . $e->getMessage());
       return back()->withError('An error occurred while importing shops. Please try again.');
     }
   }
+
+  public function validateRequest(Request $request)
+  {
+    $validatedData = $request->validate([
+      'file' => 'required|mimes:xlsx,xls,csv|max:51200',
+    ], [
+      'file.required' => 'ファイルを選択してください。',
+      'file.mimes' => '有効なファイルタイプは xlsx, xls, csv のみです。',
+      'file.max' => 'ファイルサイズは最大 50MB までです。',
+    ]);
+
+    return $validatedData;
+  }
+
   public function importForm()
   {
     return view('admin.shops.import');
