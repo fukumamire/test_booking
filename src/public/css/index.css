@@ -268,8 +268,6 @@
   color: white; /* テキスト色を白にします */
 }
 
-/* 既存のCSSはそのまま残す */
-
 /* SPサイズ用のメディアクエリを追加 */
 @media screen and (max-width: 768px) {
   .header__right {
@@ -331,5 +329,44 @@
   .heart, .heart-active {
     width: 80px;
     height: 80px;
+  }
+
+  /* 検索バーのスタイル */
+  .header__search {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .header__search .select-box__label {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .search__item {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .search__item-input {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .search__item-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  /* コンテンツのパディングを調整 */
+  .shop__wrap {
+    padding-top: 60px; /* 検索バーの高さに合わせて調整 */
   }
 }
