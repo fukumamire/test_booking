@@ -39,14 +39,18 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript
 
 ### shops テーブル
 
-| カラム名   | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
-|------------|------------------|-------------|------------|----------|-------------|
-| id         | unsigned bigint  | 〇          | 〇         | 〇       |             |
-| user_id    | unsigned bigint  |             |            |         |             |
-| name       | VARCHAR          |             |            | 〇       |             |
-| outline    | TEXT             |             |            |          |             |
-| created_at | timestamp        |             |            |          |             |
-| updated_at | timestamp        |             |            |          |             |
+`avg_rating` カラムを追加
+
+| カラム名     | 型               | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
+|--------------|------------------|-------------|------------|----------|-------------|
+| id           | unsigned bigint   | 〇          | 〇         | 〇       |             |
+| user_id      | unsigned bigint   |             |            |          |             |
+| name         | VARCHAR           |             |            | 〇       |             |
+| outline      | TEXT              |             |            |          |             |
+| created_at   | timestamp         |             |            |          |             |
+| updated_at   | timestamp         |             |            |          |             |
+| avg_rating   | float             |             |            |          |             |
+
 
 ### shop_areas テーブル (中間テーブル)
 
