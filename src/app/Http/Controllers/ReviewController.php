@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Storage;
 
+use App\Http\Requests\StoreReviewRequest;
+
+
 class ReviewController extends Controller
 {
 
@@ -42,24 +45,24 @@ class ReviewController extends Controller
     ]);
   }
 
-  public function store(Request $request)
+  public function store(StoreReviewRequest $request)
   {
     if (Auth::check() && Auth::user()->roles->contains('name', 'shop-manager')) {
       return redirect()->back()->withErrors(['shop_manager_error' => '店舗代表者は口コミを投稿できません。']);
     }
 
-    $validatedData = $request->validate([
-      'rating' => 'required|integer|min:1|max:5',
-      'comment' => 'required|string|min:20|max:400',
-      'shop_id' => 'required|exists:shops,id',
-      'image_url' => 'nullable|image|mimes:jpeg,png|max:2048',
-    ], [
-      'rating.required' => '評価は必須です。',
-      'comment.min' => 'コメントは20文字以上でなければなりません。',
-      'image_url.image' => '画像ファイルのみアップロードできます。',
-      'image_url.mimes' => 'JPEGまたはPNG形式の画像のみアップロードできます。',
-      'image_url.max' => '画像のサイズは2MB以下にしてください。',
-    ]);
+    // $validatedData = $request->validate([
+    //   'rating' => 'required|integer|min:1|max:5',
+    //   'comment' => 'required|string|min:20|max:400',
+    //   'shop_id' => 'required|exists:shops,id',
+    //   'image_url' => 'nullable|image|mimes:jpeg,png|max:2048',
+    // ], [
+    //   'rating.required' => '評価は必須です。',
+    //   'comment.min' => 'コメントは20文字以上でなければなりません。',
+    //   'image_url.image' => '画像ファイルのみアップロードできます。',
+    //   'image_url.mimes' => 'JPEGまたはPNG形式の画像のみアップロードできます。',
+    //   'image_url.max' => '画像のサイズは2MB以下にしてください。',
+    // ]);
 
     if (!Auth::check()) { // ユーザーがログインしていない場合
       return redirect()->route('request_login')->withErrors(['user_not_authenticated' => 'ログインしてください。']);
@@ -72,27 +75,30 @@ class ReviewController extends Controller
 
     if ($review) {
       // 既存のレビューを更新
-      $review->rating = $validatedData['rating'];
-      $review->comment = $validatedData['comment'];
-      if ($request->hasFile('image_url')) {
-        $path = $request->file('image_url')->store('public/reviews');
-        $review->image_url = basename($path);
-      }
-      $review->save();
+      $review->rating = $request->input('rating');
+      $review->comment = $request->input('comment');
+      // $review->rating = $validatedData['rating'];
+      // $review->comment = $validatedData['comment'];
+      // if ($request->hasFile('image_url')) {
+      //   $path = $request->file('image_url')->store('public/reviews');
+      //   $review->image_url = basename($path);
+      // }
+      // $review->save();
     } else {
       // 新しいレビューを作成
       $review = new Review;
       $review->shop_id = $shop->id;
       $review->user_id = Auth::id();
-      $review->rating = $validatedData['rating'];
-      $review->comment = $validatedData['comment'];
-      if ($request->hasFile('image_url')) {
-        $path = $request->file('image_url')->store('public/reviews');
-        $review->image_url = basename($path);
-      }
-      $review->save();
+      $review->rating = $request->input('rating');
+      $review->comment = $request->input('comment');
     }
-
+    // $review->rating = $validatedData['rating'];
+    // $review->comment = $validatedData['comment'];
+    if ($request->hasFile('image_url')) {
+      $path = $request->file('image_url')->store('public/reviews');
+      $review->image_url = basename($path);
+    }
+    $review->save();
     // avg_rating を更新
     $shop->updateAvgRating();
 
