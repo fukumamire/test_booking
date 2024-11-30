@@ -250,13 +250,13 @@ main {
 .upload-area__text {
   width: 100%;
   margin: 0;
-  font-size: 1.4rem;
+  font-size: clamp(0.875rem, 0.684rem + 0.95vw, 1.4rem);
 }
 
 .upload-area__text--small {
   width: 100%;
   margin: 0;
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 0.655rem + 0.73vw, 1.2rem);
 }
 
 .input-file {
@@ -304,6 +304,7 @@ main {
   cursor: pointer;
   border-radius: 20px;
   width: 50%;
+  margin-top: 20px; /* ボタンの上に余白を追加 */
   margin-left: 15%;
   text-align: center;
 }
