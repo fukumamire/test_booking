@@ -5,10 +5,14 @@ main {
   max-width: 800px;
   margin-top: 100px;
   font-family: Arial, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .review-header {
-  font-size: 24px;
+  font: clamp(0.875rem, 0.739rem + 0.68vw, 1.25rem);
+  /* font-size: clamp(0.875rem, 0.375rem + 2.5vw, 2.25rem); */
+  /* フォントサイズのレスポンシブ 最小１４ｐｘ最大３６PX*/
   color: #333;
   background-color: #eee;
 }
@@ -21,7 +25,28 @@ main {
   position: relative;
 }
 
-.review-content::after {
+
+/* 縦線のスタイル */
+.review-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left:  50%; /* 正確に中央に配置 */
+  width: 1px;
+  background-color: #ccc;
+  z-index: 1;
+}
+
+/* 子要素のz-indexを調整 */
+.review-content > div {
+  z-index: 2;
+  position: relative;
+  width: 50%; /* 左右の列を等分にする */
+  box-sizing: border-box; /* パディングやボーダーを含む幅を計算 */
+}
+
+/* .review-content::after {
   content: '';
   position: absolute;
   top: 0;
@@ -29,7 +54,7 @@ main {
   left: 40%;
   width: 1px;
   background-color: #ccc;
-}
+} */
 
 
 /* 店舗情報の枠を追加 */
@@ -117,7 +142,9 @@ main {
 
 /* 右列 */
 .review-fields {
-  width: 60%;
+  /* width: 60%; */
+  width: 100%;
+  margin-top: 20px;
 }
 
 
@@ -247,14 +274,26 @@ main {
   height: 120px;
   margin: 0 auto;
   border: 1px solid lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.image-area__image{
+/* .image-area__image{
   width: 100%;
   height: 120px;
   object-fit: contain;
   display: block;
+} */
+
+.image-area__image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
+
 
 .submit-button {
   background-color:white;
@@ -276,12 +315,36 @@ main {
 
 /* レスポンシブデザイン */
 @media screen and (max-width: 768px) {
+  
+  .review-container {
+    width: 90%; /* スマートフォンなど小さい画面では幅を広くする */
+    margin-left: auto;
+    margin-right: auto;
+  }
   .review-content {
     flex-direction: column;
+    gap: 20px;
+  }
+
+  .review-content::before {
+    display: none;
   }
 
   .shop-info,
   .review-fields {
     width: 100%;
+  }
+
+  .image-area {
+    width: 100%;
+    height: 150px;
+  }
+
+  .review-body textarea {
+    height: 100px;
+  }
+  .submit-button {
+    width: 100%;
+    margin-left: 0;
   }
 }
