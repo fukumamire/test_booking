@@ -22,6 +22,11 @@ header.header-left {
   background-color: #eee; 
 }
 
+.header-left-content {
+  display: flex;
+  align-items: center;
+}
+
 @keyframes bugfix {
   from {
     padding: 0;
@@ -172,7 +177,7 @@ header .overlay-menu ul li button.logout-link:hover {
 
 /* ロゴ */
 header .header__logo {
-  font-size: 2.8rem;
+  font-size: clamp(0.8rem, 0.073rem + 3.64vw, 2.8rem);
   color: blue;
   padding-left: 0;
   margin-top: 80px;
@@ -182,21 +187,72 @@ header .header__logo {
 }
 
 @media screen and (max-width: 768px) {
+  /* header.header-left {
+    flex-direction: row; */
+     /* 横並びにする */
+    /* justify-content: flex-start; */
+     /* 左右に配置 */
+  /* } */
+
   header.header-left {
-    flex-direction: row; /* 横並びにする */
-    justify-content: flex-start; /* 左右に配置 */
+    margin-top: 20px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 20px;
   }
+
+  .header-left-content {
+    width: 100%;
+    justify-content:flex-starts;
+  }
+
+  /* header #overlay-button.overlay-button {
+    margin: 0;
+    padding: 10px;
+    padding-right: 40px;
+    width: 40px; 
+    height: 40px; 
+  } */
 
   header #overlay-button.overlay-button {
-    /* padding: 10px; */
-    padding-right: 40px;
-    width: 50px; /* 追加 */
-    height: 50px; /* 追加 */
+    margin: 0;
+    margin-left: 10px;
+    margin-right:10x;
+    /* width: 40px;  */
+    /* ボタンの幅を小さく調整 */
+    height: 20px; /* ボタンの高さを小さく調整 */
   }
 
+  header #overlay-button.overlay-button span {
+    height: 3px;/* 線の太さ */
+    width: 30px;/* ハンバーガー線の長さ */
+  }
+
+  header #overlay-button.overlay-button span:before,
+  header #overlay-button.overlay-button span:after {
+    height: 3px;
+    width: 25px;
+  }
+  header #overlay-button.overlay-button span:after {
+  /* top: 10px; */
+  width: 20px; /* 下の線を一番短く設定 */
+}
+
+  header #overlay-button.overlay-button span:before {
+    top: -10px;
+  }
+
+  header #overlay-button.overlay-button span:after {
+    top: 10px;
+  }
+  
   header .header__logo {
-    font-size: 2rem; /* サイズを調整 */
-    margin-top: 20px; /* 追加 */
-    margin-left: 20px; /* 追加 */
+    font-size: 1.5rem; 
+    /* サイズを調整 */
+    margin: 0;
+    padding: 0;
+    /* margin-top: 20px; 
+    margin-left: 20px; */
   }
 }

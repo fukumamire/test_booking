@@ -14,8 +14,11 @@
 
 <body>
   <header class="header-left">
-    <input type="checkbox" id="overlay-input" class="overlay-toggle" />
-    <label for="overlay-input" id="overlay-button" class="overlay-button"><span></span></label>
+    <div class="header-left-content">
+      <input type="checkbox" id="overlay-input" class="overlay-toggle" />
+      <label for="overlay-input" id="overlay-button" class="overlay-button"><span></span></label>
+      <div class="header__logo">Rese</div>
+    </div>
     <div id="overlay" class="overlay-menu">
       <ul class="nav__list">
         @auth('admin')
@@ -64,7 +67,6 @@
         @endguest
       </ul>
     </div>
-    <div class="header__logo">Rese</div>
     @yield('header')
   </header>
   <main>

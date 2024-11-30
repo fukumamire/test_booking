@@ -11,8 +11,6 @@ main {
 
 .review-header {
   font: clamp(0.875rem, 0.739rem + 0.68vw, 1.25rem);
-  /* font-size: clamp(0.875rem, 0.375rem + 2.5vw, 2.25rem); */
-  /* フォントサイズのレスポンシブ 最小１４ｐｘ最大３６PX*/
   color: #333;
   background-color: #eee;
 }
@@ -45,16 +43,6 @@ main {
   width: 50%; /* 左右の列を等分にする */
   box-sizing: border-box; /* パディングやボーダーを含む幅を計算 */
 }
-
-/* .review-content::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 40%;
-  width: 1px;
-  background-color: #ccc;
-} */
 
 
 /* 店舗情報の枠を追加 */
