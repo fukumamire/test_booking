@@ -35,6 +35,7 @@ class StoreReviewRequest extends FormRequest
 	{
 		return [
 			'rating.required' => '評価は必須です。',
+			'comment.required' => 'コメントは必須です。',
 			'comment.min' => 'コメントは20文字以上でなければなりません。',
 			'image_url.image' => '画像ファイルのみアップロードできます。',
 			'image_url.mimes' => 'JPEGまたはPNG形式の画像のみアップロードできます。',
