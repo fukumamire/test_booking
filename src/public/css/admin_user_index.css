@@ -116,6 +116,7 @@ body {
 .pagination li a {
   text-decoration: none;
   color: #333;
+  font-size:clamp(0.563rem, 0.472rem + 0.45vw, 0.813rem);
   padding: 10px 15px;
   border-radius: 5px;
   background-color: #fff;
