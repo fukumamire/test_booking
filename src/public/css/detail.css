@@ -110,11 +110,10 @@
 }
 
 .reservation-form {
-  margin-top: 30px;
+  margin-top: 50px;
   padding-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  padding-bottom: 50px;
   background-color: rgb(63, 90, 242);
   color: white;
   border-radius: 5px;
