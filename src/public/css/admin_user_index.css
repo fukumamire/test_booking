@@ -22,7 +22,7 @@ body {
 
 .page-title {
   text-align: center;
-  font-size: 24px;
+  font-size: clamp(0.875rem, 0.648rem + 1.14vw, 1.5rem);
   font-weight: bold;
   color: #333;
   margin-bottom: 30px;
@@ -36,9 +36,10 @@ body {
 .btn-secondary {
   background-color: #6c757d;
   color: #fff;
+  font-size: clamp(0.625rem, 0.534rem + 0.45vw, 0.875rem);
   border: none;
   padding: 8px 16px;
-  font-size: 16px;
+  font-size: clamp(0.8rem, 0.727rem + 0.36vw, 1rem);
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease;
@@ -79,20 +80,23 @@ body {
 
 .header-no {
   width: 60px;
+  font-size:clamp(0.625rem, 0.443rem + 0.91vw, 1.125rem);
 }
 
 .header-name {
   width: 200px;
+  font-size:clamp(0.625rem, 0.443rem + 0.91vw, 1.125rem);
 }
 
 .header-email {
   width: 250px;
+  font-size:clamp(0.625rem, 0.443rem + 0.91vw, 1.125rem);
 }
 
 .header-roles {
   width: 150px;
+  font-size:clamp(0.625rem, 0.443rem + 0.91vw, 1.125rem);
 }
-
 .pagination-wrap {
   margin-top: 20px;
   text-align: center;
@@ -132,10 +136,6 @@ body {
 @media (max-width: 600px) {
   .header-name, .header-email, .header-roles {
     width: auto;
-  }
-
-  .user__table th, .user__table td {
-    font-size: 12px;
   }
 
   .pagination li a {
