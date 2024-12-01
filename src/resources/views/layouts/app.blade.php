@@ -13,11 +13,11 @@
 
 <body>
   <header class="header-left">
-    <div class="header-left-content">
+    {{-- <div class="header-left-content"> --}}
       <input type="checkbox" id="overlay-input" class="overlay-toggle" />
       <label for="overlay-input" id="overlay-button" class="overlay-button"><span></span></label>
       <div class="header__logo">Rese</div>
-    </div>
+    {{-- </div> --}}
     <div id="overlay" class="overlay-menu">
       <ul class="nav__list">
         @auth('admin')
