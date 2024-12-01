@@ -187,13 +187,6 @@ header .header__logo {
 }
 
 @media screen and (max-width: 768px) {
-  /* header.header-left {
-    flex-direction: row; */
-     /* 横並びにする */
-    /* justify-content: flex-start; */
-     /* 左右に配置 */
-  /* } */
-
   header.header-left {
     margin-top: 20px;
     flex-direction: row;
@@ -207,20 +200,11 @@ header .header__logo {
     justify-content:flex-starts;
   }
 
-  /* header #overlay-button.overlay-button {
-    margin: 0;
-    padding: 10px;
-    padding-right: 40px;
-    width: 40px; 
-    height: 40px; 
-  } */
 
   header #overlay-button.overlay-button {
     margin: 0;
     margin-left: 10px;
     margin-right:10x;
-    /* width: 40px;  */
-    /* ボタンの幅を小さく調整 */
     height: 20px; /* ボタンの高さを小さく調整 */
   }
 
@@ -235,7 +219,6 @@ header .header__logo {
     width: 25px;
   }
   header #overlay-button.overlay-button span:after {
-  /* top: 10px; */
   width: 20px; /* 下の線を一番短く設定 */
 }
 
@@ -252,7 +235,5 @@ header .header__logo {
     /* サイズを調整 */
     margin: 0;
     padding: 0;
-    /* margin-top: 20px; 
-    margin-left: 20px; */
   }
 }
