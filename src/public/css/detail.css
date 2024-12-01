@@ -33,7 +33,7 @@
 }
 
 .shop-name {
-  font-size: 2.4rem;
+  font-size: clamp(1rem, 0.533rem + 2.33vw, 2.4rem);
   font-weight: bold;
   padding: 0 10px;
 }
@@ -51,12 +51,12 @@
 }
 
 .shop-tags {
-  font-size: 1.4rem;
+  font-size:clamp(0.8rem, 0.6rem + 1vw, 1.4rem);
   margin-bottom: 10px;
 }
 
 .shop-description {
-  font-size: 1.4rem;
+  font-size: clamp(0.8rem, 0.6rem + 1vw, 1.4rem);
   margin-bottom: 20px;
 }
 
@@ -90,7 +90,7 @@
   color: white;
   text-decoration: none;
   border-radius: 5px;
-  font-size: 1.8rem;
+  font-size: clamp(0.8rem, 0.467rem + 1.67vw, 1.8rem);
   font-weight: bold;
   transition: background-color 0.3s ease;
   text-align: center;/* 文字を中央に配置 */
@@ -100,34 +100,21 @@
   background-color: #0056b3;
 }
 
-/* .review-write-link {
-  font-size: 1.8em;
-} */
-
 .review-write-link,
 .review-edit-link,
 .review-delete-link {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 0.927rem + 0.36vw, 1.2rem);
   padding: 5px 10px;
   text-align: center;
   border-radius: 5px;
 }
 
-/* .reservation-form {
-  background-color: rgb(63, 90, 242);
-  padding: 20px;
-  border-radius: 5px;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-} */
-
-
 .reservation-form {
   margin-top: 30px;
-  padding: 20px;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 50px;
   background-color: rgb(63, 90, 242);
   color: white;
   border-radius: 5px;
@@ -187,10 +174,10 @@
   background-color: rgb(28, 65, 251);
   border: none;
   border-radius: 0 0 5px 5px; /* 下の角を丸める */
-  font-size: 1.6rem;
+  font-size: clamp(0.8rem, 0.509rem + 1.45vw, 1.6rem);
   cursor: pointer;
   color: white;
-  margin-top: 50%;
+  margin-top: 80%;
 }
 
 /* ユーザー自身が口コミした内容 */
@@ -234,14 +221,6 @@
   line-height: 1em;
 }
 
-/* .rating__star {
-  position: relative;
-  z-index: 0;
-  display: inline-block;
-  white-space: nowrap;
-  color: rgb(225, 225, 225);
-  font-size: 2.8rem;
-} */
 
 .rating__star {
   display: inline-block;
