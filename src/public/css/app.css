@@ -44,6 +44,7 @@ header.header-left {
   }
 }
 
+/* ハンバーガーメニューの表示/非表示を制御 */
 header .overlay-toggle {
   display: none;
 }
@@ -119,7 +120,7 @@ header .overlay-toggle:checked ~ #overlay-button.overlay-button span:after {
   transform: rotate(-45deg) translate(7px, -7px);
 }
 
-header .overlay-menu {
+/* header .overlay-menu {
   height: 100vh;
   width: 100vw;
   background: #fff;
@@ -128,6 +129,19 @@ header .overlay-menu {
   position: fixed;
   top: 0;
   bottom: 0;
+} */
+
+header.overlay-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: none; /* 初期状態で非表示 */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 
 .overlay-toggle:checked + #overlay-button.overlay-button span,
