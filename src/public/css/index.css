@@ -5,7 +5,7 @@
   transform: translate(-50%, -50%); /* 要素の中心をビューポートの中央に配置 */
   padding: 1rem 2rem calc(1rem + 10px);
   background: #fff100;
-  font-size: 20px;
+  font-size: clamp(0.75rem, 0.568rem + 0.91vw, 1.25rem);
   z-index: 9997; /* 他の要素と重なるのを防ぐために高めにする */
   display: inline-block; /* インラインブロック要素として扱う */
 }
@@ -36,7 +36,7 @@
   border-radius: 5px;
   box-shadow: 2px 2px 5px gray;
   background-color: #fff;
-  font-size: 1.2rem;
+  font-size: clamp(0.75rem, 0.586rem + 0.82vw, 1.2rem);
   width: 65%;
 }
 
@@ -93,7 +93,7 @@
   background-color: #fff;
   color: black;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: clamp(0.75rem, 0.586rem + 0.82vw, 1.2rem);
 }
 
 .select-box__item:focus {
@@ -123,7 +123,7 @@
   flex-grow: 1; /* 入力フィールドが残りのスペースを占有するように */
   height: 45px;
   padding: 0 20px;
-  font-size: 20px;
+  font-size: clamp(0.75rem, 0.568rem + 0.91vw, 1.25rem);
   border: none;
   outline: none;
 }
@@ -178,7 +178,7 @@
 
 .shop__title {
   font-weight: bold;
-  font-size: 1.6rem;
+  font-size: clamp(1rem, 0.782rem + 1.09vw, 1.6rem);
   margin: 5px 0; /* 上下に5pxのマージンを追加 */
   padding-left: 20px;
 }
@@ -186,7 +186,7 @@
 
 .shop__tag {
   display: flex;
-  font-size: 1.2rem;
+  font-size: clamp(0.8rem, 0.655rem + 0.73vw, 1.2rem);
   margin-top: 5px;
   margin-bottom: 5px;
   padding-left: 20px;
@@ -217,7 +217,7 @@
   padding: 0 16px;
   height: 40px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size:clamp(0.7rem, 0.5rem + 0.67vw, 1rem);
 }
 
 
@@ -257,7 +257,7 @@
 }
 
 .pagination li {
-  font-size: 1.2em; /* サイズを大きくします */
+  font-size: clamp(0.7rem, 0.367rem + 1.11vw, 1.2rem); /* サイズを大きくします */
   padding: 0.5rem 1rem; /* 内側のパディングを増やす */
   border-radius: 5px; /* 角を丸くします */
   background-color: #f8f9fa; /* 基本的な背景色 */
@@ -270,109 +270,16 @@
 
 /* SPサイズ用のメディアクエリを追加 */
 @media screen and (max-width: 768px) {
+  /* ヘッダー検索フォーム */
   .header__right {
     width: 100%;
     margin-top: 20px;
     margin-left: 0;
   }
 
-  .header__search,
-  .header__sort {
+  .header__search, .header__sort {
     width: 100%;
     margin-bottom: 20px;
-  }
-
-  .header__sort {
-    width: 100%;
-    margin-right: 0;
-  }
-
-  .search__item {
-    width: 100%;
-  }
-
-  /* .shop__wrap {
-    flex-direction: column;
-  } */
-  .shop__wrap {
-    flex-direction: column;
-    padding: 0 20px;
-  }
-
-
-  .shop__content {
-    width: 100%;
-    height: auto;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-
-  .shop__image {
-    height: 250px; /* 固定の高さを設定 */
-    object-fit: cover;
-  }
-
-  /* .shop__item {
-    height: auto;
-  } */
-
-  .shop__item {
-    height: auto;
-    padding: 20px;
-  }
-
-  /* .shop__title {
-    font-size: 1.4rem;
-  } */
-  
-  .shop__title {
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-  }
-
-  .shop__tag {
-    font-size: 1rem;
-    margin-bottom: 15px;
-  }
-  
-  
-  .shop__button {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  
-  .shop__button-detail {
-    margin-left: 0;
-    margin-top: 10px;
-    width: 100%;
-    text-align: center;
-  }
-
-  .heart, .heart-active {
-    width: 60px;
-    height: 60px;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-
-  /* 検索バーのスタイル */
-  .header__search {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .header__search .select-box__label {
-    width: 100%;
-    margin-bottom: 10px;
   }
 
   .search__item {
@@ -383,18 +290,85 @@
   .search__item-input {
     width: 100%;
     height: 40px;
-    font-size: 16px;
   }
 
-  .search__item-button {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  /* コンテンツのパディングを調整 */
+  /* ショップリストのレスポンシブ */
   .shop__wrap {
-    padding-top: 60px; /* 検索バーの高さに合わせて調整 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    margin-top: 20px;
+  }
+
+  .shop__content {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .shop__image {
+    height: 250px;
+    object-fit: cover;
+  }
+
+  .shop__item {
+    padding: 15px;
+  }
+
+  .shop__title {
+    margin-bottom: 10px;
+  }
+
+  .shop__tag {
+    margin-bottom: 15px;
+  }
+
+  .shop__button {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .shop__button-detail {
+    margin-left: 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    width: 50%;
+    text-align: center;
+  }
+
+  .heart,
+  .heart-active {
+    /* width: 50px; */
+    height: 50px;
+    background: url(https://nelog.jp/wp-content/uploads/2016/03/heart_animation.png) no-repeat;
+    background-size: 2800px 70px; /* 背景画像全体のスケールを指定 */
+  }
+
+  .heart {
+    background-position: 0 0; /* 非アクティブ時の位置調整 */
+  }
+
+  .heart-active {
+    background-position: -1350px 0; 
+    /* アクティブ時の位置調整 */
+  }
+
+  .heart:hover,
+  .heart-active:hover {
+    -webkit-transition: background 1s steps(28);
+    transition: background 1s steps(28);
+  }
+
+  /* ページネーションのカスタマイズ */
+  .pagination {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .pagination li {
+    padding: 0.4rem 0.8rem;
   }
 }
