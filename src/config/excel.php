@@ -191,7 +191,8 @@ return [
     'gnumeric' => Excel::GNUMERIC,
     'htm'      => Excel::HTML,
     'html'     => Excel::HTML,
-    'csv'      => Excel::CSV,
+    'csv'      =>
+    \Maatwebsite\Excel\Excel::CSV,
     'tsv'      => Excel::TSV,
 
     /*
