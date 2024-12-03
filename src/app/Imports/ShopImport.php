@@ -51,7 +51,8 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return array_map(function ($value) {
       // UTF-8に変換
       $value = mb_convert_encoding($value, 'UTF-8', 'auto');
-
+      // 空白をトリム
+      $value = is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
       // 不正な文字を除去（空白を保持）
       $value = preg_replace('/[^\p{Han}\p{Hiragana}\p{Katakana}\d\s]+/u', '', $value);
 
