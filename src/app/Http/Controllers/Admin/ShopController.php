@@ -16,123 +16,16 @@ class ShopController extends Controller
     $this->middleware('auth:admin');
   }
 
-  // public function import(Request $request)
-  // {
-  //   try {
-  //     if (!$request->hasFile('file')) {
-  //       Log::warning('No file uploaded');
-  //       return back()->withError('Please select a file to upload');
-  //     }
-
-  //     $file = $request->file('file');
-  //     Log::info('File uploaded: ' . $file->getClientOriginalName());
-
-  //     // バリデーションをここで実行
-  //     $this->validateRequest($request);
-
-  //     $extension = $file->getClientOriginalExtension();
-
-  //     // CSVファイルの内容をログに出力
-  //     $content = file_get_contents($file->getRealPath());
-  //     Log::info('CSV file content:', [$content]);
-
-  //     switch ($extension) {
-  //       case 'xlsx':
-  //         $readerType = \Maatwebsite\Excel\Excel::XLSX;
-  //         break;
-  //       case 'xls':
-  //         $readerType = \Maatwebsite\Excel\Excel::XLS;
-  //         break;
-  //       case 'csv':
-  //         $readerType = \Maatwebsite\Excel\Excel::CSV;
-  //         break;
-  //       default:
-  //         throw new \InvalidArgumentException("Unsupported file type: {$extension}");
-  //     }
-
-  //     $import = new ShopImport();
-  //     Excel::import($import, $file, null, $readerType);
-
-  //     if (session()->has('import_errors')) {
-  //       return redirect()->back()->withErrors(session()->get('import_errors'));
-  //     }
-
-  //     Log::info('Shop imported successfully.');
-  //     return redirect()->back()->with('success', 'Shops imported successfully.');
-  //   } catch (ValidationException $e) {
-  //     Log::error('Validation error: ' . $e->getMessage());
-  //     return redirect()->back()->withErrors($e->validator);
-  //   } catch (\Exception $e) {
-  //     Log::error('Error importing shops: ' . $e->getMessage());
-  //     return back()->withError('An error occurred while importing shops. Please try again.');
-  //   }
-  // }
-
-
-  // public function import(Request $request)
-  // {
-  //   try {
-  //     if (!$request->hasFile('file')) {
-  //       Log::warning('No file uploaded');
-  //       return back()->withError('Please select a file to upload');
-  //     }
-
-  //     $file = $request->file('file');
-  //     Log::info('File uploaded: ' . $file->getClientOriginalName());
-
-  //     $this->validateRequest($request);
-
-  //     $extension = $file->getClientOriginalExtension();
-
-  //     $import = new ShopImport();
-  //     Excel::import(
-  //       $import,
-  //       $file,
-  //       null,
-  //       \Maatwebsite\Excel\Excel::CSV
-  //     );
-
-  //     if (session()->has('import_errors')) {
-  //       return redirect()->back()->withErrors(session()->get('import_errors'));
-  //     }
-
-  //     Log::info('Shop imported successfully.');
-  //     return redirect()->back()->with('success', 'Shops imported successfully.');
-  //   } catch (ValidationException $e) {
-  //     Log::error('Validation error: ' . $e->getMessage());
-  //     return redirect()->back()->withErrors($e->validator);
-  //   } catch (\Exception $e) {
-  //     Log::error('Error importing shops: ' . $e->getMessage());
-  //     return back()->withError('An error occurred while importing shops. Please try again.');
-  //   }
-  // }
-
   public function import(Request $request)
   {
     try {
-      if (!$request->hasFile('file')) {
-        Log::warning('No file uploaded');
-        return back()->withError('Please select a file to upload');
-      }
-
       $file = $request->file('file');
       Log::info('File uploaded: ' . $file->getClientOriginalName());
 
-      $this->validateRequest($request);
-
-      $extension = $file->getClientOriginalExtension();
-
       $import = new ShopImport();
-      Excel::import(
-        $import,
-        $file,
-        null,
-        \Maatwebsite\Excel\Excel::CSV
-      );
-
-      if (session()->has('import_errors')) {
-        return redirect()->back()->withErrors(session()->get('import_errors'));
-      }
+      Excel::import($import, $file, null, \Maatwebsite\Excel\Excel::CSV, function ($reader) {
+        $reader->noHeading();
+      });
 
       Log::info('Shop imported successfully.');
       return redirect()->back()->with('success', 'Shops imported successfully.');
@@ -151,7 +44,7 @@ class ShopController extends Controller
       'file' => 'required|mimes:csv,txt|max:51200',
     ], [
       'file.required' => 'ファイルを選択してください。',
-      'file.mimes' => '有効なファイルタイプは csv, txt  のみです。',
+      'file.mimes' => '有効なファイルタイプは csv, txt のみです。',
       'file.max' => 'ファイルサイズは最大 50MB までです。',
     ]);
 
@@ -159,7 +52,6 @@ class ShopController extends Controller
 
     return $validatedData;
   }
-
 
   public function importForm()
   {
