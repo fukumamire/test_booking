@@ -54,6 +54,12 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return array_map(function ($value) {
       // UTF-8に変換
       $value = mb_convert_encoding($value, 'UTF-8', 'auto');
+
+      // URLの場合はそのまま返す
+      if (preg_match('/^https?:\/\//', $value)) {
+        return $value;
+      }
+
       // 空白をトリム
       $value = is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
       // 不正な文字を除去（空白を保持）
@@ -69,13 +75,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     if ($row[0] === '店舗名') {
       return null;
     }
-    // 行の長さチェック（不完全な行でも処理を続行）
-
-
-    // if (count($row) < 6) {
-    //   // ヘッダー行や不完全な行をスキップ
-    //   return null;
-    // }
 
     $cleanedRow = $this->cleanData($row);
 
@@ -94,16 +93,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     // DEFINED_AREAS 配列を逆順にして短縮形から完全名へのマッピングを作成
     $reverseDefinedAreas = array_merge(self::DEFINED_AREAS, array_flip(self::DEFINED_AREAS));
 
-    // 入力されたエリア名を標準化
-    // $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? null;
-
-    // Log::debug("標準化されたエリア名: " . $standardizedAreaName);
-
-    // 標準化されたエリア名が有効か確認
-    // if (!in_array($standardizedAreaName, array_values(self::DEFINED_AREAS), true)) {
-    //   throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
-    // }
-
     // 標準化処理の簡略化　入力されたエリア名をそのまま DEFINED_AREAS にマッピングし、マッチしない場合はエラーをスロー
     $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
 
@@ -113,17 +102,14 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
     return DB::transaction(function () use ($cleanedRow, $standardizedAreaName) {
       try {
-        // ユーザーIDの整形
-        $userId = !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null;
-
-        // 既存の店舗を検索、なければ新規作成
+        // 既存の店舗を検索
         $existingShop = Shop::where('name', $cleanedRow[0])->first();
 
         if ($existingShop) {
           // 既存の店舗がある場合、更新
           $existingShop->update([
             'outline' => $cleanedRow[4],
-            'user_id' => $userId,
+            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null,
           ]);
           $shop = $existingShop;
         } else {
@@ -131,7 +117,9 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           $shop = Shop::create([
             'name' => $cleanedRow[0],
             'outline' => $cleanedRow[4],
-            'user_id' => $userId,
+            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null,
+            'created_at' => now(),
+            'updated_at' => now(),
           ]);
         }
 
