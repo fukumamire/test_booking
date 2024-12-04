@@ -103,25 +103,15 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return DB::transaction(function () use ($cleanedRow, $standardizedAreaName) {
       try {
         // 既存の店舗を検索
-        $existingShop = Shop::where('name', $cleanedRow[0])->first();
-
-        if ($existingShop) {
-          // 既存の店舗がある場合、更新
-          $existingShop->update([
-            'outline' => $cleanedRow[4],
-            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null,
-          ]);
-          $shop = $existingShop;
-        } else {
-          // 新しい店舗を作成
-          $shop = Shop::create([
-            'name' => $cleanedRow[0],
+        $shop = Shop::updateOrCreate(
+          ['name' => $cleanedRow[0]],
+          [
             'outline' => $cleanedRow[4],
             'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null,
             'created_at' => now(),
             'updated_at' => now(),
-          ]);
-        }
+          ]
+        );
 
         // エリア情報の関連付け
         $area = Area::where('name', $standardizedAreaName)->first();
@@ -176,6 +166,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         return $shop;
       } catch (\Exception $e) {
         Log::error("店舗のインポート中にエラーが発生しました: " . $e->getMessage());
+        Log::error("エラーが発生したデータ: " . json_encode($cleanedRow));
         throw $e; // エラーを再スローしてトランザクションをロールバック
       }
     });
