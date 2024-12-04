@@ -17,8 +17,11 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 {
   const DEFINED_AREAS = [
     '東京' => '東京都',
+    '東京都' => '東京都',
     '大阪' => '大阪府',
+    '大阪府' => '大阪府',
     '福岡' => '福岡県',
+    '福岡県' => '福岡県',
   ];
 
   const DEFINED_GENRES = [
@@ -62,10 +65,17 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function model(array $row): ?Shop
   {
-    if (count($row) < 6) {
-      // ヘッダー行や不完全な行をスキップ
+    // ヘッダー行をスキップ
+    if ($row[0] === '店舗名') {
       return null;
     }
+    // 行の長さチェック（不完全な行でも処理を続行）
+
+
+    // if (count($row) < 6) {
+    //   // ヘッダー行や不完全な行をスキップ
+    //   return null;
+    // }
 
     $cleanedRow = $this->cleanData($row);
 
@@ -81,15 +91,23 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     $areaName = trim($cleanedRow[2]);
     Log::debug("エリア名 (未処理): " . $areaName);
 
-    // DEFINED_AREAS 配列を逆順にして、短縮形から完全名へのマッピングを作成
-    $reverseDefinedAreas = array_flip(self::DEFINED_AREAS);
+    // DEFINED_AREAS 配列を逆順にして短縮形から完全名へのマッピングを作成
+    $reverseDefinedAreas = array_merge(self::DEFINED_AREAS, array_flip(self::DEFINED_AREAS));
 
-    // 入力されたエリア名が短縮形か完全名かのいずれかで標準化
-    $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? self::DEFINED_AREAS[$areaName] ?? null;
-    Log::debug("標準化されたエリア名: " . $standardizedAreaName);
+    // 入力されたエリア名を標準化
+    // $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? null;
+
+    // Log::debug("標準化されたエリア名: " . $standardizedAreaName);
 
     // 標準化されたエリア名が有効か確認
-    if (!$standardizedAreaName || !in_array($standardizedAreaName, ['東京都', '大阪府', '福岡県'])) {
+    // if (!in_array($standardizedAreaName, array_values(self::DEFINED_AREAS), true)) {
+    //   throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+    // }
+
+    // 標準化処理の簡略化　入力されたエリア名をそのまま DEFINED_AREAS にマッピングし、マッチしない場合はエラーをスロー
+    $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
+
+    if ($standardizedAreaName === null) {
       throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
     }
 
@@ -190,16 +208,4 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     Log::error('Error importing shops: ' . $e->getMessage());
     session()->push('import_errors', 'An error occurred while importing shops. Please try again.');
   }
-
-  // public function onFailure(\Throwable $e)
-  // {
-  //   $errorMessage = $e->getMessage();
-  //   $errorData = $e->getTrace()[0]['args'][0] ?? null; // エラーメッセージに含まれるデータを取得
-
-  //   if ($errorData) {
-  //     $errorMessage .= " (エラーが発生したデータ: " . json_encode($errorData) . ")";
-  //   }
-
-  //   session()->push('import_errors', $errorMessage);
-  // }
 }
