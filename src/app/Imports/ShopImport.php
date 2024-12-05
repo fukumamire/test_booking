@@ -87,7 +87,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     }
 
     // エリア情報のインポート
-    $areaName = trim($cleanedRow[2]);
+    $areaName = trim($row[2]);
     Log::debug("エリア名 (未処理): " . $areaName);
 
     // DEFINED_AREAS 配列を逆順にして短縮形から完全名へのマッピングを作成
@@ -97,7 +97,12 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
 
     if ($standardizedAreaName === null) {
-      throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      // エリア名が見つからない場合、逆マッピングを試みる
+      $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? null;
+
+      if ($standardizedAreaName === null) {
+        throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      }
     }
 
     return DB::transaction(function () use ($cleanedRow, $standardizedAreaName) {
@@ -118,6 +123,9 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
         if (!$area) {
           throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
+        Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
+
+
         DB::table('shop_areas')->updateOrInsert(
           ['shop_id' => $shop->id, 'area_id' => $area->id],
           ['updated_at' => now()]

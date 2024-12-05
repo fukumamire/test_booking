@@ -23,18 +23,13 @@ class ShopController extends Controller
       Log::info('File uploaded: ' . $file->getClientOriginalName());
 
       $import = new ShopImport();
-      Excel::import($import, $file, null, \Maatwebsite\Excel\Excel::CSV, function ($reader) {
-        $reader->noHeading();
-      });
+      Excel::import($import, $file->getRealPath(), null, \Maatwebsite\Excel\Excel::CSV);
 
       Log::info('Shop imported successfully.');
       return redirect()->back()->with('success', 'Shops imported successfully.');
-    } catch (ValidationException $e) {
-      Log::error('Validation error: ' . $e->getMessage());
-      return redirect()->back()->withErrors($e->validator);
     } catch (\Exception $e) {
       Log::error('Error importing shops: ' . $e->getMessage());
-      return back()->withError('An error occurred while importing shops. Please try again.');
+      return redirect()->back()->withErrors(['error' => 'An error occurred while importing shops. Please try again.']);
     }
   }
 
