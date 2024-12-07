@@ -71,6 +71,9 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function model(array $row): ?Shop
   {
+    // 既存の最大IDを取得
+    $maxId = Shop::max('id') ?? 0;
+
     // ヘッダー行をスキップ
     if ($row[0] === '店舗名') {
       return null;
@@ -105,16 +108,17 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       }
     }
 
-    return DB::transaction(function () use ($cleanedRow, $standardizedAreaName) {
+    return DB::transaction(function () use ($cleanedRow, $standardizedAreaName, $maxId) {
       try {
         // 既存の店舗を検索
         $shop = Shop::updateOrCreate(
           ['name' => $cleanedRow[0]],
           [
             'outline' => $cleanedRow[4],
-            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : null,
+            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1, // デフォルトユーザーIDを設定
             'created_at' => now(),
             'updated_at' => now(),
+            'id' => $maxId + 1, // 新しいIDを明示的に設定
           ]
         );
 
@@ -124,7 +128,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
         }
         Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
-
 
         DB::table('shop_areas')->updateOrInsert(
           ['shop_id' => $shop->id, 'area_id' => $area->id],
@@ -182,7 +185,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function batchSize(): int
   {
-    return 500; // 一度にインポートするバッチサイズ
+    return 10; // 一度にインポートするバッチサイズ 小さな値（例：10）に設定
   }
 
   public function chunkSize(): int
@@ -193,6 +196,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   public function onError(\Throwable $e)
   {
     Log::error('Error importing shops: ' . $e->getMessage());
-    session()->push('import_errors', 'An error occurred while importing shops. Please try again.');
+    session()->push('import_errors', 'インポート中にエラーが発生しました。データの中身を確認し再度、データを送信してください。');
   }
 }
