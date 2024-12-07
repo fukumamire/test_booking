@@ -34,21 +34,6 @@ class ShopController extends Controller
     }
   }
 
-  // public function validateRequest(Request $request)
-  // {
-  //   $validatedData = $request->validate([
-  //     'file' => 'required|mimes:csv,txt|max:51200',
-  //   ], [
-  //     'file.required' => 'ファイルを選択してください。',
-  //     'file.mimes' => '有効なファイルタイプは csv, txt のみです。',
-  //     'file.max' => 'ファイルサイズは最大 50MB までです。',
-  //   ]);
-
-  //   Log::info('Validated data:', $validatedData);
-
-  //   return $validatedData;
-  // }
-
   public function importForm()
   {
     return view('admin.shops.import');
