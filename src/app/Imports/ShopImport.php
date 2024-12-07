@@ -72,6 +72,13 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function model(array $row): ?Shop
   {
+    // ヘッダー行をスキップ
+    static $headerProcessed = false;
+    if (!$headerProcessed) {
+      $headerProcessed = true;
+      return null;
+    }
+
     $cleanedRow = $this->cleanData($row);
 
     // 既存の店舗を検索
@@ -144,19 +151,42 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     });
   }
 
+  // private function updateAreaInfo(Shop $shop, string $areaName)
+  // {
+  //   $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
+
+  //   if ($standardizedAreaName === null) {
+  //     throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+  //   }
+
+  //   Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
+
+  //   $area = Area::where('name', $standardizedAreaName)->first();
+  //   if (!$area) {
+  //     throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+  //   }
+
+  //   DB::table('shop_areas')->updateOrInsert(
+  //     ['shop_id' => $shop->id, 'area_id' => $area->id],
+  //     ['updated_at' => now()]
+  //   );
+  // }
+
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
     $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
 
     if ($standardizedAreaName === null) {
-      throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      Log::warning("無効な地域名が指定されました: '$areaName'. 許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      return; // 無効な地域名の場合は処理をスキップ
     }
 
     Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
 
     $area = Area::where('name', $standardizedAreaName)->first();
     if (!$area) {
-      throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      Log::warning("地域が見つかりません: '$standardizedAreaName'");
+      return; // 存在しない地域の場合は処理をスキップ
     }
 
     DB::table('shop_areas')->updateOrInsert(
@@ -164,6 +194,38 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
       ['updated_at' => now()]
     );
   }
+
+  // private function updateGenres(Shop $shop, string $genresString)
+  // {
+  //   $genres = explode(',', $genresString);
+
+  //   foreach ($genres as $genreName) {
+  //     $standardizedGenreName = trim($genreName);
+
+  //     // ジャンのバリデーション
+  //     if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
+  //       throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
+  //     }
+
+  //     // ジャンルが存在するか確認
+  //     $genre = Genre::where('name', $standardizedGenreName)->first();
+
+  //     if (!$genre) {
+  //       // ジャンルが存在しない場合は新規作成
+  //       $genre = Genre::create([
+  //         'name' => $standardizedGenreName,
+  //         'created_at' => now(),
+  //         'updated_at' => now(),
+  //       ]);
+  //     }
+
+  //     // genres テーブルに関連付けを更新
+  //     DB::table('genres')->updateOrInsert(
+  //       ['id' => $genre->id],
+  //       ['shop_id' => $shop->id, 'updated_at' => now()]
+  //     );
+  //   }
+  // }
 
   private function updateGenres(Shop $shop, string $genresString)
   {
@@ -174,7 +236,8 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
       // ジャンのバリデーション
       if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
-        throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
+        Log::warning("無効なジャンル名が指定されました: '$genreName'. 許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
+        continue; // 無効なジャンルの場合は次のアイテムに進む
       }
 
       // ジャンルが存在するか確認
@@ -219,9 +282,18 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     return 500; // チャンクサイズ
   }
 
+  // public function onError(\Throwable $e)
+  // {
+  //   Log::error('Error importing shops: ' . $e->getMessage());
+  //   session()->push('import_errors', 'インポート中にエラーが発生しました。データの中身を確認し再度、データを送信してください。');
+  // }
+
   public function onError(\Throwable $e)
   {
-    Log::error('Error importing shops: ' . $e->getMessage());
+    Log::error('Error importing shops: ' . $e->getMessage(), [
+      'exception' => $e,
+      'trace' => $e->getTraceAsString()
+    ]);
     session()->push('import_errors', 'インポート中にエラーが発生しました。データの中身を確認し再度、データを送信してください。');
   }
 }
