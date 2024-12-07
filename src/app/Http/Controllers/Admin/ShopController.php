@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
+
 class ShopController extends Controller
 {
   public function __construct()
@@ -33,20 +34,20 @@ class ShopController extends Controller
     }
   }
 
-  public function validateRequest(Request $request)
-  {
-    $validatedData = $request->validate([
-      'file' => 'required|mimes:csv,txt|max:51200',
-    ], [
-      'file.required' => 'ファイルを選択してください。',
-      'file.mimes' => '有効なファイルタイプは csv, txt のみです。',
-      'file.max' => 'ファイルサイズは最大 50MB までです。',
-    ]);
+  // public function validateRequest(Request $request)
+  // {
+  //   $validatedData = $request->validate([
+  //     'file' => 'required|mimes:csv,txt|max:51200',
+  //   ], [
+  //     'file.required' => 'ファイルを選択してください。',
+  //     'file.mimes' => '有効なファイルタイプは csv, txt のみです。',
+  //     'file.max' => 'ファイルサイズは最大 50MB までです。',
+  //   ]);
 
-    Log::info('Validated data:', $validatedData);
+  //   Log::info('Validated data:', $validatedData);
 
-    return $validatedData;
-  }
+  //   return $validatedData;
+  // }
 
   public function importForm()
   {
