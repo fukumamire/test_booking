@@ -6,7 +6,8 @@
 @section('content')
 <div class="container">
   <h1>Shop Import</h1>
-
+  
+  {{-- バリデーションエラー専用 --}}
   @if ($errors->any())
   <div class="alert alert-danger">
     <ul>
@@ -16,6 +17,13 @@
     </ul>
   </div>
   @endif
+
+  @if(session()->has('import_error'))
+    <div class="alert alert-danger">
+      {{ session()->get('import_error') }}
+    </div>
+  @endif
+
 
   <div class="alert alert-info">
     <h3>注意事項</h3>

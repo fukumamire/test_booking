@@ -29,8 +29,8 @@ class ShopController extends Controller
       Log::info('Shop imported successfully.');
       return redirect()->back()->with('success', 'Shops imported successfully.');
     } catch (\Exception $e) {
-      Log::error('Error importing shops: ' . $e->getMessage());
-      return redirect()->back()->withErrors(['error' => 'An error occurred while importing shops. Please try again.']);
+      Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
+      return redirect()->back()->withErrors(['インポート中にエラーが発生しました。']);
     }
   }
 
