@@ -35,7 +35,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
   protected $columnMappings = [
     'Shop' => [
       'name' => '店舗名',
-      'user_id' => 'ユーザーＩＤ',
+      'user_id' => 'ユーザーID',
       'outline' => '店舗概要',
     ],
     'Area' => [
@@ -49,7 +49,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     ],
   ];
 
-  private function cleanData($data)
+  private function cleanData(array $data)
   {
     return array_map(function ($value) {
       // UTF-8に変換
@@ -62,6 +62,7 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
       // 空白をトリム
       $value = is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
+
       // 不正な文字を除去（空白を保持）
       $value = preg_replace('/[^\p{Han}\p{Hiragana}\p{Katakana}\d\s]+/u', '', $value);
 
@@ -71,116 +72,141 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   public function model(array $row): ?Shop
   {
-    // 既存の最大IDを取得
-    $maxId = Shop::max('id') ?? 0;
-
-    // ヘッダー行をスキップ
-    if ($row[0] === '店舗名') {
-      return null;
-    }
-
     $cleanedRow = $this->cleanData($row);
 
-    Log::info('Received row data:', $row);
-    Log::info('Cleaned row data:', $cleanedRow);
+    // 既存の店舗を検索
+    $existingShop = Shop::where('name', $cleanedRow[0])->first();
 
-    if (empty(trim($cleanedRow[0]))) {
-      Log::warning("店舗名が空です。データ: " . json_encode($cleanedRow));
-      return null;
+    if ($existingShop) {
+      // 既存の店舗がある場合は更新
+      return $this->updateExistingShop($existingShop, $cleanedRow);
     }
 
-    // エリア情報のインポート
-    $areaName = trim($row[2]);
-    Log::debug("エリア名 (未処理): " . $areaName);
+    // 新しい店舗として保存
+    return $this->createNewShop($cleanedRow);
+  }
 
-    // DEFINED_AREAS 配列を逆順にして短縮形から完全名へのマッピングを作成
-    $reverseDefinedAreas = array_merge(self::DEFINED_AREAS, array_flip(self::DEFINED_AREAS));
-
-    // 標準化処理の簡略化　入力されたエリア名をそのまま DEFINED_AREAS にマッピングし、マッチしない場合はエラーをスロー
-    $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
-
-    if ($standardizedAreaName === null) {
-      // エリア名が見つからない場合、逆マッピングを試みる
-      $standardizedAreaName = $reverseDefinedAreas[$areaName] ?? null;
-
-      if ($standardizedAreaName === null) {
-        throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
-      }
-    }
-
-    return DB::transaction(function () use ($cleanedRow, $standardizedAreaName, $maxId) {
+  private function updateExistingShop(Shop $shop, array $cleanedRow)
+  {
+    return DB::transaction(function () use ($shop, $cleanedRow) {
       try {
-        // 既存の店舗を検索
-        $shop = Shop::updateOrCreate(
-          ['name' => $cleanedRow[0]],
-          [
-            'outline' => $cleanedRow[4],
-            'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1, // デフォルトユーザーIDを設定
-            'created_at' => now(),
-            'updated_at' => now(),
-            'id' => $maxId + 1, // 新しいIDを明示的に設定
-          ]
-        );
+        $shop->update([
+          'outline' => $cleanedRow[4],
+          'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
+          'updated_at' => now(),
+        ]);
 
-        // エリア情報の関連付け
-        $area = Area::where('name', $standardizedAreaName)->first();
-        if (!$area) {
-          throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
-        }
-        Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
+        // エリア情報の更新
+        $this->updateAreaInfo($shop, $cleanedRow[2]);
 
-        DB::table('shop_areas')->updateOrInsert(
-          ['shop_id' => $shop->id, 'area_id' => $area->id],
-          ['updated_at' => now()]
-        );
+        // ジャンル情報の更新
+        $this->updateGenres($shop, $cleanedRow[3]);
 
-        // ジャンル情報のインポート
-        $genres = explode(',', $cleanedRow[3]);
-
-        foreach ($genres as $genreName) {
-          $standardizedGenreName = trim($genreName);
-
-          // ジャンのバリデーション
-          if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
-            throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
-          }
-
-          // ジャンルが存在するか確認
-          $genre = Genre::where('name', $standardizedGenreName)->first();
-
-          if (!$genre) {
-            // ジャンルが存在しない場合は新規作成
-            $genre = Genre::create([
-              'name' => $standardizedGenreName,
-              'created_at' => now(),
-              'updated_at' => now(),
-            ]);
-          }
-
-          // genres テーブルに関連付けを追加
-          DB::table('genres')->updateOrInsert(
-            ['id' => $genre->id],
-            ['shop_id' => $shop->id, 'updated_at' => now()]
-          );
-        }
-
-        // 画像情報のインポート
-        if (!empty($cleanedRow[5])) {
-          ShopImage::create([
-            'shop_id' => $shop->id,
-            'shop_image_url' => $cleanedRow[5],
-            'created_at' => now(),
-            'updated_at' => now(),
-          ]);
-        }
+        // 画像情報の更新
+        $this->updateShopImage($shop, $cleanedRow[5]);
 
         return $shop;
       } catch (\Exception $e) {
-        Log::error("店舗のインポート中にエラーが発生しました: " . $e->getMessage());
+        Log::error("既存の店舗の更新中にエラーが発生しました: " . $e->getMessage());
         Log::error("エラーが発生したデータ: " . json_encode($cleanedRow));
         throw $e; // エラーを再スローしてトランザクションをロールバック
       }
     });
+  }
+
+  private function createNewShop(array $cleanedRow)
+  {
+    return DB::transaction(function () use ($cleanedRow) {
+      try {
+        $shop = Shop::create([
+          'name' => $cleanedRow[0],
+          'outline' => $cleanedRow[4],
+          'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
+          'created_at' => now(),
+          'updated_at' => now(),
+        ]);
+
+        // エリア情報の登録
+        $this->updateAreaInfo($shop, $cleanedRow[2]);
+
+        // ジャンル情報の登録
+        $this->updateGenres($shop, $cleanedRow[3]);
+
+        // 画像情報の登録
+        $this->updateShopImage($shop, $cleanedRow[5]);
+
+        return $shop;
+      } catch (\Exception $e) {
+        Log::error("新しい店舗の作成中にエラーが発生しました: " . $e->getMessage());
+        Log::error("エラーが発生したデータ: " . json_encode($cleanedRow));
+        throw $e; // エラーを再スローしてトランザクションをロールバック
+      }
+    });
+  }
+
+  private function updateAreaInfo(Shop $shop, string $areaName)
+  {
+    $standardizedAreaName = self::DEFINED_AREAS[$areaName] ?? null;
+
+    if ($standardizedAreaName === null) {
+      throw new \Exception("地域が不正です。入力された値: '$areaName'。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+    }
+
+    Log::debug("エリア名 (標準化後): " . $standardizedAreaName);
+
+    $area = Area::where('name', $standardizedAreaName)->first();
+    if (!$area) {
+      throw new \Exception("地域が見つかりません。許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+    }
+
+    DB::table('shop_areas')->updateOrInsert(
+      ['shop_id' => $shop->id, 'area_id' => $area->id],
+      ['updated_at' => now()]
+    );
+  }
+
+  private function updateGenres(Shop $shop, string $genresString)
+  {
+    $genres = explode(',', $genresString);
+
+    foreach ($genres as $genreName) {
+      $standardizedGenreName = trim($genreName);
+
+      // ジャンのバリデーション
+      if (!array_key_exists($standardizedGenreName, self::DEFINED_GENRES)) {
+        throw new \Exception("ジャンルが不正です。許可された値は「寿司」「焼肉」「イタリアン」「居酒屋」「ラーメン」のみです。");
+      }
+
+      // ジャンルが存在するか確認
+      $genre = Genre::where('name', $standardizedGenreName)->first();
+
+      if (!$genre) {
+        // ジャンルが存在しない場合は新規作成
+        $genre = Genre::create([
+          'name' => $standardizedGenreName,
+          'created_at' => now(),
+          'updated_at' => now(),
+        ]);
+      }
+
+      // genres テーブルに関連付けを更新
+      DB::table('genres')->updateOrInsert(
+        ['id' => $genre->id],
+        ['shop_id' => $shop->id, 'updated_at' => now()]
+      );
+    }
+  }
+
+  private function updateShopImage(Shop $shop, string $imageUrl)
+  {
+    if (!empty($imageUrl)) {
+      ShopImage::updateOrCreate([
+        'shop_id' => $shop->id,
+      ], [
+        'shop_image_url' => $imageUrl,
+        'updated_at' => now(),
+      ]);
+    }
   }
 
   public function batchSize(): int
