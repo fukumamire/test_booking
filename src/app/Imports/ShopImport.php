@@ -51,7 +51,12 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
 
   private function cleanData(array $data)
   {
-    return array_map(function ($value) {
+    return array_map(function ($key, $value) {
+      // id フィールドはそのまま返す
+      if ($key === 'id') {
+        return $value;
+      }
+
       // UTF-8に変換
       $value = mb_convert_encoding($value, 'UTF-8', 'auto');
 
@@ -76,6 +81,12 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     static $headerProcessed = false;
     if (!$headerProcessed) {
       $headerProcessed = true;
+      return null;
+    }
+
+    // 既存のIDがある場合はスキップ
+    if (isset($row['id']) && Shop::where('id', $row['id'])->exists()) {
+      Log::info("ID重複: {$row['id']} をスキップしました。");
       return null;
     }
 
@@ -121,6 +132,36 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
     });
   }
 
+  // private function createNewShop(array $cleanedRow)
+  // {
+  //   return DB::transaction(function () use ($cleanedRow) {
+  //     try {
+  //       $shop = Shop::create([
+  //         'name' => $cleanedRow[0],
+  //         'outline' => $cleanedRow[4],
+  //         'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
+  //         'created_at' => now(),
+  //         'updated_at' => now(),
+  //       ]);
+
+  //       // エリア情報の登録
+  //       $this->updateAreaInfo($shop, $cleanedRow[2]);
+
+  //       // ジャンル情報の登録
+  //       $this->updateGenres($shop, $cleanedRow[3]);
+
+  //       // 画像情報の登録
+  //       $this->updateShopImage($shop, $cleanedRow[5]);
+
+  //       return $shop;
+  //     } catch (\Exception $e) {
+  //       Log::error("新しい店舗の作成中にエラーが発生しました: " . $e->getMessage());
+  //       Log::error("エラーが発生したデータ: " . json_encode($cleanedRow));
+  //       throw $e; // エラーを再スローしてトランザクションをロールバック
+  //     }
+  //   });
+  // }
+
   private function createNewShop(array $cleanedRow)
   {
     return DB::transaction(function () use ($cleanedRow) {
@@ -129,8 +170,6 @@ class ShopImport implements ToModel, WithBatchInserts, WithChunkReading
           'name' => $cleanedRow[0],
           'outline' => $cleanedRow[4],
           'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
-          'created_at' => now(),
-          'updated_at' => now(),
         ]);
 
         // エリア情報の登録
