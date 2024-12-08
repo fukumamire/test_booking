@@ -61,11 +61,13 @@ class AdminShopImportRequest extends FormRequest
     }, $header);
 
 
+    $header = array_map(function ($value) {
+      return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換  ヘッダーを正規化
+    }, $header);
 
     // 必須のヘッダーを定義
     // $requiredHeaders = ['店舗名', ['ユーザーID', 'ユーザーＩＤ'], '地域', 'ジャンル', '店舗概要', ['画像URL', '画像ＵＲＬ']];
     $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
-
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
