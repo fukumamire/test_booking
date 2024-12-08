@@ -52,13 +52,26 @@ class AdminShopImportRequest extends FormRequest
     $rows = array_map('str_getcsv', file($file->getRealPath()));
     $header = array_map('trim', $rows[0] ?? []);
 
+
+    // ヘッダーの標準化
+    $header = array_map(function ($value) {
+      $value = str_replace('ID', 'ユーザーID', $value);
+      $value = str_replace('URL', 'URL', $value);
+      return $value;
+    }, $header);
+
+
+
     // 必須のヘッダーを定義
+    // $requiredHeaders = ['店舗名', ['ユーザーID', 'ユーザーＩＤ'], '地域', 'ジャンル', '店舗概要', ['画像URL', '画像ＵＲＬ']];
     $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
+
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
       abort(422, 'CSVファイルのヘッダーが不正です: ' . implode(', ', $requiredHeaders));
     }
+
 
     // データ行を検証
     $dataRows = array_slice($rows, 1);
@@ -67,6 +80,7 @@ class AdminShopImportRequest extends FormRequest
       $this->validateRow($data, $index + 2); // データ行番号 +1 (ヘッダー分)
     }
   }
+
   /**
    * 各行をバリデーション.
    *
