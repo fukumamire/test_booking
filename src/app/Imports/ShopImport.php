@@ -84,19 +84,19 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     Log::info("CSV データ: " . json_encode($row));
     Log::info("クリーンドデータ: " . json_encode($cleanedRow));
 
-    if (empty($cleanedRow['name'])) {
+    if (empty($cleanedRow['店舗名'])) {
       Log::warning("店舗名が設定されていません。行: " . $this->line . ". データ: " . json_encode($cleanedRow));
       return null; // 空の行をスキップ
     }
 
     return [
-      'name' => $cleanedRow['name'],
-      'outline' => $cleanedRow['outline'] ?? '',
-      'user_id' => !empty(trim($cleanedRow['user_id'])) ? filter_var($cleanedRow['user_id'], FILTER_VALIDATE_INT) : 1,
+      'name' => $cleanedRow['店舗名'],
+      'outline' => $cleanedRow['店舗概要'] ?? '',
+      'user_id' => !empty(trim($cleanedRow['ユーザーID'])) ? filter_var($cleanedRow['ユーザーID'], FILTER_VALIDATE_INT) : 1,
       'updated_at' => now(),
-      'area_name' => $cleanedRow['area_name'] ?? '',
-      'genres' => !empty($cleanedRow['genres']) ? explode(',', $cleanedRow['genres']) : [], // カンマ区切りを配列に変換
-      'image_url' => $cleanedRow['image_url'] ?? '',
+      'area_name' => $cleanedRow['地域'] ?? '',
+      'genres' => !empty($cleanedRow['ジャンル']) ? explode(',', $cleanedRow['ジャンル']) : [], // カンマ区切りを配列に変換
+      'image_url' => $cleanedRow['画像URL'] ?? '',
     ];
   }
 

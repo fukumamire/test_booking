@@ -46,14 +46,14 @@ class AdminShopImportRequest extends FormRequest
    *
    * @return void
    */
-  protected function passedValidation()
+  public function passedValidation()
   {
     $file = $this->file('file');
     $rows = array_map('str_getcsv', file($file->getRealPath()));
     $header = array_map('trim', $rows[0] ?? []);
 
     // 必須のヘッダーを定義
-    $requiredHeaders = ['name', 'user_id', 'area_name', 'genres', 'image_url'];
+    $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
@@ -67,7 +67,6 @@ class AdminShopImportRequest extends FormRequest
       $this->validateRow($data, $index + 2); // データ行番号 +1 (ヘッダー分)
     }
   }
-
   /**
    * 各行をバリデーション.
    *
@@ -78,13 +77,13 @@ class AdminShopImportRequest extends FormRequest
   private function validateRow(array $data, int $lineNumber)
   {
     $validator =
-    Validator::make($data, [
-      'name' => 'required|string|max:50',
-      'user_id' => 'required|integer|exists:users,id',
-      'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
-      'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
-      'image_url' => 'required|url|regex:/\.(jpeg|png)$/i',
-    ]);
+      Validator::make($data, [
+        'name' => 'required|string|max:50',
+        'user_id' => 'required|integer|exists:users,id',
+        'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
+        'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+        'image_url' => 'required|url|regex:/\.(jpeg|png)$/i',
+      ]);
 
     if ($validator->fails()) {
       abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode(', ', $validator->errors()->all()));
