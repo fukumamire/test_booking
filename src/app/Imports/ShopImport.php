@@ -9,6 +9,8 @@ use Maatwebsite\Excel\Concerns\WithBatchInserts;
 
 class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
 {
+  private $line = 0;
+
   const DEFINED_AREAS = [
     '東京' => '東京都',
     '東京都' => '東京都',
@@ -71,16 +73,23 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
 
   public function array(array $row)
   {
+    $this->line++;
     $cleanedRow = $this->cleanData($row);
 
+    Log::info("CSV データ: " . json_encode($cleanedRow));
+
+    if (empty($cleanedRow[0])) {
+      Log::warning("店舗名が設定されていません。行: " . $this->line);
+      return null; // 空の行をスキップ
+    }
+
     return [
-      // 'id' => $row['id'] ?? null,
       'name' => $cleanedRow[0],
       'outline' => $cleanedRow[4],
       'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
       'updated_at' => now(),
       'area_name' => $cleanedRow[2],
-      'genres' => [$cleanedRow[3]], // ジャンルは配列として扱う
+      'genres' => [$cleanedRow[3]], // ジャンルは配列として扱います
       'image_url' => $cleanedRow[5],
     ];
   }

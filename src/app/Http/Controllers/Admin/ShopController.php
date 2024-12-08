@@ -61,17 +61,30 @@ class ShopController extends Controller
   private function processImportResults($results)
   {
     foreach ($results as $result) {
+      if (empty($result)) {
+        Log::warning("空の行が検出されました。");
+        continue; // 空の行をスキップ
+      }
+
+      Log::info("処理中のデータ: " . json_encode($result));
+
       DB::transaction(function () use ($result) {
         // 店舗のupsert
         $shop = Shop::updateOrCreate(
           ['id' => $result['id'] ?? null],
           [
-            'name' => $result['name'] ?? '',
+            'name' => $result['name'] ?? '未設定',
             'outline' => $result['outline'] ?? '',
             'user_id' => $result['user_id'] ?? 1,
             'updated_at' => $result['updated_at'] ?? now()
           ]
         );
+
+        Log::info("作成/更新された店舗: " . json_encode($shop->toArray()));
+
+        if (empty($shop->name)) {
+          Log::warning("店舗名が設定されていません。ID: " . ($shop->id ?? 'なし'));
+        }
 
         // エリア情報の登録
         $this->updateAreaInfo($shop, $result['area_name'] ?? '');
