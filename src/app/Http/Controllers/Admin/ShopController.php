@@ -7,30 +7,133 @@ use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
-
+use App\Models\Shop;
+use App\Models\Area;
+use App\Models\Genre;
+use App\Models\ShopImage;
+use App\Http\Requests\AdminShopImportRequest;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
+  public static $DEFINED_AREAS = [
+    '東京' => '東京都',
+    '東京都' => '東京都',
+    '大阪' => '大阪府',
+    '大阪府' => '大阪府',
+    '福岡' => '福岡県',
+    '福岡県' => '福岡県',
+  ];
+
+  public static $DEFINED_GENRES = [
+    '寿司' => '寿司',
+    '焼肉' => '焼肉',
+    'イタリアン' => 'イタリアン',
+    '居酒屋' => '居酒屋',
+    'ラーメン' => 'ラーメン',
+  ];
+
   public function __construct()
   {
     $this->middleware('auth:admin');
   }
 
-  public function import(Request $request)
+
+  public function import(AdminShopImportRequest $request)
   {
     try {
       $file = $request->file('file');
       Log::info('File uploaded: ' . $file->getClientOriginalName());
 
       $import = new ShopImport();
-      Excel::import($import, $file->getRealPath(), null, \Maatwebsite\Excel\Excel::CSV);
+      $results = Excel::toArray($import, $file->getRealPath(), null, \Maatwebsite\Excel\Excel::CSV);
+
+      $this->processImportResults($results);
 
       Log::info('Shop imported successfully.');
       return redirect()->back()->with('success', 'Shops imported successfully.');
     } catch (\Exception $e) {
       Log::error($e->getMessage(), ['trace' => $e->getTraceAsString()]);
       return redirect()->back()->withErrors(['インポート中にエラーが発生しました。']);
+    }
+  }
+
+  private function processImportResults($results)
+  {
+    foreach ($results as $result) {
+      DB::transaction(function () use ($result) {
+        // 店舗のupsert
+        $shop = Shop::upsert(
+          $result,
+          ['id'],
+          ['name', 'outline', 'user_id', 'updated_at']
+        );
+
+        // エリア情報の登録
+        $this->updateAreaInfo($shop, $result['area_name']);
+
+        // ジャンル情報の登録
+        $this->updateGenres($shop, $result['genres']);
+
+        // 画像情報の登録
+        $this->updateShopImage($shop, $result['image_url']);
+      });
+    }
+  }
+
+  private function updateAreaInfo(Shop $shop, string $areaName)
+  {
+    $definedAreas = static::$DEFINED_AREAS;
+
+    if (!isset($definedAreas[$areaName])) {
+      Log::warning("無効な地域名が指定されました: '$areaName'. 許可された値は「東京」「大阪」「福岡」または「東京都」「大阪府」「福岡県」のみです。");
+      return; // 無効な地域名の場合は処理をスキップ
+    }
+
+    Log::debug("エリア名 (標準化後): " . $definedAreas[$areaName]);
+
+    $area = Area::where('name', $definedAreas[$areaName])->first();
+    if (!$area) {
+      Log::warning("地域が見つかりません: '" . $definedAreas[$areaName] . "'");
+      return; // 存在しない地域の場合は処理をスキップ
+    }
+
+    DB::table('shop_areas')->updateOrInsert(
+      ['shop_id' => $shop->id, 'area_id' => $area->id],
+      ['updated_at' => now()]
+    );
+  }
+
+  private function updateGenres($shop, array $genres)
+  {
+    foreach ($genres as $genreName) {
+      $standardizedGenreName = trim($genreName);
+
+      // 既存のジャンルを取得
+      $genre = Genre::where('name', $standardizedGenreName)->first();
+
+      if (!$genre) {
+        Log::warning("未登録のジャンル名が指定されました: '$genreName'");
+        continue; // 未登録のジャンルの場合は次のアイテムに進む
+      }
+
+      // genres テーブルに関連付けを更新
+      DB::table('genres')->updateOrInsert(
+        ['id' => $genre->id],
+        ['shop_id' => $shop->id, 'updated_at' => now()]
+      );
+    }
+  }
+
+  private function updateShopImage(Shop $shop, string $imageUrl)
+  {
+    if (!empty($imageUrl)) {
+      ShopImage::updateOrCreate([
+        'shop_id' => $shop->id,
+      ], [
+        'shop_image_url' => $imageUrl,
+        'updated_at' => now(),
+      ]);
     }
   }
 

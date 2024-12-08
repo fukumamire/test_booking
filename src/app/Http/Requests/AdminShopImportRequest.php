@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AdminShopImportRequest extends FormRequest
 {
@@ -16,7 +16,7 @@ class AdminShopImportRequest extends FormRequest
   public function authorize()
   {
     // ユーザーが認証済みかつ管理者権限を持っているかチェック
-    return auth()->check() && $this->hasRole([ 'super-admin']);
+    return Auth::check() && $this->user()->isAdmin();
   }
 
   /**
