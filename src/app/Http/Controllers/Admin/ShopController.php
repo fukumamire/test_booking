@@ -68,33 +68,34 @@ class ShopController extends Controller
 
       Log::info("処理中のデータ: " . json_encode($result));
 
-      DB::transaction(function () use ($result) {
-        // 店舗のupsert
-        $shop = Shop::updateOrCreate(
-          ['id' => $result['id'] ?? null],
-          [
-            'name' => $result['name'] ?? '未設定',
-            'outline' => $result['outline'] ?? '',
-            'user_id' => $result['user_id'] ?? 1,
-            'updated_at' => $result['updated_at'] ?? now()
-          ]
-        );
+      try {
+        DB::transaction(function () use ($result) {
+          // 店舗のupsert
+          $shop = Shop::updateOrCreate(
+            ['id' => $result['id'] ?? null],
+            [
+              'name' => $result['name'] ?? '未設定',
+              'outline' => $result['outline'] ?? '',
+              'user_id' => $result['user_id'] ?? 1,
+              'updated_at' => $result['updated_at'] ?? now()
+            ]
+          );
 
-        Log::info("作成/更新された店舗: " . json_encode($shop->toArray()));
+          Log::info("作成/更新された店舗: " . json_encode($shop->toArray()));
 
-        if (empty($shop->name)) {
-          Log::warning("店舗名が設定されていません。ID: " . ($shop->id ?? 'なし'));
-        }
+          if (empty($shop->name)) {
+            Log::warning("店舗名が設定されていません。ID: " . ($shop->id ?? 'なし'));
+          }
 
-        // エリア情報の登録
-        $this->updateAreaInfo($shop, $result['area_name'] ?? '');
-
-        // ジャンル情報の登録
-        $this->updateGenres($shop, $result['genres'] ?? []);
-
-        // 画像情報の登録
-        $this->updateShopImage($shop, $result['image_url'] ?? '');
-      });
+          // 各情報を処理
+          $this->updateAreaInfo($shop, $result['area_name'] ?? '');
+          $this->updateGenres($shop, $result['genres'] ?? []);
+          $this->updateShopImage($shop, $result['image_url'] ?? '');
+        });
+      } catch (\Exception $e) {
+        Log::error("インポート処理中にエラーが発生しました: " . $e->getMessage());
+        continue; // エラーが発生しても次の行を処理
+      }
     }
   }
 
@@ -143,17 +144,17 @@ class ShopController extends Controller
     }
   }
 
+
   private function updateShopImage(Shop $shop, string $imageUrl)
   {
     if (!empty($imageUrl)) {
-      ShopImage::updateOrCreate([
-        'shop_id' => $shop->id,
-      ], [
+      $shop->shopImages()->updateOrCreate([], [
         'shop_image_url' => $imageUrl,
         'updated_at' => now(),
       ]);
     }
   }
+
 
   public function importForm()
   {

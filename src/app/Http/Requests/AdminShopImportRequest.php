@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class AdminShopImportRequest extends FormRequest
 {
@@ -27,9 +28,10 @@ class AdminShopImportRequest extends FormRequest
   public function rules()
   {
     return [
-      'file' => 'required|mimes:csv,txt|max:51200',
+      'file' => 'required|mimes:csv,txt|max:51200', // ファイルタイプとサイズ
     ];
   }
+
   public function messages()
   {
     return [
@@ -37,5 +39,55 @@ class AdminShopImportRequest extends FormRequest
       'file.mimes' => '有効なファイルタイプは csv, txt のみです。',
       'file.max' => 'ファイルサイズは最大 50MB までです。',
     ];
+  }
+
+  /**
+   * バリデーション後のカスタム検証.
+   *
+   * @return void
+   */
+  protected function passedValidation()
+  {
+    $file = $this->file('file');
+    $rows = array_map('str_getcsv', file($file->getRealPath()));
+    $header = array_map('trim', $rows[0] ?? []);
+
+    // 必須のヘッダーを定義
+    $requiredHeaders = ['name', 'user_id', 'area_name', 'genres', 'image_url'];
+
+    // ヘッダーが不足している場合にエラーをスロー
+    if (array_diff($requiredHeaders, $header)) {
+      abort(422, 'CSVファイルのヘッダーが不正です: ' . implode(', ', $requiredHeaders));
+    }
+
+    // データ行を検証
+    $dataRows = array_slice($rows, 1);
+    foreach ($dataRows as $index => $row) {
+      $data = array_combine($header, $row);
+      $this->validateRow($data, $index + 2); // データ行番号 +1 (ヘッダー分)
+    }
+  }
+
+  /**
+   * 各行をバリデーション.
+   *
+   * @param array $data
+   * @param int $lineNumber
+   * @return void
+   */
+  private function validateRow(array $data, int $lineNumber)
+  {
+    $validator =
+    Validator::make($data, [
+      'name' => 'required|string|max:50',
+      'user_id' => 'required|integer|exists:users,id',
+      'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
+      'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+      'image_url' => 'required|url|regex:/\.(jpeg|png)$/i',
+    ]);
+
+    if ($validator->fails()) {
+      abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode(', ', $validator->errors()->all()));
+    }
   }
 }

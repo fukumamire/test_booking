@@ -84,21 +84,22 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     Log::info("CSV データ: " . json_encode($row));
     Log::info("クリーンドデータ: " . json_encode($cleanedRow));
 
-    if (empty($cleanedRow[0])) {
+    if (empty($cleanedRow['name'])) {
       Log::warning("店舗名が設定されていません。行: " . $this->line . ". データ: " . json_encode($cleanedRow));
       return null; // 空の行をスキップ
     }
 
     return [
-      'name' => $cleanedRow[0],
-      'outline' => $cleanedRow[4],
-      'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
+      'name' => $cleanedRow['name'],
+      'outline' => $cleanedRow['outline'] ?? '',
+      'user_id' => !empty(trim($cleanedRow['user_id'])) ? filter_var($cleanedRow['user_id'], FILTER_VALIDATE_INT) : 1,
       'updated_at' => now(),
-      'area_name' => $cleanedRow[2],
-      'genres' => [$cleanedRow[3]], // ジャンルは配列として扱います
-      'image_url' => $cleanedRow[5],
+      'area_name' => $cleanedRow['area_name'] ?? '',
+      'genres' => !empty($cleanedRow['genres']) ? explode(',', $cleanedRow['genres']) : [], // カンマ区切りを配列に変換
+      'image_url' => $cleanedRow['image_url'] ?? '',
     ];
   }
+
 
   public function chunkSize(): int
   {
@@ -113,6 +114,6 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
   public function onError(\Throwable $e)
   {
     Log::error("インポート中にエラーが発生しました: " . $e->getMessage());
-    Log::error("エラーの詳細: " . $e->getTraceAsString());
+    session()->flash('error', 'インポート中にエラーが発生しました。詳細はログをご確認ください。');
   }
 }
