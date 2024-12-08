@@ -63,10 +63,14 @@ class ShopController extends Controller
     foreach ($results as $result) {
       DB::transaction(function () use ($result) {
         // 店舗のupsert
-        $shop = Shop::upsert(
-          $result,
-          ['id'],
-          ['name', 'outline', 'user_id', 'updated_at']
+        $shop = Shop::updateOrCreate(
+          ['id' => $result['id'] ?? null],
+          [
+            'name' => $result['name'],
+            'outline' => $result['outline'],
+            'user_id' => $result['user_id'],
+            'updated_at' => $result['updated_at']
+          ]
         );
 
         // エリア情報の登録

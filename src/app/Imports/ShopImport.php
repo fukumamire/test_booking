@@ -74,7 +74,7 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     $cleanedRow = $this->cleanData($row);
 
     return [
-      'id' => $row['id'] ?? null,
+      // 'id' => $row['id'] ?? null,
       'name' => $cleanedRow[0],
       'outline' => $cleanedRow[4],
       'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
