@@ -66,21 +66,21 @@ class ShopController extends Controller
         $shop = Shop::updateOrCreate(
           ['id' => $result['id'] ?? null],
           [
-            'name' => $result['name'],
-            'outline' => $result['outline'],
-            'user_id' => $result['user_id'],
-            'updated_at' => $result['updated_at']
+            'name' => $result['name'] ?? '',
+            'outline' => $result['outline'] ?? '',
+            'user_id' => $result['user_id'] ?? 1,
+            'updated_at' => $result['updated_at'] ?? now()
           ]
         );
 
         // エリア情報の登録
-        $this->updateAreaInfo($shop, $result['area_name']);
+        $this->updateAreaInfo($shop, $result['area_name'] ?? '');
 
         // ジャンル情報の登録
-        $this->updateGenres($shop, $result['genres']);
+        $this->updateGenres($shop, $result['genres'] ?? []);
 
         // 画像情報の登録
-        $this->updateShopImage($shop, $result['image_url']);
+        $this->updateShopImage($shop, $result['image_url'] ?? '');
       });
     }
   }

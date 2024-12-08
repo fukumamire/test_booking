@@ -80,7 +80,7 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
       'user_id' => !empty(trim($cleanedRow[1])) ? filter_var($cleanedRow[1], FILTER_VALIDATE_INT) : 1,
       'updated_at' => now(),
       'area_name' => $cleanedRow[2],
-      'genres' => explode(',', $cleanedRow[3]),
+      'genres' => [$cleanedRow[3]], // ジャンルは配列として扱う
       'image_url' => $cleanedRow[5],
     ];
   }
