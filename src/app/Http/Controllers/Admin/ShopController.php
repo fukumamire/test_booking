@@ -98,6 +98,7 @@ class ShopController extends Controller
     }
   }
 
+
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
     $definedAreas = static::$DEFINED_AREAS;

@@ -45,6 +45,7 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     ],
   ];
 
+
   private function cleanData(array $data)
   {
     // id 列を削除（主キーはデータベースで自動生成）
@@ -67,7 +68,11 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
       // 不正な文字を除去（空白を保持）
       $value = preg_replace('/[^\p{Han}\p{Hiragana}\p{Katakana}\d\s]+/u', '', $value);
 
-      return is_string($value) ? trim(mb_convert_kana($value, 'as')) : $value;
+      // 空白を除去し、空文字列をnullに変換
+      $value = is_string($value) ? trim($value) : $value;
+      $value = $value === '' ? null : $value;
+
+      return $value;
     }, array_keys($data), $data);
   }
 
@@ -76,10 +81,11 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     $this->line++;
     $cleanedRow = $this->cleanData($row);
 
-    Log::info("CSV データ: " . json_encode($cleanedRow));
+    Log::info("CSV データ: " . json_encode($row));
+    Log::info("クリーンドデータ: " . json_encode($cleanedRow));
 
     if (empty($cleanedRow[0])) {
-      Log::warning("店舗名が設定されていません。行: " . $this->line);
+      Log::warning("店舗名が設定されていません。行: " . $this->line . ". データ: " . json_encode($cleanedRow));
       return null; // 空の行をスキップ
     }
 
