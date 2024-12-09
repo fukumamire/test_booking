@@ -57,13 +57,10 @@ class AdminShopImportRequest extends FormRequest
     $header = array_map(function ($value) {
       $value = str_replace('ID', 'ユーザーID', $value);
       $value = str_replace('URL', 'URL', $value);
-      return $value;
-    }, $header);
-
-
-    $header = array_map(function ($value) {
       return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換  ヘッダーを正規化
     }, $header);
+
+
 
     // 必須のヘッダーを定義
     // $requiredHeaders = ['店舗名', ['ユーザーID', 'ユーザーＩＤ'], '地域', 'ジャンル', '店舗概要', ['画像URL', '画像ＵＲＬ']];
@@ -92,13 +89,16 @@ class AdminShopImportRequest extends FormRequest
    */
   private function validateRow(array $data, int $lineNumber)
   {
+    // ユーザーIDの指定がなければデフォルトで１
+    $data['user_id'] = $data['user_id'] ?? 1;
+
     $validator =
       Validator::make($data, [
         'name' => 'required|string|max:50',
-        'user_id' => 'required|integer|exists:users,id',
+        'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
         'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
         'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
-        'image_url' => 'required|url|regex:/\.(jpeg|png)$/i',
+        'image_url' => 'required|url|regex:/\.(jpeg|png)$/i', // 画像URL必須 & jpeg/png
       ]);
 
     if ($validator->fails()) {
