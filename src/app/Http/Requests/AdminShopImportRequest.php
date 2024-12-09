@@ -52,18 +52,14 @@ class AdminShopImportRequest extends FormRequest
     $rows = array_map('str_getcsv', file($file->getRealPath()));
     $header = array_map('trim', $rows[0] ?? []);
 
-
     // ヘッダーの標準化
     $header = array_map(function ($value) {
       $value = str_replace('ID', 'ユーザーID', $value);
       $value = str_replace('URL', 'URL', $value);
-      return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換  ヘッダーを正規化
+      return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換
     }, $header);
 
-
-
     // 必須のヘッダーを定義
-    // $requiredHeaders = ['店舗名', ['ユーザーID', 'ユーザーＩＤ'], '地域', 'ジャンル', '店舗概要', ['画像URL', '画像ＵＲＬ']];
     $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
 
     // ヘッダーが不足している場合にエラーをスロー
@@ -71,12 +67,18 @@ class AdminShopImportRequest extends FormRequest
       abort(422, 'CSVファイルのヘッダーが不正です: ' . implode(', ', $requiredHeaders));
     }
 
-
     // データ行を検証
-    $dataRows = array_slice($rows, 1);
+    $dataRows = array_slice($rows, 1); // データ行のみ
     foreach ($dataRows as $index => $row) {
+      $lineNumber = $index + 2; // データ行の行番号（+1 ヘッダー分）
+
+      // ヘッダーとデータ行の列数が一致しているか確認
+      if (count($header) !== count($row)) {
+        abort(422, "CSVの{$lineNumber}行目にデータ列の不足または余剰があります。");
+      }
+
       $data = array_combine($header, $row);
-      $this->validateRow($data, $index + 2); // データ行番号 +1 (ヘッダー分)
+      $this->validateRow($data, $lineNumber); // データ行のバリデーション
     }
   }
 
@@ -87,22 +89,50 @@ class AdminShopImportRequest extends FormRequest
    * @param int $lineNumber
    * @return void
    */
+  // private function validateRow(array $data, int $lineNumber)
+  // {
+  //   // ユーザーIDの指定がなければデフォルトで１
+  //   $data['user_id'] = $data['user_id'] ?? 1;
+
+  //   $validator =
+  //     Validator::make($data, [
+  //       'name' => 'required|string|max:50',
+  //       'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
+  //       'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
+  //       'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+  //       'image_url' => 'required|url|regex:/\.(jpeg|png)$/i', // 画像URL必須 & jpeg/png
+  //     ]);
+
+  //   if ($validator->fails()) {
+  //     abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode(', ', $validator->errors()->all()));
+  //   }
+  // }
   private function validateRow(array $data, int $lineNumber)
   {
-    // ユーザーIDの指定がなければデフォルトで１
-    $data['user_id'] = $data['user_id'] ?? 1;
+    // 入力データに不足があればデフォルト値で補完
+    $data = array_merge([
+      'name' => null,
+      'user_id' => 1, // デフォルトで1
+      'area_name' => null,
+      'genres' => null,
+      'image_url' => null,
+    ], $data);
 
-    $validator =
-      Validator::make($data, [
-        'name' => 'required|string|max:50',
-        'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
-        'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
-        'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
-        'image_url' => 'required|url|regex:/\.(jpeg|png)$/i', // 画像URL必須 & jpeg/png
-      ]);
+    $validator = Validator::make($data, [
+      'name' => 'required|string|max:50',
+      'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
+      'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
+      'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+      'image_url' => 'required|url|regex:/\.(jpeg|jpg|png)$/i', // jpgも許可
+    ]);
 
     if ($validator->fails()) {
-      abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode(', ', $validator->errors()->all()));
+      // エラー情報を詳細に表示
+      $errors = [];
+      foreach ($validator->errors()->toArray() as $field => $messages) {
+        $errors[] = "{$field}: " . implode(', ', $messages);
+      }
+      abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode('; ', $errors));
     }
   }
 }
