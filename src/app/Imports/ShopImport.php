@@ -28,25 +28,6 @@ class ShopImport implements ToArray, WithChunkReading, WithBatchInserts
     'ラーメン' => 'ラーメン',
   ];
 
-  // 実際は使用されていなかった
-  // protected $columnMappings = [
-  //   'Shop' => [
-  //     'name' => '店舗名',
-  //     'user_id' => 'ユーザーID',
-  //     'outline' => '店舗概要',
-  //   ],
-  //   'Area' => [
-  //     'name' => '地域',
-  //   ],
-  //   'Genre' => [
-  //     'name' => 'ジャンル',
-  //   ],
-  //   'ShopImage' => [
-  //     'shop_image_url' => '画像URL',
-  //   ],
-  // ];
-
-
   private function cleanData(array $data)
   {
     // id 列を削除（主キーはデータベースで自動生成）

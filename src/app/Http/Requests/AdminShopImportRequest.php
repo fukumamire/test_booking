@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Log;
 
 class AdminShopImportRequest extends FormRequest
 {
@@ -52,18 +52,23 @@ class AdminShopImportRequest extends FormRequest
     $rows = array_map('str_getcsv', file($file->getRealPath()));
     $header = array_map('trim', $rows[0] ?? []);
 
+    Log::info('Raw header:', $header);
+
     // ヘッダーの標準化
     $header = array_map(function ($value) {
-      $value = str_replace('ID', 'ユーザーID', $value);
-      $value = str_replace('URL', 'URL', $value);
+      $value = str_replace('ユーザーID', 'ユーザーID', $value);
+      $value = str_replace('画像URL', '画像URL', $value);
       return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換
     }, $header);
+
+    Log::info('Processed header:', $header);
 
     // 必須のヘッダーを定義
     $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
+      Log::info('Header difference:', array_diff($requiredHeaders, $header));
       abort(422, 'CSVファイルのヘッダーが不正です: ' . implode(', ', $requiredHeaders));
     }
 
@@ -81,7 +86,6 @@ class AdminShopImportRequest extends FormRequest
       $this->validateRow($data, $lineNumber); // データ行のバリデーション
     }
   }
-
   /**
    * 各行をバリデーション.
    *
@@ -89,24 +93,6 @@ class AdminShopImportRequest extends FormRequest
    * @param int $lineNumber
    * @return void
    */
-  // private function validateRow(array $data, int $lineNumber)
-  // {
-  //   // ユーザーIDの指定がなければデフォルトで１
-  //   $data['user_id'] = $data['user_id'] ?? 1;
-
-  //   $validator =
-  //     Validator::make($data, [
-  //       'name' => 'required|string|max:50',
-  //       'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
-  //       'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
-  //       'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
-  //       'image_url' => 'required|url|regex:/\.(jpeg|png)$/i', // 画像URL必須 & jpeg/png
-  //     ]);
-
-  //   if ($validator->fails()) {
-  //     abort(422, "CSVの{$lineNumber}行目にエラーがあります: " . implode(', ', $validator->errors()->all()));
-  //   }
-  // }
   private function validateRow(array $data, int $lineNumber)
   {
     // 入力データに不足があればデフォルト値で補完
