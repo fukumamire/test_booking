@@ -39,7 +39,6 @@ class ShopController extends Controller
   }
 
 
- 
   public function import(AdminShopImportRequest $request)
   {
     $file = $request->file('csv_file');
@@ -47,8 +46,26 @@ class ShopController extends Controller
     // CSVデータを配列形式で取得
     $csvData = array_map('str_getcsv', file($file->getRealPath()));
 
-    // ヘッダーを取得
-    $header = array_shift($csvData);
+    // ヘッダーマッピング（AdminShopImportRequest.phpと同じ）
+    $headerMapping = [
+      '店舗名' => 'name',
+      'ユーザーID' => 'user_id',
+      '地域' => 'area_name',
+      'ジャンル' => 'genres',
+      '店舗概要' => 'outline',
+      '画像URL' => 'image_url',
+    ];
+
+    // ヘッダーを取得してマッピング
+    $header = array_map(function ($col) use ($headerMapping) {
+      return $headerMapping[$col] ?? null;
+    }, array_shift($csvData));
+
+    // ヘッダー検証
+    if (in_array(null, $header, true) || count($header) !== count($headerMapping)) {
+      $missingHeaders = array_diff_key($headerMapping, array_flip($header));
+      abort(422, "CSVファイルのヘッダーが不正です。以下のヘッダーが不足しています: " . implode(', ', $missingHeaders));
+    }
 
     // データの検証と登録
     foreach ($csvData as $lineNumber => $row) {
@@ -56,18 +73,20 @@ class ShopController extends Controller
         abort(422, "CSVの" . ($lineNumber + 2) . "行目に列数の不一致があります。");
       }
 
-      $data = array_combine($header, $row);
+      $data = array_combine(
+        $header,
+        $row
+      );
 
-      // データの検証（AdminShopImportRequestで既に実行されているため、ここでは不要）
-      // $this->validateRow($data, $lineNumber + 2);
+      $this->validateRow($data, $lineNumber + 2);
 
       $shop = Shop::create([
         'name' => $data['name'],
         'user_id' => $data['user_id'] ?? 1,
         'area_name' => $data['area_name'],
         'genres' => $data['genres'],
+        'outline' => $data['outline'] ?? '',
         'image_url' => $data['image_url'],
-        'outline' => $data['outline'] ?? '', // 店舗概要を追加
       ]);
 
       // エリア情報の更新
@@ -82,7 +101,6 @@ class ShopController extends Controller
 
     return redirect()->back()->with('success', 'CSVのインポートが完了しました！');
   }
-
 
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
@@ -138,7 +156,6 @@ class ShopController extends Controller
       ]);
     }
   }
-
 
   public function importForm()
   {

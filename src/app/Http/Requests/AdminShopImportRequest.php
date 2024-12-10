@@ -122,7 +122,15 @@ class AdminShopImportRequest extends FormRequest
       'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
       'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
       'outline' => 'string|max:400', // 店舗概要の制約を追加
-      'image_url' => 'required|url|regex:/\.(jpeg|jpg|png)$/i', // jpgも許可
+      'image_url' => [
+        'required',
+        'url',
+        function ($attribute, $value, $fail) {
+          if (!preg_match('/\.(jpeg|jpg|png)$/', $value)) {
+            $fail('画像URLはJPEG、JPG、またはPNG形式でなければなりません。');
+          }
+        },
+      ],
     ]);
 
     if ($validator->fails()) {
