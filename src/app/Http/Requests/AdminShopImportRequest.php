@@ -46,6 +46,7 @@ class AdminShopImportRequest extends FormRequest
    *
    * @return void
    */
+
   public function passedValidation()
   {
     $file = $this->file('file');
@@ -54,17 +55,24 @@ class AdminShopImportRequest extends FormRequest
 
     Log::info('Raw header:', $header);
 
-    // ヘッダーの標準化
-    $header = array_map(function ($value) {
-      $value = str_replace('ユーザーID', 'ユーザーID', $value);
-      $value = str_replace('画像URL', '画像URL', $value);
-      return mb_convert_kana(trim($value), 'as'); // トリム + 全角/半角変換
+    // ヘッダーの標準化とマッピング
+    $headerMapping = [
+      '店舗名' => 'name',
+      'ユーザーID' => 'user_id',
+      '地域' => 'area_name',
+      'ジャンル' => 'genres',
+      '店舗概要' => 'outline',
+      '画像URL' => 'image_url',
+    ];
+
+    $header = array_map(function ($value) use ($headerMapping) {
+      return $headerMapping[$value] ?? null;
     }, $header);
 
     Log::info('Processed header:', $header);
 
     // 必須のヘッダーを定義
-    $requiredHeaders = ['店舗名', 'ユーザーID', '地域', 'ジャンル', '店舗概要', '画像URL'];
+    $requiredHeaders = ['name', 'user_id', 'area_name', 'genres', 'outline', 'image_url'];
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
@@ -86,6 +94,8 @@ class AdminShopImportRequest extends FormRequest
       $this->validateRow($data, $lineNumber); // データ行のバリデーション
     }
   }
+
+
   /**
    * 各行をバリデーション.
    *
@@ -93,6 +103,7 @@ class AdminShopImportRequest extends FormRequest
    * @param int $lineNumber
    * @return void
    */
+
   private function validateRow(array $data, int $lineNumber)
   {
     // 入力データに不足があればデフォルト値で補完
@@ -101,6 +112,7 @@ class AdminShopImportRequest extends FormRequest
       'user_id' => 1, // デフォルトで1
       'area_name' => null,
       'genres' => null,
+      'outline' => null,
       'image_url' => null,
     ], $data);
 
@@ -109,6 +121,7 @@ class AdminShopImportRequest extends FormRequest
       'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
       'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
       'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+      'outline' => 'string|max:400', // 店舗概要の制約を追加
       'image_url' => 'required|url|regex:/\.(jpeg|jpg|png)$/i', // jpgも許可
     ]);
 

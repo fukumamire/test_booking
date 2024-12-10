@@ -39,6 +39,7 @@ class ShopController extends Controller
   }
 
 
+ 
   public function import(AdminShopImportRequest $request)
   {
     $file = $request->file('csv_file');
@@ -46,24 +47,8 @@ class ShopController extends Controller
     // CSVデータを配列形式で取得
     $csvData = array_map('str_getcsv', file($file->getRealPath()));
 
-    // 日本語ヘッダーと内部キーのマッピング
-    $headerMapping = [
-      '店舗名' => 'name',
-      'ユーザーID' => 'user_id',
-      '地域' => 'area_name',
-      'ジャンル' => 'genres',
-      '画像URL' => 'image_url',
-    ];
-
-    // ヘッダーを取得してマッピング
-    $header = array_map(function ($col) use ($headerMapping) {
-      return $headerMapping[$col] ?? null;
-    }, array_shift($csvData));
-
-    // ヘッダー検証
-    if (in_array(null, $header, true) || count($header) !== count($headerMapping)) {
-      abort(422, "CSVファイルのヘッダーが不正です: " . implode(', ', $header));
-    }
+    // ヘッダーを取得
+    $header = array_shift($csvData);
 
     // データの検証と登録
     foreach ($csvData as $lineNumber => $row) {
@@ -73,7 +58,8 @@ class ShopController extends Controller
 
       $data = array_combine($header, $row);
 
-      $this->validateRow($data, $lineNumber + 2);
+      // データの検証（AdminShopImportRequestで既に実行されているため、ここでは不要）
+      // $this->validateRow($data, $lineNumber + 2);
 
       $shop = Shop::create([
         'name' => $data['name'],
@@ -81,6 +67,7 @@ class ShopController extends Controller
         'area_name' => $data['area_name'],
         'genres' => $data['genres'],
         'image_url' => $data['image_url'],
+        'outline' => $data['outline'] ?? '', // 店舗概要を追加
       ]);
 
       // エリア情報の更新
@@ -96,7 +83,7 @@ class ShopController extends Controller
     return redirect()->back()->with('success', 'CSVのインポートが完了しました！');
   }
 
-  
+
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
     if (!isset(static::$DEFINED_AREAS[$areaName])) {
