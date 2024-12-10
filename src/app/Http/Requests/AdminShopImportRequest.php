@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Admin\ShopController;
 
 class AdminShopImportRequest extends FormRequest
 {
@@ -119,15 +120,40 @@ class AdminShopImportRequest extends FormRequest
     $validator = Validator::make($data, [
       'name' => 'required|string|max:50',
       'user_id' => 'required|integer|exists:users,id', // user_id必須 & データベースに存在確認
-      'area_name' => 'required|string|in:東京都,大阪府,福岡県', // 許可されたエリアを指定
-      'genres' => 'required|string|in:寿司,焼肉,イタリアン,居酒屋,ラーメン', // 許可されたジャンル
+      'area_name' => [
+        'required',
+        'string',
+        function (
+          $attribute,
+          $value,
+          $fail
+        ) use ($data) {
+          if (!isset(ShopController::$DEFINED_AREAS[$value])) {
+            $fail('area_nameは「東京」、「東京都」、「大阪」、「大阪府」、「福岡」、または「福岡県」のいずれかでなければなりません。');
+          }
+          $data['area_name'] = ShopController::$DEFINED_AREAS[$value];
+        },
+      ],
+      'genres' => [
+        'required',
+        'string',
+        function ($attribute, $value, $fail) {
+          $genres = explode(',', $value);
+          foreach ($genres as $genre) {
+            $genre = trim($genre);
+            if (!in_array($genre, ['寿司', '焼肉', 'イタリアン', '居酒屋', 'ラーメン'])) {
+              $fail('genresには「寿司」、「焼肉」、「イタリアン」、「居酒屋」、または「ラーメン」のいずれかを指定してください。複数のジャンルを指定する場合はカンマで区切ってください。');
+            }
+          }
+        },
+      ],
       'outline' => 'string|max:400', // 店舗概要の制約を追加
       'image_url' => [
         'required',
         'url',
         function ($attribute, $value, $fail) {
           if (!preg_match('/\.(jpeg|jpg|png)$/', $value)) {
-            $fail('画像URLはJPEG、JPG、またはPNG形式でなければなりません。');
+            $fail('image_urlはJPEG、JPG、またはPNG形式でなければなりません。');
           }
         },
       ],
