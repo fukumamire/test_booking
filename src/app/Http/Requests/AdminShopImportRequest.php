@@ -77,8 +77,14 @@ class AdminShopImportRequest extends FormRequest
 
     // ヘッダーが不足している場合にエラーをスロー
     if (array_diff($requiredHeaders, $header)) {
-      Log::info('Header difference:', array_diff($requiredHeaders, $header));
-      abort(422, 'CSVファイルのヘッダーが不正です: ' . implode(', ', $requiredHeaders));
+      $missingHeaders = array_diff($requiredHeaders, $header);
+      $errorMessage = "CSVファイルのヘッダーが不正です。以下のヘッダーが不足しています: " . implode(', ', $missingHeaders);
+      $this->failedValidation(Validator::make([], []), new \Illuminate\Validation\ValidationException(
+        Validator::make([], []),
+        $errorMessage
+      ));
+
+      Log::error($errorMessage . " Required Headers: " . json_encode($requiredHeaders) . ", Actual Headers: " . json_encode($header));
     }
 
     // データ行を検証
@@ -87,8 +93,17 @@ class AdminShopImportRequest extends FormRequest
       $lineNumber = $index + 2; // データ行の行番号（+1 ヘッダー分）
 
       // ヘッダーとデータ行の列数が一致しているか確認
-      if (count($header) !== count($row)) {
-        abort(422, "CSVの{$lineNumber}行目にデータ列の不足または余剰があります。");
+      if (
+        count($header) !== count($row)
+      ) {
+        $errorMessage = "CSVの{$lineNumber}行目にデータ列の不足または余剰があります。";
+        $this->failedValidation(Validator::make([], []), new \Illuminate\Validation\ValidationException(
+          Validator::make([], []),
+          $errorMessage
+        ));
+
+        // エラーログの記録
+        Log::error($errorMessage . " Header count: " . count($header) . ", Row count: " . count($row));
       }
 
       $data = array_combine($header, $row);

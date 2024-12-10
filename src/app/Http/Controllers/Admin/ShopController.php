@@ -41,7 +41,11 @@ class ShopController extends Controller
 
   public function import(AdminShopImportRequest $request)
   {
-    $file = $request->file('csv_file');
+    $file = $request->file('file');
+    
+    if (!$file) {
+      return redirect()->back()->withErrors(['file' => 'CSVファイルが選択されていません。']);
+    }
 
     // CSVデータを配列形式で取得
     $csvData = array_map('str_getcsv', file($file->getRealPath()));
@@ -78,7 +82,9 @@ class ShopController extends Controller
         $row
       );
 
-      $this->validateRow($data, $lineNumber + 2);
+      // $this->validateRow($data, $lineNumber + 2);
+      // ここでAdminShopImportRequestのバリデーションを呼び出す
+      $request->validateRow($data, $lineNumber + 2);
 
       $shop = Shop::create([
         'name' => $data['name'],
