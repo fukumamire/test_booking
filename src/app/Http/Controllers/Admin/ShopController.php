@@ -98,7 +98,6 @@ class ShopController extends Controller
     return redirect()->back()->with('success', 'CSVのインポートが完了しました！');
   }
 
-
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
     if (!isset(static::$DEFINED_AREAS[$areaName])) {
@@ -114,11 +113,14 @@ class ShopController extends Controller
       return; // 存在しない地域の場合は処理をスキップ
     }
 
-    DB::table('shop_areas')->updateOrInsert(
-      ['shop_id' => $shop->id, 'area_id' => $area->id],
-      ['updated_at' => now()]
-    );
+    // 既存のレコードがある場合、新しいレコードを作成
+    DB::table('shop_areas')->insert([
+      'shop_id' => $shop->id,
+      'area_id' => $area->id,
+      'updated_at' => now()
+    ]);
   }
+
 
   private function updateGenres($shop, array $genres)
   {
@@ -137,10 +139,13 @@ class ShopController extends Controller
         continue; // 未登録のジャンルの場合は次のアイテムに進む
       }
 
-      DB::table('genres')->updateOrInsert(
-        ['id' => $genre->id],
-        ['shop_id' => $shop->id, 'updated_at' => now()]
-      );
+      // 既存のレコードがある場合、新しいレコードを作成
+      DB::table('genres')->insert([
+        'shop_id' => $shop->id,
+        'name' => $genre->name,
+        'created_at' => now(),
+        'updated_at' => now()
+      ]);
     }
   }
 
