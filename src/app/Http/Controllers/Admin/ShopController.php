@@ -72,6 +72,10 @@ class ShopController extends Controller
 
       $data = array_combine($header, $row);
 
+      // genresをカンマ区切りの文字列から配列に変換
+      $data['genres'] = !empty($data['genres']) ? explode(',', $data['genres']) : [];
+
+      // 新しい店舗情報を作成
       $shop = Shop::create([
         'name' => $data['name'],
         'user_id' => $data['user_id'] ?? 1,
