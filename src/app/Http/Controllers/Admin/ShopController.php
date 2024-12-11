@@ -38,14 +38,10 @@ class ShopController extends Controller
     $this->middleware('auth:admin');
   }
 
-
   public function import(AdminShopImportRequest $request)
   {
+    // バリデーションが成功した後、CSVファイルを処理します。
     $file = $request->file('file');
-    
-    if (!$file) {
-      return redirect()->back()->withErrors(['file' => 'CSVファイルが選択されていません。']);
-    }
 
     // CSVデータを配列形式で取得
     $csvData = array_map('str_getcsv', file($file->getRealPath()));
@@ -71,20 +67,10 @@ class ShopController extends Controller
       abort(422, "CSVファイルのヘッダーが不正です。以下のヘッダーが不足しています: " . implode(', ', $missingHeaders));
     }
 
-    // データの検証と登録
+    // データの登録
     foreach ($csvData as $lineNumber => $row) {
-      if (count($header) !== count($row)) {
-        abort(422, "CSVの" . ($lineNumber + 2) . "行目に列数の不一致があります。");
-      }
 
-      $data = array_combine(
-        $header,
-        $row
-      );
-
-      // $this->validateRow($data, $lineNumber + 2);
-      // ここでAdminShopImportRequestのバリデーションを呼び出す
-      $request->validateRow($data, $lineNumber + 2);
+      $data = array_combine($header, $row);
 
       $shop = Shop::create([
         'name' => $data['name'],
@@ -107,6 +93,7 @@ class ShopController extends Controller
 
     return redirect()->back()->with('success', 'CSVのインポートが完了しました！');
   }
+
 
   private function updateAreaInfo(Shop $shop, string $areaName)
   {
