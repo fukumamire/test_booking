@@ -147,7 +147,7 @@ class ShopController extends Controller
   private function updateShopImage(Shop $shop, string $imageUrl)
   {
     if (!empty($imageUrl)) {
-      $shop->shopImages()->updateOrCreate([], [
+      $shop->images()->updateOrCreate([], [
         'shop_image_url' => $imageUrl,
         'updated_at' => now(),
       ]);
