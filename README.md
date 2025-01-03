@@ -4,7 +4,9 @@
 
 
 ## 作成した目的
-自社で予約サービスを持ちたいという依頼があったため
+※２０２５年１月３日時点　fukumamire/Booking-restaurantをクローンして作成したもの。1. 口コミ機能　2. 店舗一覧ソート機能が動くか確認するため作成したものです
+
+
 
 ## アプリケーションURL
 
@@ -150,13 +152,13 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript、Laravel-permis
 - **updated_at**: レコードの最終更新日時。Laravelによって自動的に管理されます
 
 ## reviewsテーブル
-| カラム名    | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL | FOREIGN KEY |
+| カラム名    | 型           | PRIMARY KEY | UNIQUE KEY | NOT NULL（NUllを許可しない） | FOREIGN KEY |
 |-------------|--------------|-------------|------------|----------|-------------|
-| id          | bigint       | 〇           |            | 〇        |             |
-| shop_id     | bigint       |             |            | 〇        | 〇           |
-| user_id     | bigint       |             |            | 〇        | 〇           |
-| rating      | tiny int      |             |            | 〇        |             |
-| title       | VARCHAR(20)  |             |            |          |             |
+| id          | bigint       | 〇           |            | 〇        　　　　　　　|             |
+| shop_id     | bigint       |             |            | 〇        　　　　　　　　| 〇           |
+| user_id     | bigint       |             |            | 〇        　　　　　　　　| 〇           |
+| rating      | int      　　|             |            | 〇        　　　　　　　　|             |
+| image_url   | VARCHAR(255) |　            |           |          　　　　　　　　　|             |
 | comment     | text         |             |            | 〇        |             |
 | created_at  | timestamp    |             |            |          |             |
 | updated_at  | timestamp    |             |            |          |             |
@@ -168,14 +170,14 @@ Laravel 8.x、PHP 7.4.9、docker、laravel-fortify、javascript、Laravel-permis
 - `shop_id`: レビュー対象の店舗のID (FOREIGN KEY)。
 - `user_id`: レビューを書いたユーザーのID (FOREIGN KEY)。
 - `rating`: 店舗の評価（1から5の星の数）。
-- `title`: レビューのタイトル (任意)。
+- `image_url`: 画像　あってもなくてもOK
 - `comment`: レビューの本文。
 - `created_at`/`updated_at`: レビューが作成・更新された日時。
 
 # 環境構築
 ## Dockerビルド
 
-1. git@github.com:fukumamire/Booking-restaurant.git
+1. git@github.com:fukumamire/test-booking.git
 2. DockerDesktopアプリを立ち上げる
 3. docker-compose up -d --build
 
